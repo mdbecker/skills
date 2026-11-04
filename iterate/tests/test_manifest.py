@@ -114,3 +114,127 @@ class ManifestTests(unittest.TestCase):
                     module.atomic_write(target, 'replacement')
             self.assertEqual(target.read_text(), 'original')
             self.assertEqual(list(Path(directory).iterdir()), [target])
+
+    def registry_commands(self):
+        return [('tool', 'list'),
+                ('tool', 'add', '--name', 'new', '--path', 'tool.py', '--desc', 'new'),
+                ('tool', 'update', '--name', 'existing', '--desc', 'updated')]
+
+    def test_registry_ancestor_links_preserve_external_storage(self):
+        for ancestor in ('testbed', 'testbed/tools'):
+            for populated in (False, True):
+                with self.subTest(ancestor=ancestor, populated=populated), tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+                    project = Path(directory)
+                    external = Path(outside)
+                    (project / 'tool.py').write_text('inert reference')
+                    (external / 'keep.txt').write_text('unchanged')
+                    registry = external / ('tools/registry.json' if ancestor == 'testbed' else 'registry.json')
+                    if populated:
+                        registry.parent.mkdir(parents=True, exist_ok=True)
+                        registry.write_text('[{"name":"existing","path":"tool.py","description":"external sentinel"}]')
+                    before = {entry.relative_to(external): entry.read_bytes() for entry in external.rglob('*') if entry.is_file()}
+                    link = project / ancestor
+                    link.parent.mkdir(parents=True, exist_ok=True)
+                    link.symlink_to(external, target_is_directory=True)
+                    for command in self.registry_commands():
+                        result = self.run_cli(project, *command, succeeds=False)
+                        self.assertIn('unsafe registry storage', result.stderr)
+                        self.assertNotIn('Traceback', result.stderr)
+                        self.assertNotIn('external sentinel', result.stdout)
+                        self.assertTrue(link.is_symlink())
+                        after = {entry.relative_to(external): entry.read_bytes() for entry in external.rglob('*') if entry.is_file()}
+                        self.assertEqual(before, after)
+
+    def test_registry_leaf_links_preserve_links_and_targets(self):
+        for placement in ('external', 'inside', 'broken'):
+            with self.subTest(placement=placement), tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+                project = Path(directory)
+                (project / 'tool.py').write_text('inert reference')
+                target = (project if placement == 'inside' else Path(outside)) / 'saved-registry.json'
+                if placement != 'broken':
+                    target.write_text('[{"name":"existing","path":"tool.py","description":"private sentinel"}]')
+                before = target.read_bytes() if target.exists() else None
+                link = project / 'testbed/tools/registry.json'
+                link.parent.mkdir(parents=True)
+                link.symlink_to(target)
+                for command in self.registry_commands():
+                    result = self.run_cli(project, *command, succeeds=False)
+                    self.assertIn('unsafe registry storage', result.stderr)
+                    self.assertNotIn('private sentinel', result.stdout)
+                    self.assertTrue(link.is_symlink())
+                    self.assertEqual(target.read_bytes() if target.exists() else None, before)
+
+    def test_registry_invalid_components_and_inside_ancestor_link(self):
+        for placement in ('testbed-file', 'tools-file', 'registry-directory', 'inside-link'):
+            with self.subTest(placement=placement), tempfile.TemporaryDirectory() as directory:
+                project = Path(directory)
+                (project / 'tool.py').write_text('inert reference')
+                if placement == 'testbed-file':
+                    occupied = project / 'testbed'
+                    occupied.write_text('keep')
+                elif placement == 'tools-file':
+                    (project / 'testbed').mkdir()
+                    occupied = project / 'testbed/tools'
+                    occupied.write_text('keep')
+                elif placement == 'registry-directory':
+                    occupied = project / 'testbed/tools/registry.json'
+                    occupied.mkdir(parents=True)
+                else:
+                    occupied = project / 'shared-tools'
+                    occupied.mkdir()
+                    (occupied / 'keep.txt').write_text('keep')
+                    (project / 'testbed').mkdir()
+                    (project / 'testbed/tools').symlink_to(occupied, target_is_directory=True)
+                for command in self.registry_commands():
+                    result = self.run_cli(project, *command, succeeds=False)
+                    self.assertIn('unsafe registry storage', result.stderr)
+                    self.assertNotIn('Traceback', result.stderr)
+                if placement in ('testbed-file', 'tools-file'):
+                    self.assertEqual(occupied.read_text(), 'keep')
+                if placement == 'inside-link':
+                    self.assertEqual((occupied / 'keep.txt').read_text(), 'keep')
+                    self.assertFalse((occupied / 'registry.json').exists())
+
+    def test_local_registry_preserves_explicit_external_references(self):
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+            project = Path(directory)
+            reference = Path(outside) / 'tool.py'
+            reference.write_text('raise RuntimeError("must never execute")\n')
+            before = reference.read_bytes()
+            self.run_cli(project, 'tool', 'list')
+            self.assertFalse((project / 'testbed').exists())
+            self.run_cli(project, 'tool', 'update', '--name', 'missing', '--desc', 'missing', succeeds=False)
+            self.assertFalse((project / 'testbed').exists())
+            self.run_cli(project, 'tool', 'add', '--name', 'external', '--path', str(reference), '--desc', 'reference')
+            self.run_cli(project, 'tool', 'update', '--name', 'external', '--usage', 'stored, not executed')
+            result = self.run_cli(project, 'tool', 'list')
+            self.assertIn(str(reference), result.stdout)
+            self.assertIn('stored, not executed', result.stdout)
+            self.assertEqual(reference.read_bytes(), before)
+            self.assertTrue((project / 'testbed/tools/registry.json').is_file())
+
+    def test_missing_key_guidance_preserves_state_and_user_restoration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            self.run_cli(project, 'init', 'demo', '--impact', 'preserve state')
+            state = project / '.ai-state/demo.json'
+            valid = state.read_bytes()
+            damaged = json.loads(valid)
+            del damaged['architecture_decisions']
+            state.write_text(json.dumps(damaged))
+            before = state.read_bytes()
+            for command in [('status', 'demo'), ('set', 'demo', 'impact', 'changed')]:
+                result = self.run_cli(project, *command, succeeds=False)
+                self.assertIn('architecture_decisions', result.stderr)
+                self.assertIn('stop and preserve', result.stderr)
+                self.assertIn('restore a known-good local copy', result.stderr)
+                self.assertNotIn('fix by hand', result.stderr)
+                self.assertEqual(state.read_bytes(), before)
+            self.run_cli(project, 'init', 'demo', '--impact', 'replacement', succeeds=False)
+            self.assertEqual(state.read_bytes(), before)
+            state.write_text('{')
+            self.run_cli(project, 'status', 'demo', succeeds=False)
+            self.run_cli(project, 'set', 'demo', 'impact', 'changed', succeeds=False)
+            self.assertEqual(state.read_text(), '{')
+            state.write_bytes(valid)
+            self.run_cli(project, 'status', 'demo')

@@ -5,6 +5,9 @@ description: Implement behavior, revise implementation specifications or prompts
 
 # Develop
 
+If another method would address a remaining uncertainty or contract, read only the
+relevant [optional recipe](resources/combinations.md). Otherwise use this mode alone.
+
 Select one owning mode. Load [shared boundaries](resources/policy.md), then only
 the selected method and applicable project profile. The `resources/` directory
 is prepared from canonical sources by the repository exporter and included in

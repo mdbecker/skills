@@ -5,6 +5,9 @@ description: Use when starting or resuming feature work that should follow the i
 
 # Iterate
 
+For a justified specialization/handoff, read only the relevant [optional recipe](resources/combinations.md).
+It does not restart this lifecycle, require sibling installs or replace user checkpoints.
+
 This is the compatibility entrypoint for `/develop iterate`; the method and
 `manifest.py` remain canonical here. The parent export bundles this method/helper
 without requiring a sibling installation. Interpret `/develop iterate` arguments
@@ -22,6 +25,15 @@ State lives in the project repo at `.ai-state/<feature-name>.json`. This file is
 The state directory and manifest files must be real local paths, not symlinks. If existing state uses symlinks, stop and explain the policy; do not replace links or move their targets automatically. The user can copy the state into a local `.ai-state/` directory before resuming.
 
 **All manifest reads and writes go through the CLI** bundled as `manifest.py` alongside this `SKILL.md`. Resolve its absolute path from the installed skill directory, then run `python3 "<skill-directory>/manifest.py"` from the project root. In the examples below, `manifest.py` means that command; do not assume it is on PATH. Never hand-edit the JSON — the CLI checks required top-level keys, phases, and backlog item fields, stamps `last_updated`, and fails loudly on corruption. Run `manifest.py --help` and `manifest.py <cmd> --help` for full usage.
+
+On damaged state, stop and preserve the file. Ask the user to restore a known-good
+local copy or authorize separate maintenance; do not reset, synthesize missing
+keys, or interpret validation failure as a missing feature.
+
+Tool-registry storage must remain ordinary local directories and a file at
+`testbed/tools/registry.json`; links or escaping storage are rejected before access.
+Explicitly selected existing external tool references remain supported, but
+registration grants no permission to execute them or write an external registry.
 
 | Action | Command |
 |---|---|

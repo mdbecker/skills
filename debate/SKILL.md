@@ -5,6 +5,9 @@ description: Run an explicitly requested Debate review or discussion through fiv
 
 # Debate
 
+If this explicitly selected review needs a cross-method handoff, read only the
+relevant [optional recipe](resources/combinations.md). It adds no permissions or mandatory steps.
+
 Run code review or technical discussion through **5 independent reviews → 3 independent reconciliations → 1 final synthesis**. This is the compatibility entrypoint for the explicit Debate engine in `/review`; it retains one canonical method rather than requiring that parent to be installed. Use existing host delegation/model access, not a separate provider application.
 
 Read [shared boundaries](resources/policy.md), [reference model policy](resources/models.md), and the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md) capability mapping. Resources are included in exports and prepared locally from canonical sources. Missing resources must be reported, not replaced with a sibling installation or guessed defaults.

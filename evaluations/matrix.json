@@ -10,6 +10,7 @@
     {"requirement":"PRD 4.7","mode":"review code|discuss","source":"code-review","method":"review/references/code.md","fixtures":["review-reference","review-transfer","clean-scope"]},
     {"requirement":"PRD 4.8","mode":"review smells","source":"smells","method":"review/references/smells.md","fixtures":["smells-reference","smells-transfer"]},
     {"requirement":"PRD 3.4/4.9","mode":"review --engine debate","source":"canonical debate/SKILL.md","method":"debate/SKILL.md","fixtures":["unanimous-miss","clean-scope"]},
-    {"requirement":"PRD 2/5/7 and release PRD","mode":"export/install","source":"inventory.json","method":"distribution/install.py","deterministic_tests":"tests/test_distribution.py","limits":"Installation tests do not verify model-mediated routing."}
+    {"requirement":"PRD 2/5/7 and release PRD","mode":"export/install","source":"inventory.json","method":"distribution/install.py","deterministic_tests":"tests/test_distribution.py","limits":"Installation tests do not verify model-mediated routing."},
+    {"requirement":"PRD_COMBOS.md","mode":"optional existing-method composition","source":"resources/combinations.md","method":"resources/combinations.md","fixtures":["combo-coverage","combo-existing-evidence","combo-experiment-approval","combo-active-iterate","combo-bdd-prompt","combo-read-only-audit","combo-green-characterization","combo-incomparable-cohorts","combo-missing-report-graph","combo-stale-handoff","combo-one-mode","combo-parent-alone","combo-legacy-only","combo-explicit-debate-tiers"],"deterministic_tests":"tests/test_combinations.py","limits":"Standalone link/resource checks and frozen evaluator criteria do not establish real agent selection or behavior."}
   ]
 }

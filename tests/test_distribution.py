@@ -337,6 +337,42 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(evidence.read_bytes(), original_evidence)
         self.assertEqual((project / "report.html").read_bytes(), before)
 
+    def test_exported_helpers_preserve_registry_boundary_and_recovery_policy(self):
+        canonical = (ROOT / 'iterate/manifest.py').read_bytes()
+        for name, relative in [('iterate', 'manifest.py'), ('develop', 'resources/iterate/manifest.py')]:
+            with self.subTest(package=name):
+                project = self.workspace / ('installed-' + name)
+                project.mkdir()
+                install(self.archive, project, selected=[name])
+                helper = project / '.agents/skills' / name / relative
+                self.assertEqual(helper.read_bytes(), canonical)
+                (project / 'tool.py').write_text('inert')
+                outside = self.workspace / ('outside-' + name)
+                outside.mkdir()
+                (project / 'testbed').symlink_to(outside, target_is_directory=True)
+                result = subprocess.run([sys.executable, str(helper), 'tool', 'add', '--name', 'inert',
+                                         '--path', 'tool.py', '--desc', 'inert'], cwd=project, capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('unsafe registry storage', result.stderr)
+                self.assertEqual(list(outside.iterdir()), [])
+                result = subprocess.run([sys.executable, str(helper), 'init', 'demo', '--impact', 'restoration'],
+                                        cwd=project, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                state = project / '.ai-state/demo.json'
+                valid = state.read_bytes()
+                damaged = json.loads(valid)
+                del damaged['architecture_decisions']
+                state.write_text(json.dumps(damaged))
+                before = state.read_bytes()
+                result = subprocess.run([sys.executable, str(helper), 'status', 'demo'], cwd=project, capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('restore a known-good local copy', result.stderr)
+                self.assertNotIn('fix by hand', result.stderr)
+                self.assertEqual(state.read_bytes(), before)
+                state.write_bytes(valid)
+                result = subprocess.run([sys.executable, str(helper), 'status', 'demo'], cwd=project, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

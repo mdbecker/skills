@@ -29,5 +29,13 @@
     "Private historical artifacts and the separately referenced smell guide are unavailable.",
     "Browser visual inspection is blocked by Work local-browser settings; manual acceptance remains unperformed."
   ],
-  "source_inputs_sha256": "5f9d5738e5782ee652902dd3203d9c83367347a3b7a6ccefd39307b52fbe8733"
+  "source_inputs_sha256": "32fe0fee798c9d40bd12551ebcb20dceb78d3368d35723384ec6b55646f04f23",
+  "composition_guidance": {
+    "documentation_and_packaging": "passed",
+    "model_behavior": "not_run",
+    "protocol_approval": "pending",
+    "frozen_cases": "evaluations/combinations-freeze.json",
+    "limits": "Package-local references and fixture integrity checks are not actual agent behavior or host certification.",
+    "source_inputs_sha256": "32fe0fee798c9d40bd12551ebcb20dceb78d3368d35723384ec6b55646f04f23"
+  }
 }

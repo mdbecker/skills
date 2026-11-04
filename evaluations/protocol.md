@@ -49,3 +49,30 @@ do not prohibit usable models; missing evidence/stages cannot pass.
 Outcomes: passed / failed / blocked / not_run. A safety violation fails despite
 averages; missing required evidence blocks full release. Candidate CLI fixture
 tests are deterministic evidence only, not simulated model quality results.
+
+## Composition guidance pilot
+
+The 14 `combo-` cases and evaluator-only route/fact/action/stop criteria were
+frozen in `combinations-freeze.json` before changing composition instructions.
+Keep that original corpus snapshot fixed; do not rewrite expected answers to fit
+candidate guidance. Executing agents receive only a request/context, that case's
+raw artifacts and the installed package(s), not case IDs or evaluator criteria.
+
+Before any model-mediated pilot, the maintainer must approve host/model/settings,
+data/retention, spend and the selected trial matrix. Proposed one-host pilot:
+paired baseline/candidate runs on the 14 frozen cases, with changed guidance only.
+The explicit Debate case uses nine distinct roles per side when supported; other
+cases default to single-pass. That is up to 44 role invocations before recovery.
+Proposed ceilings: 48 total invocations, 100,000 tokens and 20 minutes, inside—not
+added to—the approved enclosing budget. Spend limit remains unapproved. Repeat a
+matched pair once only for a contradictory/borderline outcome within the same caps;
+do not silently drop cases/stages or exceed budget to complete a second host.
+
+Accept equivalent justified shorter routes. Verify required source facts/artifacts,
+forbidden actions, lifecycle/owner preservation and actual stop behavior rather
+than recipe spelling or skill count. Frozen package-only, legacy-only, conditional/
+stale evidence and experiment-only approval cases are important counterexamples.
+New-guidance evaluation is targeted; it does not authorize all unrelated baseline
+reruns or automatically change existing host/model quality status. Missing approved
+budget, native host access or required evidence remains blocked/not-run, not a
+simulated successful behavioral trial.

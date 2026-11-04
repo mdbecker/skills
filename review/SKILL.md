@@ -5,6 +5,9 @@ description: Review a declared code change or current-source scope, audit struct
 
 # Review
 
+For a justified cross-method handoff, read only the relevant [optional recipe](resources/combinations.md).
+It grants no edit permission, sibling dependency or automatic Debate selection.
+
 Load [shared boundaries](resources/policy.md), then select one mode:
 
 - `/review code <target> [--scope diff|source] [--engine single|debate]`:

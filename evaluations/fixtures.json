@@ -435,6 +435,104 @@
       "profile": "synthetic-guard",
       "request": "Explain a general term.",
       "context": "The user asks only for a general explanation, not development, drafting, validation, review, audit or report changes."
+    },
+    {
+      "id": "combo-coverage",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Trace the delivery gap and draft the minimum next increment. Do not edit code or tracker state.",
+      "context": "Saved work items claim completion; inspect the supplied code and requirement."
+    },
+    {
+      "id": "combo-existing-evidence",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Recommend synchronous or queued import from the saved evidence; no experiment or implementation is authorized.",
+      "context": "A decision may be resolved by supplied authoritative measurements."
+    },
+    {
+      "id": "combo-experiment-approval",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Plan a bounded local experiment to test the unresolved import design; production implementation is not approved.",
+      "context": "Experiment planning is authorized; final architecture is still conditional."
+    },
+    {
+      "id": "combo-active-iterate",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Plan coordinated invoice prompt edits within the current Iterate task; preserve its lifecycle.",
+      "context": "The active feature is in TWEAKING. No BDD switch or model calls are requested."
+    },
+    {
+      "id": "combo-bdd-prompt",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Use the explicitly selected BDD lifecycle to plan a prompt/consumer contract correction; do not edit yet.",
+      "context": "BDD sequence is selected and prompt surfaces are the specialization, not another lifecycle."
+    },
+    {
+      "id": "combo-read-only-audit",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Inspect this structural consequence and recommend a remedy; no refactor is authorized.",
+      "context": "Audit only, declared subsystem scope."
+    },
+    {
+      "id": "combo-green-characterization",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Plan a pure refactor preserving the current public behavior. Do not manufacture failing tests.",
+      "context": "Current characterization coverage is green; no behavior change is requested."
+    },
+    {
+      "id": "combo-incomparable-cohorts",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Check the proposed improvement headline using saved evidence; no new study or data retrieval.",
+      "context": "An existing mapped report pipeline is available, but the headline is disputed."
+    },
+    {
+      "id": "combo-missing-report-graph",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Create a report from these saved aggregates without building a new pipeline.",
+      "context": "No existing report build mapping is supplied."
+    },
+    {
+      "id": "combo-stale-handoff",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Inspect whether the supplied coverage claim is still supported; do not implement from it.",
+      "context": "The handoff is conditional and references an older revision."
+    },
+    {
+      "id": "combo-one-mode",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Use explicit BDD to plan the small clamp bug fix. No broad audit or design discussion is needed.",
+      "context": "The requirement and selected lifecycle are clear."
+    },
+    {
+      "id": "combo-parent-alone",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "With only Develop installed, trace the next delivery step; do not install other skills.",
+      "context": "Develop and ordinary host reasoning are available; the Review parent is absent."
+    },
+    {
+      "id": "combo-legacy-only",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Discuss the design using available ordinary reasoning; do not invoke hierarchical review.",
+      "context": "Only legacy Iterate/Debate entrypoints are installed. Debate was not selected."
+    },
+    {
+      "id": "combo-explicit-debate-tiers",
+      "capability": "composition",
+      "profile": "synthetic-combination",
+      "request": "Explicitly use Debate to discuss the supplied contract within the approved review budget.",
+      "context": "Distinct-agent delegation is available, with one permitted model and budget for nine successful role invocations; preferred tiers are unavailable."
     }
   ]
 }

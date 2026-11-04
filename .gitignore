@@ -18,7 +18,16 @@ __pycache__/
 /skills.zip
 /archive/
 /reviews/
+/reports/
 /bdenglish_skills_conversation_handoff.md
+
+# Local specifications and implementation planning
+/PRD.md
+/PRD_*.md
+
+# Generated local execution/review summaries, not curated qualification state
+/evaluations/results.json
+/evaluations/*-results.json
 
 # Credentials and local configuration
 .env

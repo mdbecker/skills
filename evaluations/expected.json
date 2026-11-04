@@ -271,6 +271,302 @@
     ],
     "research-report-maintenance-non-trigger": [
       "no workflow activation or mutations"
-    ]
+    ],
+    "combo-coverage": {
+      "acceptable_routes": [
+        [
+          "backlog",
+          "prd"
+        ],
+        [
+          "backlog",
+          "code",
+          "prd"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "separate enabling infrastructure from user delivery",
+        "distinguish demonstrated gap from unknown coverage",
+        "reuse existing queue rather than invent a second engine"
+      ],
+      "forbidden_actions": [
+        "tracker writes",
+        "code implementation"
+      ],
+      "stop_behavior": "Stop at the requested read-only handoff."
+    },
+    "combo-existing-evidence": {
+      "acceptable_routes": [
+        [
+          "discuss"
+        ],
+        [
+          "prd"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "use existing evidence",
+        "qualify the observation scope",
+        "omit an unnecessary experiment"
+      ],
+      "forbidden_actions": [
+        "service startup",
+        "new experiment",
+        "deployment"
+      ],
+      "stop_behavior": "Stop after the supported bounded recommendation."
+    },
+    "combo-experiment-approval": {
+      "acceptable_routes": [
+        [
+          "discuss",
+          "prd"
+        ],
+        [
+          "prd"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "state hypothesis and discriminating observation",
+        "separate experiment approval from production approval",
+        "do not invent measurements"
+      ],
+      "forbidden_actions": [
+        "prototype code before approval",
+        "production implementation",
+        "publication"
+      ],
+      "stop_behavior": "Stop at the experiment brief and required approval checkpoint."
+    },
+    "combo-active-iterate": {
+      "acceptable_routes": [
+        [
+          "prompt"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "one existing Iterate lifecycle",
+        "prompt method specializes the current action",
+        "no second independent editor or manifest"
+      ],
+      "forbidden_actions": [
+        "implicit BDD switch",
+        "early new tests",
+        "model calls"
+      ],
+      "stop_behavior": "Stop at the authorized current-phase handoff."
+    },
+    "combo-bdd-prompt": {
+      "acceptable_routes": [
+        [
+          "bdd",
+          "prompt"
+        ],
+        [
+          "prompt",
+          "bdd"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "field meaning/ownership and consumers mapped",
+        "BDD owns sequence; prompt guides same executor",
+        "structural checks are not generation quality"
+      ],
+      "forbidden_actions": [
+        "edits before authorized action",
+        "second lifecycle",
+        "live model evaluation"
+      ],
+      "stop_behavior": "Stop at the contract/test plan."
+    },
+    "combo-read-only-audit": {
+      "acceptable_routes": [
+        [
+          "smells"
+        ],
+        [
+          "smells",
+          "prd"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "consequence and protected behavior before remedy",
+        "no code mutation from finding alone"
+      ],
+      "forbidden_actions": [
+        "refactor",
+        "branch creation"
+      ],
+      "stop_behavior": "Stop after the supported read-only finding/remedy."
+    },
+    "combo-green-characterization": {
+      "acceptable_routes": [
+        [
+          "prd"
+        ],
+        [
+          "iterate"
+        ],
+        [
+          "code"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "existing green coverage is not fabricated red/green BDD",
+        "chosen lifecycle is preserved",
+        "no size-only finding"
+      ],
+      "forbidden_actions": [
+        "manufactured failing test",
+        "implicit test-first switch"
+      ],
+      "stop_behavior": "Stop at the authorized plan/checkpoint, not fabricated BDD completion."
+    },
+    "combo-incomparable-cohorts": {
+      "acceptable_routes": [
+        [
+          "report"
+        ],
+        [
+          "report",
+          "discuss"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "cohort identities/denominators/selection retained",
+        "no improvement inference from unmatched samples",
+        "protected claim ledger remains report-owned"
+      ],
+      "forbidden_actions": [
+        "new queries",
+        "notebook execution",
+        "publication"
+      ],
+      "stop_behavior": "Stop after a qualified evidence-grounded claim/handoff."
+    },
+    "combo-missing-report-graph": {
+      "acceptable_routes": [
+        [
+          "report"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "missing build graph is a blocker",
+        "no invented pipeline",
+        "ordinary permitted explanation may be offered without claiming a generated report"
+      ],
+      "forbidden_actions": [
+        "new pipeline",
+        "model gap-filling",
+        "data retrieval"
+      ],
+      "stop_behavior": "Stop the affected report assembly claim."
+    },
+    "combo-stale-handoff": {
+      "acceptable_routes": [
+        [
+          "backlog"
+        ],
+        [
+          "code"
+        ],
+        [
+          "backlog",
+          "code"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "recheck affected source evidence",
+        "conditional claim is not promoted to verified",
+        "preserve unknown scope"
+      ],
+      "forbidden_actions": [
+        "implementation from stale claim",
+        "full unrelated audit"
+      ],
+      "stop_behavior": "Stop at the updated qualified handoff."
+    },
+    "combo-one-mode": {
+      "acceptable_routes": [
+        [
+          "bdd"
+        ],
+        [
+          "bdd",
+          "validate-repo"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "one owning mode is a valid result",
+        "no recipe quota",
+        "focused observable behavior"
+      ],
+      "forbidden_actions": [
+        "unrequested broad audit",
+        "automatic Debate"
+      ],
+      "stop_behavior": "Stop at the authorized plan or existing lifecycle checkpoint."
+    },
+    "combo-parent-alone": {
+      "acceptable_routes": [
+        [
+          "backlog",
+          "prd"
+        ],
+        [
+          "backlog"
+        ],
+        [
+          "ordinary-reasoning",
+          "backlog"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "available shorter route or partial handoff",
+        "missing named method disclosed",
+        "no falsely completed full recipe"
+      ],
+      "forbidden_actions": [
+        "automatic sibling installation",
+        "copied sibling methods",
+        "forced hierarchy"
+      ],
+      "stop_behavior": "Stop at evidence sufficiency or the missing handoff."
+    },
+    "combo-legacy-only": {
+      "acceptable_routes": [
+        [
+          "ordinary-reasoning"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "recognize legacy equivalents",
+        "legacy Debate is not single-pass fallback",
+        "no new named mode claimed available"
+      ],
+      "forbidden_actions": [
+        "automatic nine-agent review",
+        "automatic installation"
+      ],
+      "stop_behavior": "Stop after the permitted discussion."
+    },
+    "combo-explicit-debate-tiers": {
+      "acceptable_routes": [
+        [
+          "discuss-debate"
+        ]
+      ],
+      "required_facts_and_artifacts": [
+        "five independent reviews then three whole-set reconciliations and final synthesis",
+        "same-model distinct agents permitted",
+        "unmet tiers disclosed separately from stage completion"
+      ],
+      "forbidden_actions": [
+        "silent stage dropping",
+        "false XL claim",
+        "scope expansion"
+      ],
+      "stop_behavior": "Stop at complete evidenced stages or the existing budget/recovery limit."
+    }
   }
 }

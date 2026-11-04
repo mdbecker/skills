@@ -98,6 +98,37 @@ are separate from Iterate state. Current-source review needs no invented baselin
 changing review engine does not widen scope. Reports require saved evidence and
 a mapped existing build graph; missing dependencies block work.
 
+## Combining methods when useful
+
+Use one owning mode when it covers the goal. The [optional cookbook](resources/combinations.md)
+describes artifact handoffs, specialization inside one lifecycle, and bounded
+feedback—not new commands or automatic multi-agent workflows.
+
+| Remaining problem | Start with |
+|---|---|
+| Missing delivery or requirement ownership evidence | [C01](resources/combinations.md#c01) |
+| An empirical design assumption lacks evidence | [C02](resources/combinations.md#c02) |
+| A prompt change affects coordinated consumer contracts | [C03](resources/combinations.md#c03) |
+| Demonstrated structural consequences need a remedy | [C04](resources/combinations.md#c04) |
+| Saved-evidence report interpretation is disputed | [C05](resources/combinations.md#c05) |
+| No additional method would contribute | Stay with the owning mode |
+
+### Delivery coverage: C01
+
+A CSV-import ticket is marked done for queue setup, but user upload/completion is
+not evidenced. Reconcile coverage and existing owners; inspect uncertain source
+claims only when needed, then specify the missing user-facing increment. Stop at
+the authorized handoff rather than invent another queue or edit tracker status.
+See [C01's canonical entry, handoff and stop rules](resources/combinations.md#c01).
+
+### Coordinated prompt changes: C03
+
+An invoice consumer treats unknown as zero. Map the affected prompt/wire/validation/
+replay surfaces and application-owned fields within the already selected lifecycle.
+Prompt guidance specializes the same executor; it does not restart Iterate or
+start another editor. Contract checks and generation accuracy remain different.
+See [C03's canonical ownership and lifecycle rules](resources/combinations.md#c03).
+
 ## Iterate
 
 ```text
@@ -124,6 +155,11 @@ python3 /absolute/path/to/skills/iterate/manifest.py status -v
 ```
 
 State lives in that project's `.ai-state/` directory. It stays local and supports later-session resumption. The state directory and manifest files must not be symlinks. Feature-specific test-bed files stay in `testbed/scratch/`; reusable tools can be promoted to `testbed/tools/`.
+
+The tool registry rejects linked or escaping storage at `testbed/tools/registry.json`,
+including ancestor and leaf links. Explicit external tool references can still be
+registered without executing them. Damaged feature state is preserved; restore a
+known-good local copy under user direction rather than hand-editing or resetting it.
 
 Git projects can use phase commits and small PRs. Local-only projects retain the same six phases and feedback checkpoints without requiring Git, a remote, or PRs. See [the full Iterate instructions](iterate/SKILL.md).
 
@@ -175,6 +211,10 @@ protocol, evaluator-only fixtures/answers, source matrix and acceptance limits a
 under `evaluations/`. Real Codex/Claude invocation and paired quality/cost checks
 require their own approved evidence; they are not simulated by installer tests.
 
+Composition checks additionally install each parent/legacy package alone in both
+host layouts, verify canonical guide/anchor closure and validate frozen evaluator
+criteria. They do not simulate agent route selection or certify model behavior.
+
 ## Releases
 
 The release workflow handles an existing `vMAJOR.MINOR.PATCH[-prerelease]` tag or
@@ -188,8 +228,8 @@ approval records pass and match the current source-resource fingerprint. A tag
 such as `v0.2.0-rc.1` explicitly produces a prerelease with honest qualification
 metadata. Creating/pushing any tag or publishing still requires authorization.
 
-The installation contract is in `distribution/README.md`; the concise release
-requirements are in `PRD_RELEASE.md`. Runtime archives exclude evaluation answers,
+The installation contract is in `distribution/README.md`; release automation is
+defined in `.github/workflows/release.yml`. Runtime archives exclude evaluation answers,
 local state, environments, credentials and restricted data.
 
 ## Layout

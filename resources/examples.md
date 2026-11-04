@@ -3,6 +3,10 @@
 These synthetic cases illustrate decisions, not observed evaluation results.
 Load only the selected mode's section. No historical identifiers/data are defaults.
 
+If a remaining uncertainty or contract warrants a cross-method handoff, read only
+the relevant [optional combination](combinations.md). These single-mode examples
+remain sufficient when no additional step contributes useful evidence.
+
 ## BDD
 Reference: a Riskonnect-like intake rejects a missing event identity. Given a saved
 event without an identity, when submitted, then no write occurs and the caller gets

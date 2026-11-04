@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-04",
+  "status": "frozen-before-combination-guidance",
+  "model_protocol_approval": "pending",
+  "baseline_source_inputs_sha256": "5f9d5738e5782ee652902dd3203d9c83367347a3b7a6ccefd39307b52fbe8733",
+  "case_ids": [
+    "combo-coverage",
+    "combo-existing-evidence",
+    "combo-experiment-approval",
+    "combo-active-iterate",
+    "combo-bdd-prompt",
+    "combo-read-only-audit",
+    "combo-green-characterization",
+    "combo-incomparable-cohorts",
+    "combo-missing-report-graph",
+    "combo-stale-handoff",
+    "combo-one-mode",
+    "combo-parent-alone",
+    "combo-legacy-only",
+    "combo-explicit-debate-tiers"
+  ],
+  "corpus_hashes": {
+    "fixtures.json": "6b89095f05bba27ccc0138379ef64d99877d74eedc7089f47a92a96cbed567b0",
+    "expected.json": "69f3e2cb3a24a47bbdfc5abb905fd6cef28772c54de4f22a2e2c22634f38055e",
+    "artifacts.json": "d9619b9fcfd088df85631e2698b9bf578aa8ebfeb65c8e437d28bdeb70bea9c9"
+  },
+  "limits": [
+    "Evaluator routes/criteria are not supplied to executing agents.",
+    "No model-mediated or real-host trial has run.",
+    "Synthetic saved reports/checks are input fixtures, not observed evaluations."
+  ]
+}

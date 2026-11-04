@@ -5,6 +5,9 @@ description: Create or update an evidence-grounded report using approved saved i
 
 # Research reports
 
+When a disputed interpretation needs another method, read only the relevant
+[optional recipe](resources/combinations.md); it cannot supply missing evidence or a build graph.
+
 Accept `/research report create <target>` or `/research report update <target>`.
 Reject unknown operations; do not interpret `create` as permission to conduct
 research. Load [shared boundaries](resources/policy.md), [report method](references/report.md)

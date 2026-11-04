@@ -58,6 +58,27 @@ def check_state_dir():
         die(".ai-state/ must be a local directory, not a symlink")
 
 
+def registry_path():
+    project = Path.cwd().resolve()
+    destination = project / TOOLS_REGISTRY
+    current = project
+    try:
+        for component in TOOLS_REGISTRY.parts:
+            current = current / component
+            if current.is_symlink():
+                die(f"unsafe registry storage {current}: symlinks are not allowed")
+            if not current.resolve().is_relative_to(project):
+                die(f"unsafe registry storage {current}: path must remain inside the project")
+            if current.exists():
+                if current == destination and not current.is_file():
+                    die(f"unsafe registry storage {current}: registry must be an ordinary file")
+                if current != destination and not current.is_dir():
+                    die(f"unsafe registry storage {current}: ancestor must be a directory")
+    except (OSError, RuntimeError) as error:
+        die(f"unsafe registry storage {current}: {error}")
+    return destination
+
+
 def path_for(feature):
     check_state_dir()
     if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]*", feature):
@@ -81,7 +102,8 @@ def load(feature):
     for key in ("project_metadata", "core_objective", "implementation_state",
                 "deferred_backlog", "testing_strategy", "architecture_decisions"):
         if key not in m:
-            die(f"manifest {p} missing required key '{key}' — schema drift, fix by hand")
+            die(f"manifest {p} missing required key '{key}' — stop and preserve this file; "
+                "ask the user to restore a known-good local copy or authorize a separate recovery procedure")
     phase = m["project_metadata"].get("current_phase")
     if phase not in PHASES:
         die(f"manifest {p} has invalid phase {phase!r} — must be one of {', '.join(PHASES)}")
@@ -329,9 +351,9 @@ def cmd_render(args):
 
 def cmd_tool(args):
     reg = []
-    if TOOLS_REGISTRY.exists():
+    if registry_path().exists():
         try:
-            reg = json.loads(TOOLS_REGISTRY.read_text())
+            reg = json.loads(registry_path().read_text())
         except json.JSONDecodeError as e:
             die(f"corrupt registry {TOOLS_REGISTRY}: {e}")
     if args.action == "list":
@@ -350,7 +372,7 @@ def cmd_tool(args):
         for field, value in (("path", args.path), ("description", args.desc), ("usage", args.usage)):
             if value is not None:
                 entry[field] = value
-        atomic_write(TOOLS_REGISTRY, json.dumps(reg, indent=2) + "\n")
+        atomic_write(registry_path(), json.dumps(reg, indent=2) + "\n")
         print(f"updated tool '{args.name}'")
         return
     # add
@@ -363,8 +385,8 @@ def cmd_tool(args):
     entry = {"name": args.name, "path": args.path, "description": args.desc,
              "usage": args.usage or "", "added_by": args.feature or "", "added_at": now()}
     reg.append(entry)
-    TOOLS_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
-    atomic_write(TOOLS_REGISTRY, json.dumps(reg, indent=2) + "\n")
+    registry_path().parent.mkdir(parents=True, exist_ok=True)
+    atomic_write(registry_path(), json.dumps(reg, indent=2) + "\n")
     print(f"registered tool '{args.name}' ({args.path}) — remember to commit {TOOLS_REGISTRY.parent}/")
 
 
