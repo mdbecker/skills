@@ -1,0 +1,22 @@
+.DS_Store
+
+.ai-state/
+testbed/scratch/
+
+.venv/
+__pycache__/
+.pytest_cache/
+
+# Local conversation material and historical snapshots
+/skills.zip
+/archive/
+/reviews/
+/bdenglish_skills_conversation_handoff.md
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+.aws/
+*.pem
+*.key
