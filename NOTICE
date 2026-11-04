@@ -3,7 +3,9 @@ snapshot during development. The Iterate skill and its manifest helper derive
 from the original ben-iterate skill. The original human-feedback-first,
 six-phase development philosophy is retained.
 
-The current Debate skill implements a Codex-native Luna/Terra/Astra hierarchy.
+Debate preserves its five-reviewer, three-reconciler, one-synthesizer method.
+Historical Luna/Terra/Astra selections are reference profiles, not runtime
+restrictions. Host mappings do not establish unperformed compatibility checks.
 The earlier standalone review application is not part of this distribution.
 
 This repository is independently maintained by mdbecker. Upstream reference:

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "rows": [
+    {"requirement":"PRD 4.1","mode":"develop bdd","source":"bdd","method":"develop/references/bdd.md","fixtures":["bdd-reference","bdd-transfer","lifecycle-conflict"]},
+    {"requirement":"PRD 4.2","mode":"develop prd","source":"code-review","method":"develop/references/prd.md","fixtures":["prd-reference","prd-transfer"]},
+    {"requirement":"PRD 4.3","mode":"develop prompt","source":"prompt","method":"develop/references/prompt.md","fixtures":["prompt-reference","prompt-transfer"]},
+    {"requirement":"PRD 4.4","mode":"develop backlog","source":"backlog","method":"develop/references/backlog.md","fixtures":["backlog-reference","backlog-transfer"]},
+    {"requirement":"PRD 4.5","mode":"develop validate-repo","source":"template","method":"develop/references/validate-repo.md","fixtures":["validation-reference","validation-transfer","untrusted-command"]},
+    {"requirement":"PRD 4.6","mode":"research report create|update","source":"report","method":"research/references/report.md","fixtures":["report-reference","report-transfer","report-correction"]},
+    {"requirement":"PRD 4.7","mode":"review code|discuss","source":"code-review","method":"review/references/code.md","fixtures":["review-reference","review-transfer","clean-scope"]},
+    {"requirement":"PRD 4.8","mode":"review smells","source":"smells","method":"review/references/smells.md","fixtures":["smells-reference","smells-transfer"]},
+    {"requirement":"PRD 3.4/4.9","mode":"review --engine debate","source":"canonical debate/SKILL.md","method":"debate/SKILL.md","fixtures":["unanimous-miss","clean-scope"]},
+    {"requirement":"PRD 2/5/7 and release PRD","mode":"export/install","source":"inventory.json","method":"distribution/install.py","deterministic_tests":"tests/test_distribution.py","limits":"Installation tests do not verify model-mediated routing."}
+  ]
+}

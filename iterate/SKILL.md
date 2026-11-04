@@ -5,6 +5,12 @@ description: Use when starting or resuming feature work that should follow the i
 
 # Iterate
 
+This is the compatibility entrypoint for `/develop iterate`; the method and
+`manifest.py` remain canonical here. The parent export bundles this method/helper
+without requiring a sibling installation. Interpret `/develop iterate` arguments
+as the existing `/iterate` arguments. Read the bundled shared policy when present;
+do not let another mode silently change this lifecycle or its state ownership.
+
 Iterative feature development driven by a persistent state manifest. Validate the architecture and happy path against a real, running test bed BEFORE writing edge cases, error handling, or tests. Complexity is deferred, not forgotten — it's parked in a backlog and consumed in the final phase.
 
 **Core principle: nothing gets hardened until it has been proven to work by hand.**
@@ -78,6 +84,10 @@ Manifest schema (managed by the CLI; shown for reference):
 ```
 
 ## Universal Rules (all phases)
+
+- **Git permissions are separate.** Phase rituals do not authorize commits,
+  branches, squashing, pushes or PR creation. When those actions are not authorized,
+  retain the local phase/check summary and user checkpoints without mutating Git.
 
 - **Park, don't handle.** Any edge case, failure mode, or hardening concern noticed outside FINALIZATION is parked immediately via `manifest.py park`, with no code written for it. The CLI echoes "parked: ..." — surface that line so the user sees it was captured.
 - **Phase transitions are explicit.** Never silently drift into the next phase's work. When the current phase's exit criteria are met, state that, update `current_phase`, and confirm direction with the user if they're present.

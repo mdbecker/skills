@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "release_approval": "pending",
+  "model_protocol_approval": "pending",
+  "manual_acceptance": "not_run",
+  "deterministic": "passed",
+  "model_quality": "not_run",
+  "reference_fidelity": "not_run",
+  "transfer": "not_run",
+  "hosts": {
+    "codex": {
+      "installation": "not_run",
+      "invocation": "not_run",
+      "hierarchy": "not_run",
+      "layout_installation": "passed",
+      "installation_evidence": "Temporary project folder placement only; real host discovery/invocation not performed."
+    },
+    "claude": {
+      "installation": "not_run",
+      "invocation": "not_run",
+      "hierarchy": "not_run",
+      "layout_installation": "passed",
+      "installation_evidence": "Temporary project folder placement only; real host discovery/invocation not performed."
+    }
+  },
+  "limits": [
+    "Real host invocation and paired model quality checks require approved protocol/access.",
+    "Static installation and packaging tests are not model/host behavioral certification.",
+    "Private historical artifacts and the separately referenced smell guide are unavailable.",
+    "Browser visual inspection is blocked by Work local-browser settings; manual acceptance remains unperformed."
+  ],
+  "source_inputs_sha256": "5f9d5738e5782ee652902dd3203d9c83367347a3b7a6ccefd39307b52fbe8733"
+}

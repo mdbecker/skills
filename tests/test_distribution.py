@@ -1,0 +1,342 @@
+import hashlib
+import json
+import os
+from pathlib import Path
+import stat
+import subprocess
+import sys
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest.mock import patch
+import zipfile
+
+from distribution.install import install, read_archive, RECEIPT
+from scripts.build_skills import build, payload, release_ready, ROOT
+
+
+class DistributionTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.workspace = Path(self.temporary.name)
+        self.project = self.workspace / "project"
+        self.project.mkdir()
+        self.archive = self.workspace / "skills.zip"
+        self.manifest = build(self.archive, "first")
+
+    def rewrite(self, edits=None, extras=None, update_hashes=True):
+        with zipfile.ZipFile(self.archive) as archive:
+            contents = {entry.filename: archive.read(entry) for entry in archive.infolist()}
+        contents.update(edits or {})
+        manifest = json.loads(contents["manifest.json"])
+        manifest["version"] = "second"
+        if update_hashes:
+            manifest["files"] = {name: hashlib.sha256(content).hexdigest() for name, content in contents.items() if name != "manifest.json"}
+        contents["manifest.json"] = json.dumps(manifest).encode()
+        target = self.workspace / "changed.zip"
+        with zipfile.ZipFile(target, "w") as archive:
+            for name, content in contents.items():
+                archive.writestr(name, content)
+            for name, content in extras or []:
+                archive.writestr(name, content)
+        return target
+
+    def test_export_reproducible_and_exact_inventory(self):
+        second = self.workspace / "second.zip"
+        build(second, "first")
+        self.assertEqual(self.archive.read_bytes(), second.read_bytes())
+        self.assertEqual([entry["name"] for entry in self.manifest["skills"]], ["develop", "review", "research", "iterate", "debate"])
+        self.assertEqual(len(json.loads((ROOT / "inventory.json").read_text())["capabilities"]), 8)
+        with zipfile.ZipFile(self.archive) as archive:
+            self.assertNotIn("evaluations/expected.json", archive.namelist())
+            self.assertFalse(any(".ai-state" in path or "__pycache__" in path for path in archive.namelist()))
+        read_archive(self.archive)
+
+    def test_preview_install_reinstall_and_standalone_helper(self):
+        marker = self.project / "keep.txt"
+        marker.write_text("unchanged")
+        preview = install(self.archive, self.project, selected=["develop"], dry_run=True)
+        self.assertEqual(preview["installed"], [])
+        self.assertEqual(preview["planned"], ["develop"])
+        self.assertFalse((self.project / ".agents").exists())
+        result = install(self.archive, self.project, selected=["develop"])
+        self.assertEqual(result["installed"], ["develop"])
+        self.assertEqual(install(self.archive, self.project, selected=["develop"])["installed"], [])
+        helper = self.project / ".agents/skills/develop/resources/iterate/manifest.py"
+        self.archive.unlink()
+        outcome = subprocess.run([sys.executable, str(helper), "init", "standalone", "--impact", "Installed helper survives"],
+                                 cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(outcome.returncode, 0, outcome.stderr)
+        self.assertEqual(marker.read_text(), "unchanged")
+        self.assertTrue((self.project / ".ai-state/standalone.json").is_file())
+        self.assertFalse((self.project / ".agents/skills/iterate").exists())
+
+    def test_claude_layout_is_installation_not_invocation(self):
+        result = install(self.archive, self.project, host="claude", selected=["research"])
+        self.assertTrue((self.project / ".claude/skills/research/SKILL.md").is_file())
+        self.assertFalse((self.project / ".agents").exists())
+        self.assertEqual(result["qualification"]["hosts"]["claude"]["invocation"], "not_run")
+
+    def test_external_checksum_fails_without_writes(self):
+        with self.assertRaisesRegex(ValueError, "Archive SHA"):
+            install(self.archive, self.project, expected_sha256="0" * 64)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_file_corruption_rejected_before_writes(self):
+        changed = self.rewrite({"skills/develop/SKILL.md": b"corrupt"}, update_hashes=False)
+        with self.assertRaisesRegex(ValueError, "checksum mismatch"):
+            install(changed, self.project)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_traversal_absolute_backslash_and_case_collision(self):
+        for path in ("../outside", "/outside", "skills\\escape", "Skills/develop/SKILL.md"):
+            with self.subTest(path=path):
+                changed = self.rewrite(extras=[(path, b"bad")])
+                with self.assertRaises(ValueError):
+                    install(changed, self.project)
+                self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_duplicate_entries_and_symlink_payload(self):
+        changed = self.rewrite(extras=[("README.md", b"duplicate")])
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            install(changed, self.project)
+        symbolic = zipfile.ZipInfo("skills/develop/link")
+        symbolic.external_attr = (stat.S_IFLNK | 0o777) << 16
+        changed = self.rewrite(extras=[(symbolic, b"/outside")])
+        with self.assertRaisesRegex(ValueError, "regular files"):
+            install(changed, self.project)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_missing_bundled_reference(self):
+        changed = self.rewrite({"skills/develop/SKILL.md": (ROOT / "develop/SKILL.md").read_bytes() + b"\n[missing](resources/absent.md)"})
+        with self.assertRaisesRegex(ValueError, "bundled reference"):
+            install(changed, self.project)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_target_parent_symlink_rejected(self):
+        outside = self.workspace / "outside"
+        outside.mkdir()
+        (self.project / ".agents").symlink_to(outside, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "symlink"):
+            install(self.archive, self.project)
+        self.assertEqual(list(outside.iterdir()), [])
+
+    def test_entrypoint_name_must_match_declared_inventory(self):
+        content = (ROOT / "develop/SKILL.md").read_bytes().replace(b"name: develop", b"name: other")
+        changed = self.rewrite({"skills/develop/SKILL.md": content})
+        with self.assertRaisesRegex(ValueError, "metadata"):
+            install(changed, self.project)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_existing_skill_symlink_rejected(self):
+        destination = self.project / ".agents/skills"
+        destination.mkdir(parents=True)
+        outside = self.workspace / "outside"
+        outside.mkdir()
+        (destination / "develop").symlink_to(outside, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "symlink"):
+            install(self.archive, self.project)
+        self.assertEqual(list(outside.iterdir()), [])
+
+    def test_unmanaged_conflict_leaves_unrelated_work(self):
+        destination = self.project / ".agents/skills/develop"
+        destination.mkdir(parents=True)
+        (destination / "SKILL.md").write_text("my skill")
+        with self.assertRaisesRegex(ValueError, "Conflict"):
+            install(self.archive, self.project)
+        self.assertEqual((destination / "SKILL.md").read_text(), "my skill")
+        self.assertFalse((destination.parent / "review").exists())
+
+    def test_upgrade_only_unchanged_managed_skill(self):
+        install(self.archive, self.project, selected=["develop"])
+        entry = "skills/develop/references/prd.md"
+        changed = self.rewrite({entry: (ROOT / "develop/references/prd.md").read_bytes() + b"\nUpdated fixture.\n"})
+        with self.assertRaises(ValueError):
+            install(changed, self.project, selected=["develop"])
+        result = install(changed, self.project, selected=["develop"], upgrade=True)
+        self.assertEqual(result["installed"], ["develop"])
+        target = self.project / ".agents/skills/develop/references/prd.md"
+        self.assertIn(b"Updated fixture", target.read_bytes())
+        target.write_text("local edit")
+        with self.assertRaisesRegex(ValueError, "local modifications"):
+            install(self.archive, self.project, selected=["develop"], upgrade=True)
+        self.assertEqual(target.read_text(), "local edit")
+
+    def test_added_local_file_blocks_upgrade(self):
+        install(self.archive, self.project, selected=["develop"])
+        marker = self.project / ".agents/skills/develop/my-notes.md"
+        marker.write_text("keep")
+        with self.assertRaises(ValueError):
+            install(self.archive, self.project, selected=["develop"], upgrade=True)
+        self.assertEqual(marker.read_text(), "keep")
+
+    def test_failed_second_replacement_rolls_back_and_preserves_receipt(self):
+        install(self.archive, self.project)
+        before = {path.relative_to(self.project): path.read_bytes() for path in self.project.rglob("*") if path.is_file()}
+        changed = self.rewrite({"skills/develop/references/prd.md": b"Changed first",
+                                "skills/review/references/code.md": b"Changed second"})
+        original_replace = os.replace
+
+        def fail_second(source, target):
+            if str(source).endswith("/new/review"):
+                raise OSError("simulated second-write failure")
+            return original_replace(source, target)
+
+        with patch("distribution.install.os.replace", side_effect=fail_second):
+            with self.assertRaisesRegex(OSError, "second-write"):
+                install(changed, self.project, upgrade=True)
+        after = {path.relative_to(self.project): path.read_bytes() for path in self.project.rglob("*") if path.is_file()}
+        self.assertEqual(before, after)
+
+    def test_invalid_receipts_and_existing_lock(self):
+        install(self.archive, self.project)
+        receipt = self.project / ".agents/skills" / RECEIPT
+        original = receipt.read_bytes()
+        for content in (b"null", b"[]", b'{"schema_version":1,"schema_version":2}'):
+            receipt.write_bytes(content)
+            with self.assertRaises(ValueError):
+                install(self.archive, self.project)
+        receipt.write_bytes(original)
+        lock = receipt.parent / ".mdbecker-skills.lock"
+        lock.write_text("another installer")
+        with self.assertRaises(FileExistsError):
+            install(self.archive, self.project)
+        self.assertEqual(lock.read_text(), "another installer")
+        self.assertEqual(receipt.read_bytes(), original)
+
+    def test_unknown_host_and_selection_are_read_only(self):
+        with self.assertRaises(ValueError):
+            install(self.archive, self.project, host="unknown")
+        with self.assertRaises(ValueError):
+            install(self.archive, self.project, selected=["missing"])
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_unverified_quality_blocks_stable_release_readiness(self):
+        self.assertFalse(release_ready(self.manifest["qualification"], self.manifest["source_inputs"]))
+        status = {key: "passed" for key in ("release_approval", "model_protocol_approval", "manual_acceptance", "deterministic", "model_quality", "reference_fidelity", "transfer")}
+        status["hosts"] = {host: {key: "passed" for key in ("installation", "invocation", "hierarchy")} for host in ("codex", "claude")}
+        self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
+        status["source_inputs_sha256"] = hashlib.sha256(json.dumps(self.manifest["source_inputs"], sort_keys=True).encode()).hexdigest()
+        self.assertTrue(release_ready(status, self.manifest["source_inputs"]))
+        status["hosts"]["claude"]["invocation"] = "not_run"
+        self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
+
+    def test_fixture_expectations_are_evaluator_only(self):
+        fixtures = json.loads((ROOT / "evaluations/fixtures.json").read_text())
+        expected = json.loads((ROOT / "evaluations/expected.json").read_text())
+        self.assertEqual({entry["id"] for entry in fixtures["cases"]}, set(expected["cases"]))
+        self.assertTrue(expected["evaluator_only"])
+        self.assertFalse(any("expected" in entry for entry in fixtures["cases"]))
+        artifacts = json.loads((ROOT / "evaluations/artifacts.json").read_text())
+        self.assertEqual(set(artifacts["cases"]), set(expected["cases"]))
+        self.assertTrue(artifacts["synthetic_only"])
+        with zipfile.ZipFile(self.archive) as archive:
+            self.assertFalse(any(path.startswith("evaluations/") for path in archive.namelist()))
+
+    def test_archive_limits_and_file_directory_collision(self):
+        for limits in ({"MAX_FILES": 1}, {"MAX_BYTES": 1}):
+            with self.subTest(limits=limits), patch.multiple("distribution.install", **limits):
+                with self.assertRaisesRegex(ValueError, "limit"):
+                    install(self.archive, self.project)
+        changed = self.rewrite(extras=[("skills/develop/resources", b"file, not directory")])
+        with self.assertRaisesRegex(ValueError, "parent directory"):
+            install(changed, self.project)
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_stable_build_blocked_but_explicit_preview_can_build(self):
+        output = self.workspace / "release.zip"
+        clean_source = [SimpleNamespace(stdout="a" * 40), SimpleNamespace(stdout="")]
+        with patch("scripts.build_skills.subprocess.run", side_effect=clean_source):
+            with self.assertRaisesRegex(ValueError, "Stable release blocked"):
+                build(output, "v0.1.0", release=True)
+        self.assertFalse(output.exists())
+        with patch("scripts.build_skills.subprocess.run", side_effect=clean_source):
+            manifest = build(output, "v0.1.0-rc.1", release=True, prerelease=True)
+        self.assertTrue(manifest["prerelease"])
+        self.assertEqual(manifest["qualification"]["model_quality"], "not_run")
+
+    def test_release_workflow_pins_and_no_asset_clobber(self):
+        import yaml
+        workflow = yaml.load((ROOT / ".github/workflows/release.yml").read_text(), Loader=yaml.BaseLoader)
+        self.assertIn("push", workflow["on"])
+        self.assertIn("workflow_dispatch", workflow["on"])
+        self.assertEqual(workflow["permissions"]["contents"], "read")
+        steps = workflow["jobs"]["release"]["steps"]
+        for step in steps:
+            if "uses" in step:
+                self.assertRegex(step["uses"], r"@[0-9a-f]{40}$")
+        publication = next(step["run"] for step in steps if "gh release create" in step.get("run", ""))
+        self.assertNotIn("--clobber", publication)
+        self.assertLess(publication.index("gh release upload"), publication.index("--draft=false"))
+
+    def copied_sources(self):
+        root = self.workspace / "source-copy"
+        unused_inventory, unused_files, inputs = payload(ROOT)
+        for identity in inputs:
+            target = root / identity
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / identity).read_bytes())
+        return root
+
+    def test_explicit_inventory_does_not_sweep_private_files(self):
+        root = self.copied_sources()
+        (root / "resources/credentials.env").write_text("synthetic secret")
+        (root / "resources/clinical-data.json").write_text("synthetic restricted payload")
+        unused_inventory, files, inputs = payload(root)
+        self.assertFalse(any("credentials.env" in name or "clinical-data.json" in name for name in files))
+        self.assertNotIn("resources/credentials.env", inputs)
+        self.assertNotIn("resources/clinical-data.json", inputs)
+
+    def test_source_mutation_during_export_is_rejected(self):
+        root = self.copied_sources()
+        source = root / "resources/policy.md"
+        original_read = Path.read_bytes
+        changed = False
+
+        def mutate_after_capture(path):
+            nonlocal changed
+            content = original_read(path)
+            if path == source and not changed:
+                changed = True
+                path.write_bytes(content + b"\nConcurrent edit.\n")
+            return content
+
+        with patch.object(Path, "read_bytes", mutate_after_capture):
+            with self.assertRaisesRegex(ValueError, "changed during export"):
+                payload(root)
+
+    def test_checksum_symlink_does_not_modify_outside_target(self):
+        output = self.workspace / "target.zip"
+        outside = self.workspace / "keep.txt"
+        outside.write_text("unchanged")
+        output.with_suffix(".zip.sha256").symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "symlinks"):
+            build(output)
+        self.assertEqual(outside.read_text(), "unchanged")
+        self.assertFalse(output.exists())
+
+    def test_synthetic_report_graph_preserves_evidence_and_failed_output(self):
+        artifacts = json.loads((ROOT / "evaluations/artifacts.json").read_text())["cases"]["report-transfer"]
+        project = self.workspace / "report-project"
+        for relative, content in artifacts.items():
+            target = project / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content)
+        evidence = project / "evidence/cohorts.json"
+        original_evidence = evidence.read_bytes()
+        (project / "failure.json").unlink()
+        result = subprocess.run([sys.executable, "scripts/assemble_report.py"], cwd=project, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = subprocess.run([sys.executable, "scripts/check_report.py"], cwd=project, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        before = (project / "report.html").read_bytes()
+        (project / "failure.json").write_text('{"simulate_assembly_failure":true}')
+        result = subprocess.run([sys.executable, "scripts/assemble_report.py"], cwd=project, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(evidence.read_bytes(), original_evidence)
+        self.assertEqual((project / "report.html").read_bytes(), before)
+
+
+if __name__ == "__main__":
+    unittest.main()

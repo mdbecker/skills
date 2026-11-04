@@ -3,6 +3,13 @@
 .ai-state/
 testbed/scratch/
 
+/dist/
+/develop/resources/
+/review/resources/
+/research/resources/
+/iterate/resources/
+/debate/resources/
+
 .venv/
 __pycache__/
 .pytest_cache/

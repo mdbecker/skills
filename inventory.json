@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "package": "mdbecker-skills",
+  "parents": ["develop", "review", "research"],
+  "compatibility": ["iterate", "debate"],
+  "common_resources": [
+    "resources/policy.md", "resources/models.md", "resources/adaptation.md",
+    "resources/provenance.json", "resources/examples.md", "resources/hosts/codex.md",
+    "resources/hosts/claude.md", "resources/profiles/skills.md", "resources/profiles/riskonnect.md",
+    "resources/profiles/template.md", "resources/profiles/incidental-findings.md",
+    "resources/profiles/reliability-study.md"
+  ],
+  "owned_resources": {
+    "develop": ["references/bdd.md", "references/prd.md", "references/prompt.md", "references/backlog.md", "references/validate-repo.md"],
+    "review": ["references/code.md", "references/smells.md", "references/discuss.md"],
+    "research": ["references/report.md"],
+    "iterate": [],
+    "debate": []
+  },
+  "capabilities": {
+    "bdd-development": "develop bdd",
+    "prd": "develop prd",
+    "prompt-editor": "develop prompt",
+    "backlog-reconciliation": "develop backlog",
+    "validate-repository-changes": "develop validate-repo",
+    "code-review": "review code",
+    "code-smell-audit": "review smells",
+    "research-report-maintenance": "research report create|update"
+  },
+  "method_exports": {
+    "develop": ["iterate"],
+    "review": ["debate"]
+  }
+}

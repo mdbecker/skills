@@ -1,32 +1,102 @@
 # Skills
 
-Two Codex skills for building and challenging software:
+Three project-local skill areas, with two retained compatibility entrypoints:
 
-- **`/iterate` — Build something.** Establish the architecture, build a minimal happy path, get hands-on feedback, refine it, then test and finalize.
-- **`/debate` — Challenge it.** Run five independent Luna reviews, three Terra reconciliation passes, and one Astra synthesis, checking findings against actual source evidence.
+- **`/develop`** — Iterate or explicit BDD, specifications, prompt changes, requirement coverage, and repository validation.
+- **`/review`** — Code/current-source review, structural audit, or technical discussion; single-pass unless Debate is explicitly selected.
+- **`/research report create|update`** — Saved-evidence assembly and maintenance through an existing report pipeline; not new research.
+- **`/iterate`** and **`/debate`** retain their arguments and canonical methods as compatibility entrypoints.
 
-The skills work independently. Debate is an optional review tool, not a required gate in Iterate.
+Each exported folder contains its full resources without sibling installations.
+Debate is optional, not an Iterate gate. Model references are not a whitelist;
+prefer economical capable reviewers, stronger middle-stage models and strongest
+final synthesis within available host/data/tool/budget permissions.
+
+Installation/metadata checks do not certify host invocation or model quality.
+See `evaluations/status.json` for unperformed gates; full acceptance is not claimed.
 
 ## Install
+
+### Another project: use the zip
+
+Download a versioned skill zip and its checksum from a trusted release, open your
+target project and ask its agent: **“install the skills in this zip file.”**
+Choose `skills-<tag>.zip`, not GitHub's automatic source-code archive. The
+archive's root README and manifest describe scoped installation and include an
+auditable Python 3.11+ standard-library installer. Extracting a zip never autoruns
+code. The agent must inspect it and retain applicable approvals.
+
+The installer copies complete selected folders into project `.agents/skills`
+for Codex or `.claude/skills` for Claude Code. It previews changes, skips identical
+content, rejects conflicts/symlink escapes, and upgrades only unchanged previously
+managed files when requested. No global install, hooks, settings edits, Git changes,
+data acquisition or skill-workflow execution occurs.
+
+For a local bundle from this checkout, prepare/export first, then use the audited
+source installer against a different project:
+
+```sh
+.venv/bin/python scripts/build_skills.py --prepare
+.venv/bin/python distribution/install.py --archive dist/skills-dev.zip --project /absolute/path/to/target --host codex --dry-run
+.venv/bin/python distribution/install.py --archive dist/skills-dev.zip --project /absolute/path/to/target --host codex
+```
+
+Use `--host claude`, `--skills develop review`, or explicitly requested `--upgrade`
+as appropriate. Do not point the copy installer at this checkout's authoring
+symlinks. Internal hashes check integrity, not publisher authenticity; supply the
+trusted external digest with `--sha256` when available.
+
+### Local authoring
 
 Clone the repository:
 
 ```sh
 git clone https://github.com/mdbecker/skills.git
 cd skills
+python3.11 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python scripts/build_skills.py --prepare
 ```
 
-This checkout includes project-local discovery links in `.agents/skills/`, so both skills are available when working here. To use them in another project, link the skill directories into that project's `.agents/skills/` directory:
+This checkout includes all five discovery links in `.agents/skills/`. Prepare the
+ignored resource closures before local use. For live-linked authoring elsewhere,
+link the prepared directories; portable distribution should use the zip instead:
 
 ```sh
 mkdir -p /absolute/path/to/your-project/.agents/skills
+ln -s /absolute/path/to/skills/develop /absolute/path/to/your-project/.agents/skills/develop
+ln -s /absolute/path/to/skills/review /absolute/path/to/your-project/.agents/skills/review
+ln -s /absolute/path/to/skills/research /absolute/path/to/your-project/.agents/skills/research
 ln -s /absolute/path/to/skills/iterate /absolute/path/to/your-project/.agents/skills/iterate
 ln -s /absolute/path/to/skills/debate /absolute/path/to/your-project/.agents/skills/debate
 ```
 
 Replace the example paths with your actual checkout and project paths. If a destination already exists, inspect it before replacing it. The links keep installed skills current when you update this checkout.
 
-Use your Codex skill picker to invoke either skill. The examples below use `/iterate` and `/debate`; hosts that use `$iterate` or `$debate` can invoke the same skill instructions with that syntax.
+Use your skill picker or the host's supported invocation syntax. Slash examples
+describe mode grammar; `$`/picker presentation does not itself certify another host.
+
+## Area commands
+
+```text
+/develop iterate csv-import
+/develop bdd reject-duplicate-delivery
+/develop prd import-spec
+/develop prompt invoice-extraction
+/develop backlog import-requirements
+/develop validate-repo
+/review code src/importer.py --scope source
+/review smells src/importer
+/review discuss "Synchronous import or queue?" --engine debate
+/research report create reliability-summary
+/research report update reliability-summary
+```
+
+Explicit BDD is genuinely test-first; ordinary Iterate keeps manual feedback before
+its testing stage. Drafting/review does not implement changes. Coverage registers
+are separate from Iterate state. Current-source review needs no invented baseline;
+changing review engine does not widen scope. Reports require saved evidence and
+a mapped existing build graph; missing dependencies block work.
 
 ## Iterate
 
@@ -65,15 +135,20 @@ Git projects can use phase commits and small PRs. Local-only projects retain the
 /debate discuss "Should this import run synchronously or as a job?"
 ```
 
-Debate runs entirely through Codex subagents. It needs access to these model selections in the host:
+Debate uses actual host delegation and model availability. These are reference
+selections, not required IDs or physical-size classifications:
 
-| Stage | Agents | Model | Responsibility |
+| Stage | Agents | Reference / available alternative | Responsibility |
 |---|---:|---|---|
-| Independent review | 5 | `gpt-6-luna` | Examine complementary aspects of the same source and baseline |
-| Reconciliation | 3 | `gpt-6.1-terra` | Each checks every candidate, disagreement, and supporting claim |
-| Final synthesis | 1 | `gpt-6-astra` | Combine supported findings into the final response |
+| Independent review | 5 | `gpt-6-luna` | Complementary independent evidence inspection |
+| Reconciliation | 3 | `gpt-6.1-terra` / `gpt-6.1-sol` | Each checks every candidate, counterevidence and omissions |
+| Final synthesis | 1 | `gpt-6-astra` | Verify supported findings and produce the final response |
 
-Stages run in order and are batched to respect available concurrency. Missing models or delegation support are reported rather than silently substituted. Codex access and usage limits still apply; the skill requires no separate API token, provider login, Python package, or standalone review CLI.
+Stages run in order under observed concurrency. Same-model distinct agents are
+permitted when preferred tiers are unavailable; disclose tier uncertainty instead
+of falsely claiming XL qualification. Substitutions inside approved boundaries
+need no repetitive model-ID approval. Missing required delegation/evidence or
+incomplete stages remain blockers. No provider CLI, token setup or new runtime.
 
 Findings must include source locations, concrete evidence or a safe reproduction, impact, severity, and the smallest reasonable fix. Agreement between reviewers is not verification. Reports distinguish verified defects, conditional claims, preferences, unresolved disagreements, and coverage limits. Cost information is reported only when available, with estimates labeled as estimates.
 
@@ -84,22 +159,58 @@ Reviews do not authorize code changes or publishing comments. See [the full Deba
 Python 3.11+ is required. Create a development environment and run:
 
 ```sh
-python3 -m venv .venv
+python3.11 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt
 .venv/bin/python -m unittest discover -s iterate/tests -v
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python scripts/validate_skills.py
 ```
 
 The tests cover manifest behavior. Metadata checks do not prove that models will follow a skill correctly; behavioral changes also need hands-on evaluation.
+
+Distribution tests additionally exercise deterministic exports, installation,
+standalone helpers, conflicts, upgrades, archive validation and rollback. The
+protocol, evaluator-only fixtures/answers, source matrix and acceptance limits are
+under `evaluations/`. Real Codex/Claude invocation and paired quality/cost checks
+require their own approved evidence; they are not simulated by installer tests.
+
+## Releases
+
+The release workflow handles an existing `vMAJOR.MINOR.PATCH[-prerelease]` tag or
+manual dispatch. It verifies tagged/default-branch ancestry, runs canonical checks,
+builds a clean deterministic zip/checksum, attaches assets to a draft, then publishes.
+It refuses to overwrite existing releases/assets; a failed draft requires an
+explicit maintainer recovery decision. No release is created by local builds.
+
+Stable export/publication remains blocked until reviewed model/host acceptance and
+approval records pass and match the current source-resource fingerprint. A tag
+such as `v0.2.0-rc.1` explicitly produces a prerelease with honest qualification
+metadata. Creating/pushing any tag or publishing still requires authorization.
+
+The installation contract is in `distribution/README.md`; the concise release
+requirements are in `PRD_RELEASE.md`. Runtime archives exclude evaluation answers,
+local state, environments, credentials and restricted data.
 
 ## Layout
 
 ```text
 iterate/             Development skill, manifest helper, and regression tests
 debate/              Prompt-only hierarchical review skill
+develop/             Development area and focused method references
+review/              Single-pass scopes and explicit Debate selection
+research/            Saved-evidence report assembly and maintenance
+resources/           Canonical common policies, profiles, examples and provenance
+distribution/        Archive README and scoped installer
+evaluations/         Protocol, synthetic fixtures, evaluator answers and limits
+tests/               Distribution and release-contract tests
 .agents/skills/      Project-local discovery links
-scripts/             Skill metadata and installation-link checks
+scripts/             Explicit resource exporter and metadata/link checks
 .github/workflows/   Automated validation
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for change guidelines, [NOTICE](NOTICE) for provenance, and [LICENSE](LICENSE) for the MIT license.
+
+Generated per-skill `resources/` and `dist/` are ignored export views; edit their
+canonical sources, then prepare again. No source/helper logic is independently
+maintained in those copies.
