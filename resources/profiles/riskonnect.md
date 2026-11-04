@@ -16,6 +16,15 @@ mapped contract, while preserving final validated output and replay consumers.
 Historical source field names, journal widths and cleanroom assumptions are not
 defaults for transfer projects.
 
+For this reference contract only, report evidence timestamps come from `CreatedDate`
+and clinical-note evidence timestamps from `ServiceInstant`. Neither automatically
+means the clinical event's occurrence time. Do not substitute an event date or a
+note creation timestamp. The application supplies evidence identities and times;
+failed JSON, validation errors and repair instructions never enter accepted replay.
+Model-visible changes update logical prompt identity/version/SHA-256 where the
+project's current prompt contract requires them. Map another project's actual
+source fields and consumers rather than copying these clinical names.
+
 Map observable BDD outcomes and current local canonical checks explicitly. Tracker
 coverage separates primary delivery, enabling work and validation; complete relevant
 pagination and preserve actual metadata/priorities. Historical issue keys and

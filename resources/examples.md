@@ -3,6 +3,12 @@
 These synthetic cases illustrate decisions, not observed evaluation results.
 Load only the selected mode's section. No historical identifiers/data are defaults.
 
+This shared file is a selection index, not the complete six-method handoff. Each
+selected BDD, PRD, prompt, backlog, code or smells reference links its package-local
+`*-worked.md` with complete inputs and worked outputs; load that example selectively.
+Do not substitute the brief summaries here for the method's required sequence or
+claim their illustrative results as observed agent execution.
+
 If a remaining uncertainty or contract warrants a cross-method handoff, read only
 the relevant [optional combination](combinations.md). These single-mode examples
 remain sufficient when no additional step contributes useful evidence.
@@ -18,16 +24,19 @@ behavior, and a test-review request makes no edits. An active Iterate feature ke
 its testing stage unless a lifecycle change is explicitly resolved.
 
 ## PRD
-Reference: specify a prompt revision's wire fields and accepted-output replay using
-saved contracts; choose one design and identify access decisions first. Transfer:
+Reference: select an event by full human-readable name while retaining canonical
+identity; distinct IDs sharing a name return explicit ambiguity. Choose one design
+and identify access decisions first. Transfer:
 specify a CSV import's observable output, identities, limits and failure contract.
 Failure: no hidden conversation references, execution, or assumed cleanroom removal
 of a consumer API; genuine owner decisions remain explicit.
 
 ## Prompt
 Reference: an application owns source timestamps; change wording and wire examples
-without making the model invent them. Transfer: invoice extraction retains
-application-owned account ID and strict accepted-output replay. Failure: valid JSON
+without making the model invent them. In the reference profile, report `CreatedDate`
+and note `ServiceInstant` are evidence timestamps, not automatically event occurrence
+or note creation. Transfer: document issuance and application processing remain
+separate, with application-owned identity and strict accepted-output replay. Failure: valid JSON
 alone is not generation quality; no live model assertion or missing replay layer
 is introduced to justify the change.
 

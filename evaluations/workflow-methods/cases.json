@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "cases": [
+    {
+      "id": "workflow-revised-code",
+      "request": "Review the supplied catalog-selector revision against the prior report, read-only, single-pass. Consolidate resolved, open, withdrawn and duplicate findings; assess intent, architecture, implementation and material polish.",
+      "context": "Eligible products match trimmed case-insensitive full titles. Distinct canonical SKUs sharing a title are ambiguous and must never write. submit_sku is a public API used by an existing client; no cleanroom is established. No dependency installation or external writes are permitted. Archive export is outside this review scope.",
+      "artifacts": {
+        "baseline.py": "def submit_sku(sku, writer):\n    return writer(sku)\n\ndef choose(title, products, writer):\n    matches = [product for product in products if product[\"title\"].casefold() == title.strip().casefold()]\n    if not matches:\n        return {\"status\": \"not_found\"}\n    return submit_sku(matches[0][\"title\"], writer)\n",
+        "catalog.py": "def submit_sku(sku, writer):\n    return writer(sku)\n\ndef choose(title, products, writer):\n    matches = [product for product in products if product[\"title\"].casefold() == title.strip().casefold()]\n    if not matches:\n        return {\"status\": \"not_found\"}\n    return submit_sku(matches[0][\"sku\"], writer)\n",
+        "client.py": "from catalog import submit_sku\n\ndef confirm(sku, writer):\n    return submit_sku(sku, writer)\n",
+        "GUIDE.txt": "Select by exact product title.\nAny error means product not found; change your title and retry.\n",
+        "prior.json": "[{\"id\": \"P01\", \"claim\": \"A title is written instead of canonical SKU.\"}, {\"id\": \"P02\", \"claim\": \"Duplicate titles choose the first distinct SKU.\"}, {\"id\": \"P03\", \"claim\": \"The public submit_sku API is dead code.\"}, {\"id\": \"P04\", \"claim\": \"A shared title writes an arbitrary product.\"}, {\"id\": \"P05\", \"claim\": \"Archive exporter duplicates output.\"}]"
+      }
+    },
+    {
+      "id": "workflow-structural-audit",
+      "request": "Audit the supplied retry, journal and settings subsystem, read-only and single-pass. Include all declared files, demonstrate consequences, rank S0\u2013S3 independently from urgency and propose dependency-aware remedies.",
+      "context": "Attempt 4 is terminal and must persist one terminal event before done. Legacy and checked policies remain public. Journal cursor advances only after successful persistence; record time is application processing time, not the document publication date. YAML settings override environment. Runtime and deployment batch defaults must agree. transport.py is declared in scope but unavailable; do not clear it. No refactor or external effects are authorized.",
+      "artifacts": {
+        "policies.py": "def legacy(attempt, record):\n    if attempt == 4:\n        record(\"terminal\")\n        return \"done\"\n    return \"retry\"\n\ndef checked(attempt, record):\n    if attempt == 4:\n        return \"done\"\n    return \"retry\"\n",
+        "journal.py": "def accepted(state, document, persist):\n    row = {\"cursor\": state[\"cursor\"], \"record_time\": document[\"processed_at\"], \"state\": \"accepted\"}\n    persist(row)\n    state[\"cursor\"] += 1\n\ndef rejected(state, document, persist):\n    row = {\"cursor\": state[\"cursor\"], \"record_time\": document[\"published_on\"], \"state\": \"rejected\"}\n    state[\"cursor\"] += 1\n    persist(row)\n",
+        "settings.py": "FIELD_NAMES = {\"batch_size\"}\nENV_NAMES = {\"batch_size\": \"BATCH_SIZE\"}\n\ndef runtime(values, environment):\n    if set(values) - FIELD_NAMES:\n        raise ValueError(\"unknown setting\")\n    size = int(values.get(\"batch_size\", environment.get(ENV_NAMES[\"batch_size\"], 40)))\n    if size <= 0:\n        raise ValueError(\"batch size must be positive\")\n    return {\"batch_size\": size}\n",
+        "deploy.py": "def deployment(values):\n    return {\"BATCH_SIZE\": str(values.get(\"batch_size\", 60))}\n",
+        "deployment.txt": "Forward BATCH_SIZE only from deployment output.\n",
+        "models.py": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Delivery:\n    status: str\n    attempt: int\n",
+        "api.py": "from models import Delivery\nfrom policies import checked, legacy\n\ndef dispatch(attempt, record, validate=False):\n    policy = checked if validate else legacy\n    return Delivery(policy(attempt, record), attempt)\n"
+      }
+    }
+  ]
+}

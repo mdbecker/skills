@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "qualification_run": "not_run",
+  "criteria": {
+    "canonical_required": true,
+    "focused_never_substitutes": true,
+    "inspect_process_logs_and_files_and_index": true,
+    "baseline_command_environment_and_failure_equivalence_required": true,
+    "format_requires_observed_intended_whitespace_change": true,
+    "sensitive_values_never_disclosed": true,
+    "local_is_not_live": true
+  },
+  "cases": {
+    "storage-table-contract": {
+      "baseline_canonical": "passed",
+      "candidate_canonical": "failed",
+      "candidate_focused": "failed",
+      "failure_origin": "patch_related",
+      "readiness": "not_ready",
+      "behavioral_failure": "RuntimeError not raised",
+      "findings": [],
+      "format": null
+    },
+    "focused-green-canonical-red": {
+      "baseline_canonical": "passed",
+      "candidate_canonical": "failed",
+      "candidate_focused": "passed",
+      "failure_origin": "patch_related",
+      "readiness": "not_ready",
+      "behavioral_failure": "AssertionError: -4 != 0",
+      "findings": [],
+      "format": null
+    },
+    "baseline-confirmed-preexisting": {
+      "baseline_canonical": "failed",
+      "candidate_canonical": "failed",
+      "candidate_focused": "passed",
+      "failure_origin": "baseline_confirmed_preexisting",
+      "readiness": "not_ready",
+      "behavioral_failure": "AssertionError: 90 != 80",
+      "findings": [],
+      "format": null
+    },
+    "authorized-format-preserves-dirty-index": {
+      "baseline_canonical": "passed",
+      "candidate_canonical": "passed",
+      "candidate_focused": "passed",
+      "failure_origin": "none",
+      "readiness": "ready",
+      "behavioral_failure": null,
+      "findings": [],
+      "format": {"path": "price.py", "line": 2}
+    },
+    "staged-artifact-sensitive-config": {
+      "baseline_canonical": "passed",
+      "candidate_canonical": "passed",
+      "candidate_focused": "passed",
+      "failure_origin": "none",
+      "readiness": "not_ready",
+      "behavioral_failure": null,
+      "findings": [
+        {"kind": "build_artifact", "path": "build/output.js", "staged": true},
+        {"kind": "sensitive_config", "path": ".env.validation", "staged": true}
+      ],
+      "format": null
+    },
+    "node-npm-canonical-regression": {
+      "baseline_canonical": "passed",
+      "candidate_canonical": "failed",
+      "candidate_focused": "passed",
+      "failure_origin": "patch_related",
+      "readiness": "not_ready",
+      "behavioral_failure": "ERR_ASSERTION",
+      "findings": [],
+      "format": null,
+      "missing_runtime": "blocked"
+    }
+  },
+  "limitations": [
+    "Synthetic deterministic fixtures and adversarial evaluator unit tests are not agent qualification.",
+    "No approved model protocol, paired model runs, native-host qualification, billing or accounting exists in this corpus.",
+    "Baseline commits exist only in disposable fixture repositories; no source-project Git mutation is authorized.",
+    "The recorder is a trusted local harness, not a tamper-proof process monitor or production validation engine."
+  ]
+}

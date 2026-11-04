@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import stat
 import subprocess
 import sys
@@ -11,7 +12,7 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-from distribution.install import install, read_archive, RECEIPT
+from distribution.install import HOST_DIRS, install, read_archive, RECEIPT
 from scripts.build_skills import build, payload, release_ready, ROOT
 
 
@@ -72,11 +73,76 @@ class DistributionTests(unittest.TestCase):
         self.assertTrue((self.project / ".ai-state/standalone.json").is_file())
         self.assertFalse((self.project / ".agents/skills/iterate").exists())
 
+    def test_required_skill_documents_are_beside_entrypoints_and_not_ignored(self):
+        inventory = json.loads((ROOT / "inventory.json").read_text())
+        sources = []
+        for name in inventory["parents"] + inventory["compatibility"]:
+            sources.append(name + "/SKILL.md")
+            for relative in inventory["owned_resources"][name]:
+                self.assertNotIn("references", Path(relative).parts)
+                if relative.endswith(".md"):
+                    self.assertEqual(Path(relative).parent, Path("."))
+                sources.append(name + "/" + relative)
+        result = subprocess.run(["git", "check-ignore", "--no-index", *sources],
+                                cwd=ROOT, capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+
+    def test_export_is_complete_without_local_reference_directories(self):
+        inventory, expected, inputs = payload(ROOT)
+        source_root = self.workspace / "canonical"
+        for relative in inputs:
+            self.assertNotIn("references", Path(relative).parts)
+            target = source_root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / relative).read_bytes())
+        self.assertFalse(any(source_root.rglob("references")))
+        actual_inventory, actual, actual_inputs = payload(source_root)
+        self.assertEqual(actual_inventory, inventory)
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual_inputs, inputs)
+        for name in inventory["parents"] + inventory["compatibility"]:
+            directory = source_root / name / "references"
+            directory.mkdir()
+            for relative in inventory["owned_resources"][name]:
+                (directory / Path(relative).name).write_text("Local-only source; do not export.\n")
+        ignored_inventory, ignored, ignored_inputs = payload(source_root)
+        self.assertEqual(ignored_inventory, inventory)
+        self.assertEqual(ignored, expected)
+        self.assertEqual(ignored_inputs, inputs)
+        self.assertFalse(any("references" in Path(relative).parts for relative in ignored))
+
     def test_claude_layout_is_installation_not_invocation(self):
         result = install(self.archive, self.project, host="claude", selected=["research"])
         self.assertTrue((self.project / ".claude/skills/research/SKILL.md").is_file())
         self.assertFalse((self.project / ".agents").exists())
         self.assertEqual(result["qualification"]["hosts"]["claude"]["invocation"], "not_run")
+
+    def test_standalone_review_preserves_methods_and_source_coverage(self):
+        inventory = json.loads((ROOT / "inventory.json").read_text())
+        references = inventory["owned_resources"]["review"]
+        for host, host_directory in HOST_DIRS.items():
+            with self.subTest(host=host):
+                project = self.workspace / ("review-" + host)
+                project.mkdir()
+                install(self.archive, project, host=host, selected=["review"])
+                directory = project / host_directory / "review"
+                installed = {path.name for path in directory.parent.iterdir() if path.is_dir()}
+                self.assertEqual(installed, {"review"})
+                for relative in references:
+                    source = ROOT / "review" / relative
+                    target = directory / relative
+                    self.assertEqual(target.read_bytes(), source.read_bytes())
+                    self.assertEqual(self.manifest["source_inputs"]["review/" + relative],
+                                     hashlib.sha256(source.read_bytes()).hexdigest())
+                for document in directory.rglob("*.md"):
+                    for reference in re.findall(r"\]\(([^)]+)\)", document.read_text()):
+                        if "://" in reference or reference.startswith("#"):
+                            continue
+                        target = (document.parent / reference.split("#", 1)[0]).resolve()
+                        self.assertTrue(target.is_relative_to(directory.resolve()), reference)
+                        self.assertTrue(target.is_file(), reference)
+                self.assertEqual(install(self.archive, project, host=host, selected=["review"])["installed"], [])
+                self.assertEqual(self.manifest["qualification"]["model_quality"], "not_run")
 
     def test_external_checksum_fails_without_writes(self):
         with self.assertRaisesRegex(ValueError, "Archive SHA"):
@@ -150,13 +216,13 @@ class DistributionTests(unittest.TestCase):
 
     def test_upgrade_only_unchanged_managed_skill(self):
         install(self.archive, self.project, selected=["develop"])
-        entry = "skills/develop/references/prd.md"
-        changed = self.rewrite({entry: (ROOT / "develop/references/prd.md").read_bytes() + b"\nUpdated fixture.\n"})
+        entry = "skills/develop/prd.md"
+        changed = self.rewrite({entry: (ROOT / "develop/prd.md").read_bytes() + b"\nUpdated fixture.\n"})
         with self.assertRaises(ValueError):
             install(changed, self.project, selected=["develop"])
         result = install(changed, self.project, selected=["develop"], upgrade=True)
         self.assertEqual(result["installed"], ["develop"])
-        target = self.project / ".agents/skills/develop/references/prd.md"
+        target = self.project / ".agents/skills/develop/prd.md"
         self.assertIn(b"Updated fixture", target.read_bytes())
         target.write_text("local edit")
         with self.assertRaisesRegex(ValueError, "local modifications"):
@@ -174,8 +240,8 @@ class DistributionTests(unittest.TestCase):
     def test_failed_second_replacement_rolls_back_and_preserves_receipt(self):
         install(self.archive, self.project)
         before = {path.relative_to(self.project): path.read_bytes() for path in self.project.rglob("*") if path.is_file()}
-        changed = self.rewrite({"skills/develop/references/prd.md": b"Changed first",
-                                "skills/review/references/code.md": b"Changed second"})
+        changed = self.rewrite({"skills/develop/prd.md": b"Changed first",
+                                "skills/review/code.md": b"Changed second"})
         original_replace = os.replace
 
         def fail_second(source, target):

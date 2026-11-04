@@ -6,10 +6,13 @@ repository, not unrelated host-bundled or plugin skills.
 
 - **`/develop`** — Iterate or explicit BDD, specifications, prompt changes, requirement coverage, and repository validation.
 - **`/review`** — Code/current-source review, structural audit, or technical discussion; single-pass unless Debate is explicitly selected.
-- **`/research report create|update`** — Saved-evidence assembly and maintenance through an existing report pipeline; not new research.
+- **`/research report create|update`** — Maintain research reports from approved saved evidence through an existing pipeline: editorial edits, chart layout, appendices, diagrams, provenance, and explicitly supported corrections. Not evidence collection, notebook execution, new analytical methods/pipelines, model gap-filling, or publishing.
 - **`/iterate`** and **`/debate`** retain their arguments and canonical methods as compatibility entrypoints.
 
 Each exported folder contains its full resources without sibling installations.
+Required method instructions, templates and worked examples are maintained as
+checked-in Markdown files beside each `SKILL.md`. Local `references/` folders
+are ignored and are never required to load, test or export a skill.
 Debate is optional, not an Iterate gate. Model references are not a whitelist;
 prefer economical capable reviewers, stronger middle-stage models and strongest
 final synthesis within available host/data/tool/budget permissions.
@@ -36,7 +39,39 @@ canonical Debate method. Installing either parent does not require installing
 its compatibility entrypoint. Shared policies, host mappings, project profiles,
 worked examples and composition guidance travel with every exported skill.
 
+### Code review or smell audit?
+
+| Mode | Use when | Result | Do not use for |
+|---|---|---|---|
+| `review code` | Assessing whether a supplied change or declared current implementation is desirable, correctly placed, correct and maintainable. | Findings with evidence, preferred remedies, urgency, compatibility implications and review coverage. | Implementing fixes or automatically auditing the whole repository. |
+| `review smells` | Investigating structures that make a declared subsystem or repository harder to maintain, change, test or operate. | Consequence-grounded structural findings, a file coverage ledger and dependency-aware remediation plan. | Size/style criticism alone or automatically performing a refactor. |
+
+For a concrete example, `/review code src/importer.py --scope source` asks whether
+the current importer is acceptable. `/review smells src/importing` asks which
+structural problems make that subsystem difficult to change and in what order
+to address them. Both are read-only; recommending a fix does not apply it. Asking
+"What is a code smell?" calls for an explanation, not either review workflow.
+
+Provide a target and accessible source; include the real base for diff review and
+prior findings for re-review. Missing sources remain unreviewed. Current-source
+review without a base cannot establish when a defect was introduced. Review stops
+at the requested report, including valid no-finding results and unperformed checks.
+
+The skill requires reading the full selected method:
+[code-review checklist and finding contract](review/code.md) or
+[structural diagnostic patterns and report contract](review/smells.md).
+The [source coverage map](review/source-coverage.md) traces the methods
+to the supplied materials. The Python source is a historical report, not its
+separately referenced smell guide; old findings and project assumptions are not
+current facts. Detailed guidance stays in the selected reference.
+
 ## Which skill should I use?
+
+Natural-language requests work too; commands are not required. Explicit intent
+and current project instructions govern selection. “Write failing tests before
+fixing this” selects BDD, even though Iterate is the ordinary implementation
+default. “Review these behavioral scenarios” selects read-only BDD, not code
+changes. Resolve conflicts with an active lifecycle before replacing it.
 
 Choose by the outcome you need next, not by how many skills are installed. These
 skills add working discipline: development controls how a change is made, review
@@ -54,7 +89,7 @@ add capabilities missing from the corresponding parents.
 | Decide what an implementer should build, without building it yet | `/develop prd <target>` | The desired outcome exists, but contracts, compatibility, failure behavior or acceptance criteria need a complete developer handoff. | A preferred design and implementation specification with bounded unresolved decisions. |
 | Change a generation prompt without breaking its consumers | `/develop prompt <target>` | Prompt meaning also appears in schemas, examples, validation or replay; changing wording alone could leave those surfaces inconsistent. | Coordinated authorized prompt/contract edits, checked within the chosen lifecycle. |
 | Find out whether requirements are actually delivered and owned | `/develop backlog <scope>` | Tickets, enabling infrastructure and user-visible completion do not clearly line up. Use it before inventing more work or duplicate owners. | An evidence-linked coverage register separating delivered, partial, missing and unknown work. |
-| Check whether a repository change is locally ready | `/develop validate-repo [scope]` | You need the project's actual tests/checks, prerequisites and final-change inspection, rather than another design opinion. | Check results, failures and blockers; not a deployment or permission to fix everything. |
+| Validate these changes, run the repository checks, or check whether this patch is locally ready | `/develop validate-repo [scope]` | Execute the target project's required checks, inspect affected contracts, preserve unrelated work, and report local readiness. | Commands/results, contract evidence, automatic changes, preservation outcomes, failures and omissions; no feature lifecycle, implementation, unrelated fixes, installation, commits, live LLM evals or deployment are authorized. |
 | Look for actionable defects in a change or current source | `/review code <target>` | You want an independent source-grounded assessment of correctness, compatibility and implementation choices before accepting or revising code. | Findings with evidence, preferred remedies, urgency and coverage; no edits. |
 | Understand why a subsystem is difficult or risky to change | `/review smells <scope>` | Repeated policies, coupled state or scattered responsibilities have a concrete maintenance or behavioral consequence. Use an explicit structural scope, not a file-length quota. | Consequence-grounded structural findings and a dependency-aware remedy plan; no refactoring. |
 | Choose between technical alternatives | `/review discuss <topic>` | You need to challenge a decision such as synchronous versus queued import, compare real tradeoffs and identify evidence that could change the recommendation. | A supported preferred decision, conditional claims and consequential unknowns; no implementation. |
@@ -121,6 +156,14 @@ Recorded limits include unavailable private historical artifacts and the separat
 referenced Python smell guide, plus blocked browser visual inspection. These records
 are not proof of current live host behavior. Stable release readiness also requires
 acceptance evidence matching the current source-resource fingerprint.
+
+Validation-specific acceptance and isolated behavioral fixtures are recorded in
+[`evaluations/validation/`](evaluations/validation/README.md). Deterministic fixture
+checks are separate from matched documentation-driven baseline/skill-assisted
+agent runs: unperformed runs and telemetry remain not run, with no certification
+of other skills. Tokens, cost and elapsed time are separate measures. Any
+performance tolerance, including the proposed 1.5× allowance, needs explicit
+approval and does not mean unchanged performance.
 
 ## Install
 
@@ -214,26 +257,44 @@ a mapped existing build graph; missing dependencies block work.
 
 ### Mode boundaries
 
-- [`bdd`](develop/references/bdd.md) observes a genuine behavioral red test before
+- [`bdd`](develop/bdd.md) observes a genuine behavioral red test before
   implementing the minimum change and verifying green; import/setup failures do not
   count as red. It does not silently replace an active Iterate lifecycle.
-- [`prd`](develop/references/prd.md) produces a preferred implementation design,
-  contracts, acceptance scenarios and bounded unknowns, not implementation.
-- [`prompt`](develop/references/prompt.md) coordinates affected generation, schema,
-  validation and replay surfaces within the selected lifecycle. Deterministic
+- [`prd`](develop/prd.md) produces a preferred implementation design,
+  contracts, acceptance scenarios and explicit blocking owner decisions, not
+  implementation. Resolve supported technical choices instead of deferring them.
+- [`prompt`](develop/prompt.md) coordinates affected generation, schema,
+  validation, application-owned enrichment, replay and prompt version/hash surfaces
+  within the selected lifecycle; it invents neither pipelines nor evidence.
+  Deterministic
   contract validity does not establish generation quality.
-- [`backlog`](develop/references/backlog.md) maps requirements, owners, implementation
-  evidence and gaps in a separate coverage register; it is read-only by default and
+- [`backlog`](develop/backlog.md) maps requirements, owners, implementation
+  evidence and gaps in a separate coverage register; coverage is not completion.
+  It is read-only by default and
   does not synchronize Iterate state or automatically edit trackers.
-- [`validate-repo`](develop/references/validate-repo.md) checks the declared scope
-  against existing project commands. Readiness inspection does not authorize fixes,
-  dependency installation, formatting or live/deployed verification.
-- [`code`](review/references/code.md), [`smells`](review/references/smells.md) and
-  [`discuss`](review/references/discuss.md) inspect defects, consequential structure
+- [`validate-repo`](develop/validate-repo.md) checks the declared scope
+  using the target project's required checks, affected contract evidence and
+  before/after file and staging inspection. “Validate these changes,” “Run the
+  repository checks,” and “Check whether this patch is locally ready” select this
+  mode. Inspect underlying command effects before running: formatting/fixes,
+  dependency installation and build cleanup need applicable permission, or an
+  approved isolated run. Focused green tests never replace full canonical
+  validation. Findings do not authorize fixes, and validation does not start a
+  feature lifecycle or create feature state; implementation, unrelated fixes,
+  installation, commits, live LLM evals and deployment are not authorized.
+- [`code`](review/code.md), [`smells`](review/smells.md) and
+  [`discuss`](review/discuss.md) inspect defects, consequential structure
   or a technical decision respectively. They do not implement fixes or post reviews.
-- [`report create|update`](research/references/report.md) edits authoritative report
+- [`report create|update`](research/report.md) edits authoritative report
   inputs using approved saved evidence and an existing build pipeline; it does not
   acquire evidence, execute notebooks, invent results or publish deliverables.
+  Natural-language requests such as “Improve this chart’s layout without changing
+  the results” and “Correct this count using the supplied corrected aggregate”
+  apply; “Run another experiment to resolve this discrepancy” does not. Missing
+  dependencies block the affected operation, never justify invented results or
+  silently omitted sections. Its [worked ledger](research/report-worked.md)
+  and [report profile template](research/report-profile.md) preserve
+  values, meanings, disclosure boundaries, provenance and honest check outcomes.
 
 Shared [boundaries](resources/policy.md) apply throughout. Use
 [adaptation guidance](resources/adaptation.md) to map a different project's
@@ -364,6 +425,12 @@ before running those suites, especially after changes to canonical resources.
 Metadata checks do not prove that models will follow a skill correctly; behavioral
 changes also need hands-on evaluation.
 
+The six restored workflow methods have complete selectively loaded worked outputs
+linked from their references. [Focused traceability and paired-check protocol](evaluations/workflow-methods/README.md)
+separate illustrative examples, held-out evaluator criteria, frozen current
+instructions and actual deterministic evidence. Model-mediated comparisons remain
+unperformed until access and budget are approved; local checks do not certify parity.
+
 Distribution tests additionally exercise deterministic exports, installation,
 standalone helpers, conflicts, upgrades, archive validation and rollback. The
 protocol, evaluator-only fixtures/answers, source matrix and acceptance limits are
@@ -396,7 +463,7 @@ local state, environments, credentials and restricted data.
 ```text
 iterate/             Development skill, manifest helper, and regression tests
 debate/              Prompt-only hierarchical review skill
-develop/             Development area and focused method references
+develop/             Development instructions and sibling method documents
 review/              Single-pass scopes and explicit Debate selection
 research/            Saved-evidence report assembly and maintenance
 resources/           Canonical common policies, profiles, examples and provenance

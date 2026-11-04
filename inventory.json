@@ -11,9 +11,9 @@
     "resources/profiles/reliability-study.md"
   ],
   "owned_resources": {
-    "develop": ["references/bdd.md", "references/prd.md", "references/prompt.md", "references/backlog.md", "references/validate-repo.md"],
-    "review": ["references/code.md", "references/smells.md", "references/discuss.md"],
-    "research": ["references/report.md"],
+    "develop": ["bdd.md", "prd.md", "prompt.md", "backlog.md", "validate-repo.md", "bdd-worked.md", "prd-worked.md", "prompt-worked.md", "backlog-worked.md"],
+    "review": ["code.md", "smells.md", "discuss.md", "source-coverage.md", "code-worked.md", "smells-worked.md"],
+    "research": ["report.md", "evidence.md", "disclosure.md", "archives.md", "diagrams.md", "rebuilding.md", "report-worked.md", "report-profile.md", "scripts/report_checks.py"],
     "iterate": [],
     "debate": []
   },

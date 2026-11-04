@@ -32,3 +32,30 @@ cohort controls, links, expand/collapse, field search/reset, prompt copying, pri
 restoration and offline network behavior. No external fonts/scripts/analytics are
 expected in the self-contained report. Preserve prior output on failed rebuild.
 Missing historical artifacts and expert/browser checks remain explicit limits.
+
+Load the report-owned evidence, disclosure, archives, diagrams and rebuilding
+references when their operations apply (the research entrypoint supplies their
+package-local paths). Record every figure's source version/full hash and locator,
+population, unit, row denominator, derivation, value/status, editable surface,
+output and allowed change. Printed aggregates or legible labels are authority;
+bar heights are not. Blank is zero only when the source establishes zero. Keep
+suppressed cells nonnumeric and unavailable intersections unavailable; retain
+conflicting saved diagnostics with their distinct definitions.
+
+Obtain both minimum observation and minimum distinct-subject counts, rounding,
+permitted geometry fields and complementary-disclosure rules from the current
+approved policy, never from the historical project or an example. A split must
+leave both children above both thresholds; count every approved observation once.
+Publish only approved counts and rounded group centroids, not record-level
+coordinates or text. Audit legends, percentages, tooltips and embedded payloads.
+Count-encoded marker area is not severity; mixed-group opacity is not an
+individual severity signal. Reuse canonical viewer/presentation definitions.
+
+Saved literal templates, runtime inputs and error messages are separate archival
+objects. Only a complete artifact matching its expected full SHA-256 is an exact
+reconstruction. Missing wrapper/placement means partial excerpt. Regenerate
+authoritative diagrams, verify source/asset identities, preserve decision/loop/
+optional connections and text equivalents; inline only static self-contained SVG
+with namespaced, intact references. Stage and check the generated report before
+atomic replacement, detecting relevant source changes and retaining prior output
+on failure. Static and browser/visual checks have separate observed statuses.

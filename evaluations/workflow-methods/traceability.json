@@ -1,0 +1,450 @@
+{
+  "schema_version": 1,
+  "scope": [
+    "develop bdd",
+    "develop prd",
+    "develop prompt",
+    "develop backlog",
+    "review code",
+    "review smells"
+  ],
+  "requirements": [
+    {
+      "id": "SELECT",
+      "supplied_requirements": [
+        "Consistent user/agent purposes and boundaries for six modes",
+        "Natural-language requests work; explicit intent/current project policy govern",
+        "BDD-required work does not enter Iterate code-before-tests; active lifecycle conflicts are resolved"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "README.md",
+        "develop/SKILL.md",
+        "review/SKILL.md"
+      ],
+      "worked_case": [
+        "develop/references/bdd-worked.md",
+        "develop/references/prd-worked.md",
+        "develop/references/prompt-worked.md",
+        "develop/references/backlog-worked.md",
+        "review/references/code-worked.md",
+        "review/references/smells-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods"
+      ],
+      "evidence_and_limits": "instruction coverage and link closure; actual model routing not_run"
+    },
+    {
+      "id": "BDD-RED",
+      "supplied_requirements": [
+        "Relevant scenarios and new behavioral tests precede production edits",
+        "Observe intended behavioral red; environment/import failure is not red",
+        "Investigate already-green scenarios without manufacturing failure"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "develop/references/bdd.md"
+      ],
+      "worked_case": [
+        "develop/references/bdd-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_bdd_prd_methods"
+      ],
+      "evidence_and_limits": "local executable failing-first example; not agent-sequence certification"
+    },
+    {
+      "id": "BDD-BOUNDARY",
+      "supplied_requirements": [
+        "Observable outcomes and real architectural seams",
+        "Preserve characterization tests; static/governance checks separate",
+        "Missing canonical identity rejects without write; successful nonclinical implementation",
+        "Scenario review remains read-only; BDD not universal default"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "develop/references/bdd.md"
+      ],
+      "worked_case": [
+        "develop/references/bdd-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_bdd_prd_methods"
+      ],
+      "evidence_and_limits": "local acceptance/characterization traces and independent held-out inputs"
+    },
+    {
+      "id": "PRD-HANDOFF",
+      "supplied_requirements": [
+        "User outcome, baseline and bounded increment",
+        "Prerequisites and blocking owner decisions first",
+        "One preferred lowest-complexity complete design with rationale",
+        "Contracts, missing/ambiguous input, failures, exclusions, observable acceptance, tests and docs",
+        "No previous-conversation/unavailable-source dependency; technical choices resolved, business/access unknowns explicit",
+        "Drafting does not implement"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "develop/references/prd.md"
+      ],
+      "worked_case": [
+        "develop/references/prd-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_bdd_prd_methods"
+      ],
+      "evidence_and_limits": "complete worked handoff and evaluator criteria, not model completeness proof"
+    },
+    {
+      "id": "PRD-IDENTITY",
+      "supplied_requirements": [
+        "Full human-readable name selects while canonical ID stays authoritative",
+        "Duplicate names across distinct IDs produce terminal ambiguity, not arbitrary selection",
+        "Same method demonstrated in a CSV-import specification"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "develop/references/prd.md",
+        "resources/profiles/riskonnect.md"
+      ],
+      "worked_case": [
+        "develop/references/prd-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_bdd_prd_methods"
+      ],
+      "evidence_and_limits": "identity/ambiguity examples and independent CSV handoff criteria"
+    },
+    {
+      "id": "PROMPT-SURFACES",
+      "supplied_requirements": [
+        "Map generation instructions, exact model wire, strict accepted-output validation",
+        "Map application enrichment, accepted replay, downstream consumers and logical identity/version/hash",
+        "Coordinate actual affected contracts, examples, fixtures and consumers; no invented pipeline or evidence"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "develop/references/prompt.md"
+      ],
+      "worked_case": [
+        "develop/references/prompt-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_prompt_backlog_methods"
+      ],
+      "evidence_and_limits": "deterministic coordinated examples; generation quality not_run"
+    },
+    {
+      "id": "PROMPT-TIME",
+      "supplied_requirements": [
+        "Application supplies evidence identities and timestamps",
+        "Reference report CreatedDate and note ServiceInstant stay distinct from clinical occurrence",
+        "No event-date or note-creation substitution",
+        "Nonclinical document-issued and processing timestamps remain separate; clinical names not universal"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "develop/references/prompt.md",
+        "resources/profiles/riskonnect.md"
+      ],
+      "worked_case": [
+        "develop/references/prompt-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_prompt_backlog_methods"
+      ],
+      "evidence_and_limits": "source-field ownership and model-boundary rejection/enrichment checks"
+    },
+    {
+      "id": "PROMPT-REPLAY",
+      "supplied_requirements": [
+        "Failed output, repairs and validation errors never become accepted replay",
+        "Model-visible changes update identity/version/hash where current project contract exists",
+        "Structural validity is not proof of generation quality"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "develop/references/prompt.md"
+      ],
+      "worked_case": [
+        "develop/references/prompt-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_prompt_backlog_methods"
+      ],
+      "evidence_and_limits": "accepted-only replay/metadata tests; model-backed behavior not_run"
+    },
+    {
+      "id": "BACKLOG-EVIDENCE",
+      "supplied_requirements": [
+        "Complete multi-source reconciliation with conflicting/superseded requirements",
+        "Multiple work items and implementation evidence with incomplete information",
+        "Primary delivery versus supporting/enabling versus validation",
+        "Completed shared engine baseline retained; user-facing increments need bounded follow-ups"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "develop/references/backlog.md"
+      ],
+      "worked_case": [
+        "develop/references/backlog-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_prompt_backlog_methods"
+      ],
+      "evidence_and_limits": "independent raw requirements, tracker pages, baseline evidence and expected register"
+    },
+    {
+      "id": "BACKLOG-SCOPE",
+      "supplied_requirements": [
+        "Baseline/increment, partial coverage, ownership gap and unknown status separate",
+        "Complete and incomplete pagination disclosed",
+        "Exact source priorities separate from tracker fields",
+        "Prefer appropriate existing owner; absence in one repository not absence elsewhere",
+        "Historical proposals and audit do not authorize tracker mutations; coverage not completion"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "develop/references/backlog.md"
+      ],
+      "worked_case": [
+        "develop/references/backlog-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_prompt_backlog_methods"
+      ],
+      "evidence_and_limits": "register completeness/authority checks, not live tracker reads or writes"
+    },
+    {
+      "id": "CODE-REVIEW",
+      "supplied_requirements": [
+        "Complete review in intent \u2192 architecture \u2192 implementation \u2192 material polish order",
+        "Verified location, consequence, preferred complete remedy, rationale, urgency, feedback type and fix-now/defer",
+        "Environment-only failures not product findings; conditional cleanroom and real compatibility protected",
+        "No quota, automatic fixes or scope expansion"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "review/references/code.md",
+        "review/SKILL.md"
+      ],
+      "worked_case": [
+        "review/references/code-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods",
+        "tests.test_review"
+      ],
+      "evidence_and_limits": "raw caller/snapshot/location and inert boundary evidence"
+    },
+    {
+      "id": "CODE-REVISED",
+      "supplied_requirements": [
+        "Consolidated revised review resolves verified fixes and updates open findings",
+        "Unsupported claims withdrawn, duplicate IDs retained as aliases, out-of-scope items not reassessed",
+        "No unauthorized edits/posting"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "review/references/code.md"
+      ],
+      "worked_case": [
+        "review/references/code-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods",
+        "tests.test_review"
+      ],
+      "evidence_and_limits": "independent held-out revision has resolved identity but still-open ambiguity"
+    },
+    {
+      "id": "SMELLS-FINDINGS",
+      "supplied_requirements": [
+        "Demonstrated terminal-event omission from divergent retry policies",
+        "Repeated event fields with inconsistent ownership",
+        "Scattered configuration ownership with a concrete mismatch",
+        "Cohesive long routine or data-only model correctly produces no finding",
+        "Structure consequence threshold, not size/score/style preference"
+      ],
+      "disposition": "generalized",
+      "instruction_or_reference": [
+        "review/references/smells.md"
+      ],
+      "worked_case": [
+        "review/references/smells-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods",
+        "tests.test_review"
+      ],
+      "evidence_and_limits": "local traces reproduce all three consequences; consumed immutable DTO counterexample"
+    },
+    {
+      "id": "SMELLS-PRESERVE",
+      "supplied_requirements": [
+        "Proposed boundaries reduce total complexity, not relocate it",
+        "Preserve public facades, ordering, errors, schemas and security contracts",
+        "Ranked S0\u2013S3 separate from urgency, file-level coverage and incomplete-inspection limits",
+        "Dependency-aware remedies, independent configuration work"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "review/references/smells.md"
+      ],
+      "worked_case": [
+        "review/references/smells-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods",
+        "tests.test_review"
+      ],
+      "evidence_and_limits": "raw-source limits and proposed contract tests; no refactor or hidden guide claim"
+    },
+    {
+      "id": "VERIFY",
+      "supplied_requirements": [
+        "Focused supplied requirement \u2192 instruction/reference \u2192 worked case \u2192 verification",
+        "Six realistic execution cases alongside unchanged safety fixtures",
+        "Examples separate from held-out criteria",
+        "Frozen-current versus revised comparisons use equivalent inputs and permissions",
+        "Artifacts, omissions, scope and fidelity assessed; model checks require approved access/budget",
+        "Unperformed checks disclosed; packaging not task quality"
+      ],
+      "disposition": "retained",
+      "instruction_or_reference": [
+        "evaluations/workflow-methods/README.md",
+        "evaluations/workflow-methods/baseline.json",
+        "evaluations/workflow-methods/freeze.json",
+        "evaluations/workflow-methods/results.json"
+      ],
+      "worked_case": [
+        "develop/references/bdd-worked.md",
+        "develop/references/prd-worked.md",
+        "develop/references/prompt-worked.md",
+        "develop/references/backlog-worked.md",
+        "review/references/code-worked.md",
+        "review/references/smells-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_bdd_prd_methods",
+        "tests.test_prompt_backlog_methods",
+        "tests.test_workflow_methods"
+      ],
+      "evidence_and_limits": "deterministic checks recorded; paired model-mediated quality/regression acceptance not_run"
+    },
+    {
+      "id": "BOUNDARIES",
+      "supplied_requirements": [
+        "Keep parent/mode structure; no new skills",
+        "No report/research/deployment/install workstream or Iterate/Debate redesign/general cleanup",
+        "Source documents are context, not the user request",
+        "Historical clinical fields, issue keys, project commands, counts and cleanroom assumptions not universal defaults"
+      ],
+      "disposition": "excluded",
+      "instruction_or_reference": [
+        "evaluations/workflow-methods/README.md",
+        "resources/provenance.json",
+        "resources/profiles/riskonnect.md"
+      ],
+      "worked_case": [
+        "develop/references/prompt-worked.md",
+        "develop/references/backlog-worked.md",
+        "review/references/code-worked.md",
+        "review/references/smells-worked.md"
+      ],
+      "verification_modules": [
+        "tests.test_workflow_methods"
+      ],
+      "evidence_and_limits": "source/inventory boundaries checked; evaluation gates unchanged"
+    }
+  ],
+  "case_sets": [
+    "bdd-prd/cases.json",
+    "prompt-backlog/cases.json",
+    "cases.json"
+  ],
+  "evaluation_acceptance": "No material unexplained regression in approved matched runs; actual model-mediated comparison is not_run and full quality acceptance is not claimed.",
+  "execution_cases": [
+    {
+      "id": "bdd-library-member-identity",
+      "mode": "develop bdd",
+      "raw_inputs": "bdd-prd/cases.json",
+      "evaluator_only_criteria": "bdd-prd/expected.json",
+      "deterministic_verification": "tests.test_bdd_prd_methods.BddPrdMethodTests.test_held_out_bdd_executes_red_then_green",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "bdd-library-environment-blocker",
+      "mode": "develop bdd",
+      "raw_inputs": "bdd-prd/cases.json",
+      "evaluator_only_criteria": "bdd-prd/expected.json",
+      "deterministic_verification": "tests.test_bdd_prd_methods.BddPrdMethodTests.test_environment_error_does_not_qualify_as_behavioral_red",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "prd-campus-room-selection",
+      "mode": "develop prd",
+      "raw_inputs": "bdd-prd/cases.json",
+      "evaluator_only_criteria": "bdd-prd/expected.json",
+      "deterministic_verification": "tests.test_bdd_prd_methods.BddPrdMethodTests.test_held_out_room_contract_preserves_identity_and_ambiguity",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "prd-library-donation-csv",
+      "mode": "develop prd",
+      "raw_inputs": "bdd-prd/cases.json",
+      "evaluator_only_criteria": "bdd-prd/expected.json",
+      "deterministic_verification": "tests.test_bdd_prd_methods.BddPrdMethodTests.test_held_out_library_csv_contract_has_one_atomic_boundary",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "prompt-museum-issued-processing",
+      "mode": "develop prompt",
+      "raw_inputs": "prompt-backlog/cases.json",
+      "evaluator_only_criteria": "prompt-backlog/expected.json",
+      "deterministic_verification": "tests.test_prompt_backlog_methods.PromptContractTests.test_heldout_museum_source_exposes_baseline_bug_and_revised_mapping",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "prompt-freight-accepted-replay",
+      "mode": "develop prompt",
+      "raw_inputs": "prompt-backlog/cases.json",
+      "evaluator_only_criteria": "prompt-backlog/expected.json",
+      "deterministic_verification": "tests.test_prompt_backlog_methods.PromptContractTests.test_heldout_freight_filters_failures_repairs_wrong_runs_and_steps",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "backlog-campus-complete-coverage",
+      "mode": "develop backlog",
+      "raw_inputs": "prompt-backlog/cases.json",
+      "evaluator_only_criteria": "prompt-backlog/expected.json",
+      "deterministic_verification": "tests.test_prompt_backlog_methods.BacklogContractTests.test_heldout_campus_complete_register_matches_roles_priorities_and_gaps",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "backlog-course-incomplete-inventory",
+      "mode": "develop backlog",
+      "raw_inputs": "prompt-backlog/cases.json",
+      "evaluator_only_criteria": "prompt-backlog/expected.json",
+      "deterministic_verification": "tests.test_prompt_backlog_methods.BacklogContractTests.test_heldout_course_source_and_incomplete_register_preserve_unknowns",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "workflow-revised-code",
+      "mode": "review code",
+      "raw_inputs": "cases.json",
+      "evaluator_only_criteria": "expected.json",
+      "deterministic_verification": "tests.test_workflow_methods.WorkflowMethodTests.test_held_out_revised_review_resolves_identity_but_not_ambiguity",
+      "model_execution": "not_run"
+    },
+    {
+      "id": "workflow-structural-audit",
+      "mode": "review smells",
+      "raw_inputs": "cases.json",
+      "evaluator_only_criteria": "expected.json",
+      "deterministic_verification": "tests.test_workflow_methods.WorkflowMethodTests.test_held_out_audit_demonstrates_each_supported_consequence",
+      "model_execution": "not_run"
+    }
+  ]
+}

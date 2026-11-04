@@ -25,6 +25,20 @@ Neither gathers evidence, runs notebooks, fills model gaps or creates a pipeline
    controls, links, narrow/print layouts and offline requests. Report pass/fail/
    blocked/not-run; no invented independent score or visual acceptance.
 
+For each task load [evidence accounting](evidence.md) and
+[transactional rebuilding](rebuilding.md). Record a structured claim/figure ledger
+and map the existing pipeline with the [report profile template](report-profile.md).
+The [worked ledger](report-worked.md) includes actual chart values, nonnumeric
+cells, conflicting diagnostics and an explicitly supported correction. These are
+illustrative saved artifacts, not historical research results.
+
+Load [disclosure](disclosure.md) before aggregation, [archives](archives.md) before
+historical reconstruction, and [diagrams](diagrams.md) before diagram/presentation
+work. The package-local [checks](scripts/report_checks.py) can enforce mapped
+contracts; their JSON-pointer adapter requires saved JSON aggregates and cannot
+extract a number from an unlabeled plot or authenticate historical wording by
+itself. Adapt other source formats explicitly, retaining their precise locators.
+
 Cohort labels/counts do not prove matched samples, pooling legitimacy or improvement.
 Keep source/cohort identity and denominator limits explicit. Reference output is
 aggregate-only: no records, identifiers, sensitive quotes, credentials or private

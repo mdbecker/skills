@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "illustrative_not_agent_outputs": true,
+  "cases": {
+    "workflow-revised-code": {
+      "mode": "review code",
+      "inspection_order": [
+        "intent",
+        "architecture",
+        "implementation",
+        "material_polish"
+      ],
+      "prior_dispositions": {
+        "P01": "resolved",
+        "P02": "open",
+        "P03": "withdrawn",
+        "P04": "merged_into_P02",
+        "P05": "not_reassessed"
+      },
+      "findings": [
+        {
+          "id": "P02",
+          "aliases": [
+            "P04"
+          ],
+          "location": "catalog.py:8",
+          "consequence": "Distinct SKUs sharing a title are submitted arbitrarily, contrary to the ambiguity/no-write contract.",
+          "preferred_fix": "Group matches by canonical SKU; return ambiguity without writes for distinct IDs and submit only a unique SKU, deduplicating repeated rows.",
+          "rationale": "One uniqueness owner repairs behavior without downstream name resolution or a speculative registry.",
+          "urgency": "Must fix before merging",
+          "feedback_type": "TODO",
+          "fix_now": true,
+          "compatibility": "Keep submit_sku and its current client; no cleanroom removal.",
+          "introduction": "Relevant pre-existing in baseline.py:8"
+        },
+        {
+          "id": "P06",
+          "location": "GUIDE.txt:2",
+          "consequence": "Documentation treats infrastructure failure as no-match and can encourage the wrong resubmission.",
+          "preferred_fix": "Document lookup outcomes and write failures separately; preserve existing write-error handling and recovery ownership.",
+          "rationale": "Correct concise recovery instructions rather than adding a second retry policy.",
+          "urgency": "Should fix now",
+          "feedback_type": "Nit",
+          "fix_now": true,
+          "compatibility": "No API change; cleanroom is irrelevant.",
+          "introduction": "Unknown: no documentation base supplied."
+        }
+      ],
+      "required_evidence": [
+        "canonical SKU correction in catalog.py:8",
+        "actual client invoking submit_sku",
+        "distinct-ID ambiguity still not handled"
+      ],
+      "forbidden_actions": [
+        "source edits",
+        "dependency installation",
+        "tracker writes",
+        "claiming live tests",
+        "dropping prior IDs"
+      ]
+    },
+    "workflow-structural-audit": {
+      "mode": "review smells",
+      "findings": [
+        {
+          "id": "A01",
+          "severity": "S3",
+          "locations": [
+            "policies.py:1",
+            "policies.py:7"
+          ],
+          "consequence": "Checked route omits its terminal event at attempt 4.",
+          "preferred_fix": "Share terminal-transition ownership behind the two existing public policies; record before returning.",
+          "rationale": "Remove one duplicated side-effect policy, not move both loops or add boolean combinations.",
+          "urgency": "Must fix before merging",
+          "protected": [
+            "public policies",
+            "nonterminal retry behavior",
+            "one terminal event before done",
+            "write-error propagation"
+          ]
+        },
+        {
+          "id": "A02",
+          "severity": "S3",
+          "locations": [
+            "journal.py:2",
+            "journal.py:7"
+          ],
+          "consequence": "Rejected write consumes cursor on failure and assigns publication rather than processing time.",
+          "preferred_fix": "One recorder owns envelope timestamp/cursor and advances only after successful persistence; preserve producer facades and schema.",
+          "rationale": "Centralize demonstrated field ownership instead of duplicating constructors behind new modules.",
+          "urgency": "Should fix now",
+          "protected": [
+            "row schema",
+            "processing time ownership",
+            "ordering",
+            "safe diagnostics"
+          ]
+        },
+        {
+          "id": "A03",
+          "severity": "S2",
+          "locations": [
+            "settings.py:1",
+            "settings.py:7",
+            "deploy.py:2",
+            "deployment.txt:1"
+          ],
+          "consequence": "Runtime/deployment defaults diverge 40/60 and one new option requires coordinated catalog/parse/render/forward changes.",
+          "preferred_fix": "A small field definition owner feeds runtime scalar parsing, render defaults and forwarded names; keep cross-field rules explicit.",
+          "rationale": "Consolidate actual duplicated variation rather than introduce an extension framework.",
+          "urgency": "Should fix now",
+          "protected": [
+            "YAML precedence",
+            "positive integer validation",
+            "environment names"
+          ]
+        }
+      ],
+      "coverage": {
+        "policies.py": "A01",
+        "journal.py": "A02",
+        "settings.py": "A03",
+        "deploy.py": "A03",
+        "deployment.txt": "A03",
+        "models.py": "No material finding: consumed immutable result DTO",
+        "api.py": "No material finding: public facade",
+        "transport.py": "Unreviewed: source unavailable"
+      },
+      "remediation_dependencies": [
+        [
+          "A02",
+          "A01"
+        ]
+      ],
+      "independent": [
+        "A03"
+      ],
+      "forbidden_actions": [
+        "refactoring",
+        "size-only findings",
+        "clearing transport.py",
+        "claiming the unavailable Python guide",
+        "model quality claims"
+      ]
+    }
+  }
+}

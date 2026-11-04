@@ -76,3 +76,29 @@ New-guidance evaluation is targeted; it does not authorize all unrelated baselin
 reruns or automatically change existing host/model quality status. Missing approved
 budget, native host access or required evidence remains blocked/not-run, not a
 simulated successful behavioral trial.
+
+## Repository validation qualification
+
+The validation-only extension is defined in [validation/README.md](validation/README.md),
+with its own immutable corpus, evaluator and [qualification record](validation/qualification.json).
+It retains existing boundary cases and adds executable isolated behavioral cases.
+The evaluator inspects actual command results, resulting files and index state;
+an agent's summary alone cannot pass. Never rewrite frozen expected outcomes to
+fit the candidate. Deterministic fixture execution is not an agent-behavior run.
+
+Match documentation-driven baseline and skill-assisted runs on the same frozen
+repositories, user scope, authority, tools, host/model/settings and environment;
+change only access to validation guidance. See [baseline identity](validation/baseline.md).
+Required correctness has zero material-regression tolerance, including safety,
+lost/mixed edits, weakened checks and false readiness. Keep untested behavior
+`not_run`; these cases do not certify Review, Research, Iterate, Debate or other
+development modes.
+
+Record tokens, provider cost and elapsed time separately with actual receipts;
+missing metrics remain unavailable, not zero or estimates presented as observed.
+For these validation runs the earlier 1.5× latency/cost proposal is **unapproved**,
+not an acceptance rule. Any performance tolerance requires explicit approval of
+the metric and threshold; satisfying a tolerance is not unchanged performance.
+Existing pending host/model/settings, spend and data/retention approval still gates
+model-mediated runs. General permission to implement this PRD does not approve an
+unbounded evaluation spend or waive that gate.

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-04",
+  "status": "frozen_before_model_evaluation",
+  "model_protocol_approval": "pending",
+  "corpus_hashes": {
+    "baseline.json": "3c3b76f778678e8923813d2e865f1fecffcf0e2f45e05f36b52dc39137ede550",
+    "cases.json": "549e39b29d169455dc8e60c1b3c41ef975f1a014b51069fb62be6dc99aab827e",
+    "expected.json": "a638190a5f1ccd0bffe8dc236d275448b3224198e4071e68ec3473556e35d220",
+    "bdd-prd/cases.json": "ee7bb031582edafaee89cea055b629284485f83bf090b65589c88ee7c2a06ef0",
+    "bdd-prd/expected.json": "d841995d867d79aeb3d0d2a74723114017ce7f963ba784fbee9f020d203cbebb",
+    "prompt-backlog/cases.json": "da54e732b4027866ef1509dca55021a4a2618c16dc03a710ac122a6fc71be566",
+    "prompt-backlog/expected.json": "f15ecce5cf77fcc479cd9677f862f2f266004361411f521a408056503ae33ebb",
+    "traceability.json": "1872a12d5994c09a397d27a579b71e859c58c8d720e9fefc2e21ccf73ddc1f97"
+  },
+  "case_ids": [
+    "workflow-revised-code",
+    "workflow-structural-audit",
+    "bdd-library-member-identity",
+    "bdd-library-environment-blocker",
+    "prd-campus-room-selection",
+    "prd-library-donation-csv",
+    "prompt-museum-issued-processing",
+    "prompt-freight-accepted-replay",
+    "backlog-campus-complete-coverage",
+    "backlog-course-incomplete-inventory"
+  ],
+  "limits": [
+    "Current-workspace instruction baseline includes pre-existing review improvements, not an original historical model run.",
+    "Implementation and deterministic artifact checks are not held-out model evaluations.",
+    "No paired task-quality or regression acceptance is claimed before approved matched model execution."
+  ]
+}

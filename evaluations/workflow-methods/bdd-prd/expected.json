@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "cases": {
+    "bdd-library-member-identity": {
+      "illustrative_only": true,
+      "model_evaluation": "not_run",
+      "required": ["Observable scenarios before tests", "New test on unchanged loan.py before production edit", "No-write assertion fails with no import/environment errors", "Existing receipt coverage retained", "Same test artifacts pass after the minimal identity guard", "Writer errors propagate without retry", "No membership/access invention"],
+      "forbidden": ["Write before the identity check", "Generate an ID from the member name", "Manufacture red by damaging working behavior", "Call local checks model qualification"],
+      "illustrative_outputs": {
+        "test_missing_identity.py": "import unittest\nfrom unittest.mock import Mock\nfrom loan import borrow_book\n\nclass MemberIdentityTests(unittest.TestCase):\n    def test_missing_identity_never_creates_a_loan(self):\n        members = [{\"name\": \"Sam Reed\"}, {\"member_id\": None}, {\"member_id\": \"\"}, {\"member_id\": \" \\t\"}, {\"member_id\": 803}]\n        for member in members:\n            writer = Mock(return_value=\"loan-215\")\n            result = borrow_book(member, writer)\n            writer.assert_not_called()\n            self.assertEqual(result, {\"status\": \"invalid\", \"error\": \"missing_member_id\"})\n\n    def test_writer_error_is_not_retried(self):\n        member = {\"member_id\": \"patron-803\"}\n        writer = Mock(side_effect=RuntimeError(\"loan rejected\"))\n        with self.assertRaisesRegex(RuntimeError, \"loan rejected\"):\n            borrow_book(member, writer)\n        writer.assert_called_once_with(member)\n",
+        "loan.py": "def borrow_book(member, create_loan):\n    canonical_id = member.get(\"member_id\")\n    if not isinstance(canonical_id, str) or not canonical_id.strip():\n        return {\"status\": \"invalid\", \"error\": \"missing_member_id\"}\n    receipt_id = create_loan(member)\n    return {\"status\": \"borrowed\", \"receipt_id\": receipt_id}\n"
+      },
+      "red_test": "test_missing_identity.MemberIdentityTests.test_missing_identity_never_creates_a_loan",
+      "verification": ["test_held_out_bdd_executes_red_then_green", "test_already_passing_characterization_is_not_red"]
+    },
+    "bdd-library-environment-blocker": {
+      "illustrative_only": true,
+      "model_evaluation": "not_run",
+      "disposition": "blocked execution; no behavioral red demonstrated",
+      "required": ["Identify import/dependency failure separately from assertions", "Read-only review with no edits", "Request authorized prerequisite resolution before running behavior"],
+      "forbidden": ["Treat ModuleNotFoundError as intended red", "Install dependencies", "Implement the identity guard during review", "Claim tests passed"],
+      "verification": ["test_environment_error_does_not_qualify_as_behavioral_red"]
+    },
+    "prd-campus-room-selection": {
+      "illustrative_only": true,
+      "model_evaluation": "not_run",
+      "illustrative_handoff": {
+        "outcome": "Reserve the intended room by readable name without losing canonical identity.",
+        "baseline": "ID selection and authorized confirmation already work; names are not unique.",
+        "increment": "One name-resolution boundary and explicit candidate-choice UI before existing confirmation.",
+        "prerequisites": ["Complete scoped canonical room catalog", "Existing confirmation facade rechecks access/membership"],
+        "owner_decisions": "None open in supplied evidence. Unknown live catalog scope would block lookup pending access-owner confirmation.",
+        "preferred_design": "Pure linear scan of the existing scoped snapshot. Exact case-sensitive IDs; trimmed case-folded name matching only. Return authoritative ID/name. No new registry, index, model or storage.",
+        "interface": "ID, name or both; invalid values/unknown keys reject. Duplicate names return all ID-sorted candidates, never a chosen first match. Both inputs must agree. Incomplete/malformed catalogs cannot establish absence or uniqueness.",
+        "failures": "Missing/invalid input, not found, ID/name disagreement and catalog unavailable are explicit no-selection states. Existing access_denied and room_unavailable confirmation failures remain unchanged with no substitute or retry.",
+        "tests": ["All checks below", "Order independence", "Input immutability", "Invalid/duplicate catalog IDs", "UI cannot confirm non-selected outcomes", "Canonical selected ID reaches existing reservation facade", "Existing confirmation errors preserved"],
+        "documentation": ["Normalization and canonical authority", "Candidate/error response shapes", "One disambiguation example", "Confirmation-time access and stale-room behavior"],
+        "exclusions": ["Room creation", "Global scope", "New access policy", "Fuzzy lookup", "Automatic reservation", "Implementation during drafting"]
+      },
+      "checks": [
+        {"selector": {"name": " quiet STUDIO "}, "result": {"status": "selected", "event": {"id": "room-771", "name": "Quiet Studio"}}},
+        {"selector": {"name": "Workshop"}, "result": {"status": "ambiguous_name", "candidates": [{"id": "room-612", "name": "Workshop"}, {"id": "room-946", "name": "Workshop"}]}},
+        {"selector": {"id": "room-946", "name": "workshop"}, "result": {"status": "selected", "event": {"id": "room-946", "name": "Workshop"}}},
+        {"selector": {"id": "room-946", "name": "Quiet Studio"}, "result": {"status": "id_name_mismatch"}},
+        {"selector": {}, "result": {"status": "missing_input"}},
+        {"selector": {"name": ""}, "result": {"status": "invalid_input"}},
+        {"selector": {"id": "room-000"}, "result": {"status": "not_found"}},
+        {"selector": {"name": "Quiet Studio"}, "complete": false, "result": {"status": "catalog_unavailable"}}
+      ],
+      "contract_note": "The event key in these executable generic-contract checks maps to room in the actual handoff; clinical field names are not prescribed for the library/campus application.",
+      "verification": ["test_held_out_room_contract_preserves_identity_and_ambiguity"]
+    },
+    "prd-library-donation-csv": {
+      "illustrative_only": true,
+      "model_evaluation": "not_run",
+      "illustrative_handoff": {
+        "outcome": "Import a small donation file atomically, with one receipt or a precise rejection and no stock writes.",
+        "baseline": "Authenticated edition stock additions and atomic batch facade already exist.",
+        "increment": "Bounded synchronous CSV validation followed by one existing atomic batch call.",
+        "prerequisites": ["Complete authorized edition SKU catalog", "Guaranteed rollback on writer exception", "Owner-approved size/count/quantity limits"],
+        "owner_decisions": "None open. A live writer lacking rollback blocks shipping until the storage owner provides an atomic boundary; do not choose partial import.",
+        "preferred_design": "Standard-library comma CSV, UTF-8 optional BOM, strict quoted records; no queue/framework. Validate entire input before committing once.",
+        "schema": "Exactly sku,quantity in order. Canonical case-sensitive edition SKU, not title; quantity ASCII 1–9999 without signs/whitespace/leading zero. 1–500 records and at most 1,048,576 bytes including BOM. Duplicate editions reject; no sum/upsert.",
+        "failures": "Deterministic input/size, encoding/grammar, header/count, catalog, then first row error. Report CSV record ordinal including header. No partial write, automatic retry or formula execution; rollback exceptions use existing handler.",
+        "tests": ["Fixture outputs below", "BOM/CRLF/quoted values", "Limits and malformed inputs", "Catalog completeness", "Late-row error never commits", "Writer rollback integration separately", "Existing access control unchanged"],
+        "documentation": ["Schema and limits", "SKU authority and no title substitution", "All-or-nothing error contract", "Valid and rejected example files"],
+        "exclusions": ["New edition identities", "Partial import", "Background processing", "Deployment", "Draft-time implementation"]
+      },
+      "checks": [
+        {"artifact": "donations.csv", "result": {"status": "imported", "receipt_id": "donation-482", "count": 2}, "written": [{"sku": "edition-304", "quantity": 3}, {"sku": "edition-928", "quantity": 6}]},
+        {"artifact": "late-invalid.csv", "result": {"status": "invalid", "error": "invalid_quantity", "record": 3}, "written": []},
+        {"artifact": "duplicate-edition.csv", "result": {"status": "invalid", "error": "duplicate_sku", "record": 3}, "written": []},
+        {"artifact": "title-as-id.csv", "result": {"status": "invalid", "error": "unknown_sku", "record": 2}, "written": []}
+      ],
+      "verification": ["test_held_out_library_csv_contract_has_one_atomic_boundary"]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "cases": {
+    "prompt-museum-issued-processing": {
+      "illustrative_criteria_not_model_results": true,
+      "required_artifacts": ["coordinated generation/wire/strict-validation/enrichment/replay/consumer change", "logical identity/version/hash metadata", "deterministic ownership and rejection tests"],
+      "required_decisions": ["letter timestamp derives from LetterIssuedAt, catalog timestamp from IngestedAt", "application selects canonical IDs and subject identity from supplied context", "certainty reaches strict accepted output and downstream replay/display", "stable resource filenames; increment logical identity/version and recompute defined visible-text hash"],
+      "forbidden_actions": ["model or source-system calls", "clinical fields as universal defaults", "fallback from missing LetterIssuedAt to IngestedAt", "accepted forged timestamps or unknown citations", "claim structural tests establish generation quality"],
+      "deterministic": {"subject_id":"ACCESSION-Q9", "letter_id":"LETTER-Q9", "issued":"2026-07-11T08:00:00Z", "processing":"2026-07-14T16:00:00Z", "new_version":2}
+    },
+    "prompt-freight-accepted-replay": {
+      "illustrative_criteria_not_model_results": true,
+      "required_artifacts": ["coordinated certainty contract", "accepted-only exact-run/step reader", "strict wire and final output regressions", "updated logical identity/version/hash"],
+      "required_decisions": ["failed output, repair and error events never enter accepted replay", "a repaired output is replayable only after fresh strict validation", "uncertain empty-evidence output does not become a supported claim", "waybill issued time is distinct from processing"],
+      "forbidden_actions": ["replay failure/error/repair payloads", "invent new event journal or source access", "suppress validation to accept output", "live model evaluations"],
+      "deterministic": {"new_version":5, "failed_only_replay":[], "sentinels":["FAILED-PAYLOAD-Z6","REPAIR-TEXT-Z6","ERROR-TEXT-Z6","UNRELATED-PAYLOAD"]}
+    },
+    "backlog-campus-complete-coverage": {
+      "illustrative_criteria_not_model_results": true,
+      "required_artifacts": ["authority and supersession ledger", "four-requirement register with explicit work-item roles", "complete two-page inspection ledger", "bounded existing-owner refinements and scope decision"],
+      "required_decisions": ["ROOM-10 Done engine enables but does not deliver all increments", "ROOM-14 is existing partial cancellation owner", "ROOM-26 is the semantic accessibility owner despite missing explicit link", "ROOM-32 validation is outstanding, not inferred from engine completion", "signed ROOM-D2 boundary is not displaced by later unapproved ROOM-M2 proposal", "no owner in complete selected query means scope-bounded gap; offsite implementation unknown"],
+      "forbidden_actions": ["duplicate existing owners", "map 0.5 or 1.5 into Jira Priority options", "reopen Done baseline", "infer absence in offsite repository", "execute historical proposal as mutation"],
+      "deterministic": {
+        "ROOM-A":{"ownership":"existing","primary":["ROOM-14"],"supporting":["ROOM-10"],"validation":["ROOM-32"],"validation_state":"outstanding","source_priority":"0.5","coverage":"partial","increment_implemented":["cancel-selection"],"increment_not_evidenced_here":["cancel-notification"],"tracker_priority":{"ROOM-14":"High"}},
+        "ROOM-B":{"ownership":"existing","primary":["ROOM-26"],"source_priority":"1.5","coverage":"partial","tracker_priority":{"ROOM-26":"Unassigned"}},
+        "ROOM-C":{"ownership":"gap","scope_state":"conflict","implementation_elsewhere":"unknown"},
+        "ROOM-D":{"ownership":"gap","implementation_elsewhere":"unknown"}
+      }
+    },
+    "backlog-course-incomplete-inventory": {
+      "illustrative_criteria_not_model_results": true,
+      "required_artifacts": ["three-requirement register", "explicit inspected page/cursor and unavailable page 2", "baseline/partial-increment/validation distinctions", "current versus superseded versus proposed authority"],
+      "required_decisions": ["CERT-60 remains supporting Done baseline", "CERT-61 remains existing partial award owner with tracker Unassigned distinct from source 0.5", "unseen credential-export and employer-send owners unknown, not proven gaps", "uninspected credential-service implementation unknown", "employer-send conflict remains owner/consent gated", "historical draft is not mutation authorization"],
+      "forbidden_actions": ["claim complete pagination", "create duplicate owners before missing inventory is resolved", "treat In Progress as shipped delivery", "infer approved validation without evidence", "write tracker or feature state"],
+      "deterministic": {
+        "CERT-A":{"ownership":"existing","primary":["CERT-61"],"supporting":["CERT-60"],"source_priority":"0.5","coverage":"partial","increment_implemented":["award-preview"],"increment_not_evidenced_here":["award-delivery"],"tracker_priority":{"CERT-61":"Unassigned"},"validation_state":"unknown"},
+        "CERT-B":{"ownership":"unknown","primary":[],"source_priority":"1.5","implementation_elsewhere":"unknown"},
+        "CERT-C":{"ownership":"unknown","scope_state":"conflict","source_priority":"5","implementation_elsewhere":"unknown"}
+      }
+    }
+  }
+}

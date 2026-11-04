@@ -1,0 +1,12 @@
+{
+  "corpus_sha256": {
+    "evaluations/research-report/cases.json": "5e34170090a71a8081676ea0f946ae3c44789816546d10b354f4f9e508ba282a",
+    "evaluations/research-report/expected.json": "62b5f20c85a9fe4439ecf96ada01a0c55026eade431b8070ecd7b0245f5ee6b9",
+    "evaluations/research-report/fixtures.py": "2faaf1fc2a86ec1874b3199aff40fee801df2d24d9527c929d7db620b77810b5"
+  },
+  "expected_origin": "PRD and explicit user/API requirements; manually specified before tests import the candidate. Public projection and cohort widths are explicit mathematical requirements, not candidate-generated outputs.",
+  "frozen_on": "2026-11-04",
+  "revision": {"previous_fixture_sha256": "c80fb2d9e187768901072b956b7d9f0fba88bf4b105065bd0fe529d40dcc4586", "reason": "Add the mapped existing-fixture diagram regeneration CLI and its actual identity test; evaluator values, chart expectations and public disclosure policy are unchanged."},
+  "schema_version": 1,
+  "scope": "Fictional count/JSON-pointer adapter, saved chart/bar artifacts and deterministic mutation checks; not arbitrary-format extraction, model routing or independent forward-agent qualification."
+}

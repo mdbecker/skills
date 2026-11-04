@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-11-04",
+  "kind": "actual_local_deterministic_checks_not_model_results",
+  "checks": [
+    {"command":".venv/bin/python -m unittest discover -s tests -p test_prompt_backlog_methods.py -v", "status":"passed", "tests_run":23, "failures":0, "errors":0},
+    {"check":"Read-only scripts.build_skills.payload: four assigned mode references present; evaluator corpus excluded", "status":"passed"},
+    {"command":"git diff --check -- develop/references/prompt.md develop/references/backlog.md develop/references/prompt-worked.md develop/references/backlog-worked.md tests/test_prompt_backlog_methods.py evaluations/workflow-methods/prompt-backlog", "status":"passed"}
+  ],
+  "case_ids": ["prompt-museum-issued-processing", "prompt-freight-accepted-replay", "backlog-campus-complete-coverage", "backlog-course-incomplete-inventory"],
+  "test_mapping": "traceability.json",
+  "limits": [
+    "No model-mediated comparison or independent agent artifacts; generation quality and methodological adherence remain unverified.",
+    "Tests execute inert synthetic worked/input sources and reconciliation over explicit authoritative/evidence inputs, not the original application or live tracker.",
+    "Packaging is read-only payload closure evidence, not a built/installed package or behavioral qualification.",
+    "Parent final targeted suite, corpus freeze and integration results are separate from this agent's checks."
+  ]
+}

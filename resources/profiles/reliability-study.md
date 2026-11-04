@@ -21,3 +21,23 @@ Acceptance: unchanged protected metrics for an editorial edit; a numerical
 correction needs an explicit request plus saved corrected evidence. Check source
 hashes, cohort labels, denominator/caveat links, offline/narrow/print behavior and
 the existing checker. Failed assembly preserves the prior report or creation inputs.
+
+The small executable evaluation fixture under `evaluations/research-report/` in
+the authoring repository expands this case; it is evaluator-only and is not a
+runtime dependency or bundled answer. Its saved A count is 24/120 from random
+service-day sampling; B is 16/40 from incident-enriched sampling. Their difference
+does not establish improvement. Saved corrected evidence explicitly authorizes
+A's numerator to change to 25, not its denominator, cohort or selection method.
+Preserve '<11', a blank not established as zero, an unavailable intersection and
+two conflicting saved definitions rather than quietly filling/reconciling them.
+
+Complete the report-owned profile template with real target paths and commands.
+For the synthetic spatial example only, the policy uses minimum 11 observations
+AND 11 distinct subjects, rounded centroids and count/centroid-only output; 20
+observations from two subjects are withheld. Eleven is example configuration,
+not a universal privacy standard. Evaluate every disclosure channel and retain
+complete accounting under reordering. A partial historical insertion remains
+partial. Use the editable decision diagram, existing presentation definitions,
+full source/asset hashes and staged build/check graph. The failure scenario must
+leave the previous report intact. Browser inspection, scientific validity,
+historical reproducibility and host/model parity are separate, unproven claims.

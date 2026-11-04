@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "cases": [
+    {
+      "id": "bdd-library-member-identity",
+      "request": "Implement test-first rejection of a loan request missing its canonical member_id. A member display name must not substitute for the ID. Return {status: invalid, error: missing_member_id} without creating a loan for absent, null, blank or non-string IDs. Preserve valid receipts and writer exceptions. Show actual red before changing production, then green.",
+      "context": "A separate municipal library application. member_id is application-issued, opaque and case-sensitive. This increment validates presence, not membership or permissions. The existing loan writer is the external effect boundary. Local Python standard-library tests and scoped code edits are authorized; no network, dependency installation, model calls or real library writes. Existing valid-loan coverage must be retained.",
+      "artifacts": {
+        "loan.py": "def borrow_book(member, create_loan):\n    receipt_id = create_loan(member)\n    return {\"status\": \"borrowed\", \"receipt_id\": receipt_id}\n",
+        "test_loan.py": "import unittest\nfrom unittest.mock import Mock\nfrom loan import borrow_book\n\nclass LoanTests(unittest.TestCase):\n    def test_valid_member_preserves_receipt(self):\n        member = {\"member_id\": \"patron-803\", \"name\": \"Sam Reed\"}\n        writer = Mock(return_value=\"loan-215\")\n        self.assertEqual(borrow_book(member, writer), {\"status\": \"borrowed\", \"receipt_id\": \"loan-215\"})\n        writer.assert_called_once_with(member)\n",
+        "request.json": "{\"name\": \"Sam Reed\", \"book_id\": \"edition-304\"}\n"
+      }
+    },
+    {
+      "id": "bdd-library-environment-blocker",
+      "request": "Review this test run for failing-first fidelity. Is the failure evidence of missing loan-rejection behavior? Do not edit code or install packages.",
+      "context": "Read-only behavioral-test review. The test cannot import an unavailable integration library. The fictional dependency is deliberately absent, and no dependency installation is approved. Valid-loan behavior itself is unchanged.",
+      "artifacts": {
+        "loan.py": "def borrow_book(member, create_loan):\n    receipt_id = create_loan(member)\n    return {\"status\": \"borrowed\", \"receipt_id\": receipt_id}\n",
+        "test_environment.py": "import unittest\nimport absent_library_gateway_803215\n\nclass LoanEnvironmentTests(unittest.TestCase):\n    def test_missing_member_never_writes(self):\n        self.assertEqual(absent_library_gateway_803215.ready(), True)\n"
+      }
+    },
+    {
+      "id": "prd-campus-room-selection",
+      "request": "Write a complete concise implementation handoff for selecting a reservable campus room by name while retaining its canonical ID. Choose the simplest complete design. Handle duplicate names explicitly, missing/ambiguous inputs, incomplete catalogs and confirmation-time failures. Include acceptance criteria, required tests and docs. Do not implement.",
+      "context": "The authenticated reservation application already selects/submits room IDs. A scoped complete catalog has authoritative opaque case-sensitive IDs and nonunique display names. The owner confirmed scope and access; the existing reservation facade rechecks membership/access on confirmation. No new persistence or access policy is needed. Draft only; local artifacts are approved, no service calls, commits or deployment.",
+      "artifacts": {
+        "catalog.json": "{\"complete\": true, \"rooms\": [{\"id\": \"room-946\", \"name\": \"Workshop\"}, {\"id\": \"room-612\", \"name\": \"Workshop\"}, {\"id\": \"room-771\", \"name\": \"Quiet Studio\"}]}\n",
+        "baseline.json": "{\"selection\": \"canonical ID only\", \"reservation_input\": {\"room_id\": \"room-612\"}, \"confirmation_errors\": [\"access_denied\", \"room_unavailable\"], \"display_names_unique\": false}\n"
+      }
+    },
+    {
+      "id": "prd-library-donation-csv",
+      "request": "Write a complete bounded PRD for importing library book donations from CSV through the existing batch facade. Specify exact schema, authoritative identity, limits, malformed and missing data, duplicate editions, rollback/no-write behavior, observable acceptance and tests/docs. Resolve technical design choices; drafting does not implement.",
+      "context": "The library already has authenticated stock additions. Its batch writer atomically commits all rows and returns a receipt or raises after guaranteed rollback. The scoped catalog uses canonical edition SKUs, not book titles. The owner approved UTF-8 comma CSV with sku,quantity columns, at most 1 MiB/500 records and quantities 1–9999. No owner blocker remains. No live writes, dependency installation, model calls or deployment are authorized.",
+      "artifacts": {
+        "catalog.json": "{\"complete\": true, \"products\": [{\"sku\": \"edition-304\", \"title\": \"River Atlas\"}, {\"sku\": \"edition-928\", \"title\": \"River Atlas\"}]}\n",
+        "donations.csv": "sku,quantity\nedition-304,3\nedition-928,6\n",
+        "late-invalid.csv": "sku,quantity\nedition-304,3\nedition-928,0\n",
+        "duplicate-edition.csv": "sku,quantity\nedition-304,3\nedition-304,6\n",
+        "title-as-id.csv": "sku,quantity\nRiver Atlas,3\n",
+        "writer-contract.json": "{\"input\": \"ordered records with canonical sku and integer quantity\", \"atomic\": true, \"exception\": \"rollback guaranteed\", \"receipt\": \"donation-482\"}\n"
+      }
+    }
+  ]
+}

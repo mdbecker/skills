@@ -30,6 +30,17 @@
     "Browser visual inspection is blocked by Work local-browser settings; manual acceptance remains unperformed."
   ],
   "source_inputs_sha256": "32fe0fee798c9d40bd12551ebcb20dceb78d3368d35723384ec6b55646f04f23",
+  "repository_validation": {
+    "qualification_record": "evaluations/validation/qualification.json",
+    "deterministic": "passed",
+    "matched_agent_runs": "not_run",
+    "correctness_comparison": "not_run",
+    "performance_comparison": "not_run",
+    "protocol_approval": "pending",
+    "limits": "Only validation-specific evidence is updated. Deterministic fixtures do not certify agent behavior, host invocation, live agents, deployed workloads or other skills. Any performance tolerance requires explicit approval.",
+    "full_repository_checks": "failed",
+    "full_repository_failure": "README-heading assertion reproduced with and without the validation-specific patch; unrelated edits retained, no fix or weaker check."
+  },
   "composition_guidance": {
     "documentation_and_packaging": "passed",
     "model_behavior": "not_run",

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "scope": "Complete the Template-Derived Repository Validation Workflow PRD",
+  "rows": [
+    {"requirement": "1. Purpose, triggers and authorization boundaries", "sources": ["README.md", "develop/SKILL.md", "develop/validate-repo.md"], "acceptance": "Matching user/agent selection; no feature state or fixes from findings."},
+    {"requirement": "2. Concrete contract obligations", "sources": ["resources/profiles/template.md", "develop/validate-repo.md"], "acceptance": "Affected obligation -> current project authority -> actual relevant check -> observed result; no Databricks defaults on transfer."},
+    {"requirement": "3. Canonical command effects", "sources": ["resources/profiles/template.md", "develop/validate-repo.md"], "acceptance": "Inspect hooks/sessions/scripts and resolve installation, formatting, cleanup and other writes before running; no weaker substitute."},
+    {"requirement": "4. Before/after and failure evidence", "sources": ["develop/validate-repo.md", "evaluations/validation/evaluator.py"], "acceptance": "Revision/dirty/untracked/index observations, preserved mixed edits, evidenced failure attribution and reruns of changed inputs; no live/deployed implication."},
+    {"requirement": "5. Substantive fixtures", "sources": ["evaluations/validation/cases.json", "evaluations/validation/expected.json", "evaluations/validation/freeze.json", "evaluations/validation/fixtures.py", "evaluations/validation/evaluator.py", "tests/test_validation.py"], "acceptance": "Six real isolated behavioral scenarios plus retained boundaries; inspect outputs/files/index and reject dishonest/lossy traces."},
+    {"requirement": "Acceptance: matched correctness and separate performance", "sources": ["evaluations/validation/README.md", "evaluations/validation/baseline.md", "evaluations/validation/qualification.json", "evaluations/protocol.md"], "acceptance": "Actual matched documentation-driven baseline/skill-assisted evidence; separate observed tokens/cost/time; explicit tolerance approval; untested not_run."}
+  ],
+  "limits": "Traceability is an implementation map, not proof that unperformed agent runs passed."
+}
