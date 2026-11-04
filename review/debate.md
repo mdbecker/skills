@@ -1,22 +1,18 @@
----
-name: debate
-description: Run an explicitly requested Debate review or discussion through five independent reviewers, three reconcilers and one synthesizer. Ordinary review uses the review parent without automatically selecting this hierarchy.
----
 
 # Debate
 
 If this explicitly selected review needs a cross-method handoff, read only the
 relevant [optional recipe](resources/combinations.md). It adds no permissions or mandatory steps.
 
-Run code review or technical discussion through **5 independent reviews → 3 independent reconciliations → 1 final synthesis**. This is the compatibility entrypoint for the explicit Debate engine in `/review`; it retains one canonical method rather than requiring that parent to be installed. Use existing host delegation/model access, not a separate provider application.
+Run code review or technical discussion through **5 independent reviews → 3 independent reconciliations → 1 final synthesis**. This is the canonical `--engine debate` method owned by `/review`. Use existing host delegation/model access, not a separate provider application.
 
 Read [shared boundaries](resources/policy.md), [reference model policy](resources/models.md), and the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md) capability mapping. Resources are included in exports and prepared locally from canonical sources. Missing resources must be reported, not replaced with a sibling installation or guessed defaults.
 
-For `/debate review <target>`, review the identified implementation, files, branch, PR, or supplied diff using the hierarchy below. For `/debate discuss "topic"`, apply the hierarchy to that question. For `/debate` with no topic or target, use the conversation's explicit target if present; otherwise ask what to challenge.
+For `/review code <target> --engine debate` or `/review smells <scope> --engine debate`, use the assessment and source scope selected by the parent. For `/review discuss "topic" --engine debate`, apply the hierarchy to that question. Parse scope/engine controls before passing the subject. Use the conversation's explicit target when available; otherwise ask what to challenge.
 
 ## Codex subagent route
 
-For `/debate review`, identify the actual target source and available baseline first. Use Git diffs when available; an original archive can provide a snapshot comparison. State the baseline and rename mapping. If no baseline exists, review the current source and distinguish existing defects from claims about newly introduced changes.
+For `/review code ... --engine debate`, identify the actual target source and available baseline first. Use Git diffs when available; an original archive can provide a snapshot comparison. State the baseline and rename mapping. If no baseline exists, review the current source and distinguish existing defects from claims about newly introduced changes.
 
 ### Source and evidence boundaries
 
@@ -76,6 +72,6 @@ All stages must check counterevidence and disputed assumptions. Separate verifie
 
 Report model eligibility, evidence-stage completion, preferred-tier conformance and quality acceptance separately, with exact actual selections/settings, substitutions and limits. Cost/coverage measurements require telemetry; otherwise say unavailable. Stage count or successful dispatch does not prove quality, savings, billing or clinical/scientific validity.
 
-For `/debate discuss`, use the same 5→3→1 hierarchy with the same question, relevant evidence, constraints, and competing options. Source claims still require evidence.
+For `/review discuss ... --engine debate`, use the same 5→3→1 hierarchy with the same question, relevant evidence, constraints, and competing options. Source claims still require evidence.
 
 Present conclusions with their evidence and remaining disagreements. Treat model findings as claims to assess, not verified facts. Do not apply fixes or replace the project's development workflow merely because a reviewer suggests them.

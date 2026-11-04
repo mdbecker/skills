@@ -35,7 +35,6 @@ From the repository root, using its existing development environment:
 .venv/bin/python -m unittest tests.test_bdd_prd_methods tests.test_prompt_backlog_methods tests.test_workflow_methods -v
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python -m unittest discover -s iterate/tests -v
 .venv/bin/python scripts/validate_skills.py
 ```
 

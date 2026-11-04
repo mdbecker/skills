@@ -23,7 +23,12 @@ Select your target project and tell its agent:
    file-count and total-size limits before extraction. Reject traversal, absolute
    paths, symlinks and undeclared entries. Read/extract only the named installer
    into a fresh temporary file after inspection; it validates the original archive
-   directly, so unsafe bulk extraction is unnecessary.
+   directly, so unsafe bulk extraction is unnecessary. Required metadata is parsed
+   by that same standalone installer: plain/quoted strings, inline comments, and
+   uniform literal/folded blocks `|`, `|-`, `>`, `>-` are supported. Empty or
+   non-string values, duplicate required keys, aliases/tags, and unsupported scalar
+   forms fail; do not reinterpret them or install a YAML dependency. This is a
+   bounded metadata contract, not a general YAML implementation.
 4. Use existing Python 3.11+ with no downloads or dependency installation. Run:
 
 ```sh
@@ -33,7 +38,7 @@ python3 /temporary/path/install.py --archive /path/skills.zip --project /path/pr
 
 For Claude Code select `--host claude`. Codex writes only project `.agents/skills`,
 Claude only project `.claude/skills`. `--skills develop review` selects a subset;
-each parent/legacy folder contains its full resources without sibling installs.
+each selected skill folder contains its full resources without sibling installs.
 `--sha256 <trusted-digest>` verifies the external release checksum.
 
 5. Identical installations are unchanged. Conflicting existing skills abort before

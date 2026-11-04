@@ -15,7 +15,7 @@ published bundles; never substitute a sibling installation when it is missing.
 
 | Invocation | Method |
 |---|---|
-| `/develop iterate <feature> [phase]` | [Existing Iterate lifecycle](resources/iterate/method.md) |
+| `/develop iterate <feature> [phase]` | [Existing Iterate lifecycle](iterate.md) |
 | `/develop bdd <task>` | [Test-first BDD](bdd.md) |
 | `/develop prd <target>` | [Specification authoring](prd.md) |
 | `/develop prompt <target>` | [Prompt/contract editing](prompt.md) |
@@ -53,11 +53,11 @@ Record before/after file and staging evidence; focused tests do not replace
 required canonical validation. Load its reference for the contract evidence,
 failure classification and reporting procedure, without loading other methods.
 
-For Iterate, interpret the remaining arguments as the existing `/iterate` arguments,
+For Iterate, interpret the remaining arguments as feature and phase controls,
 including `park`, `list`, and no-argument behavior. Its bundled helper is
-`resources/iterate/manifest.py`; resolve that absolute path and run it from the
-target project, not the installation directory. The copied method's directory
-is its helper directory. Preserve phases, manual feedback, state and user edits.
+`scripts/manifest.py`; resolve that absolute path and run it from the
+target project, not the installation directory. Preserve phases, manual feedback,
+state and user edits.
 Do not change an active Iterate lifecycle merely because BDD was suggested.
 
 Specifications choose a preferred design but do not replace Iterate's architecture

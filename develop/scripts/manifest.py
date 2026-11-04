@@ -43,6 +43,95 @@ EXIT_CRITERIA = {
 
 BACKLOG_KEYS = {"edge": "edge_cases", "hardening": "hardening_tasks"}
 
+BACKLOG_ITEM = {"description": str, "is_resolved": bool, "?waive_reason": str}
+MANIFEST_SCHEMA = {
+    "project_metadata": {
+        "feature_name": str, "last_updated": str, "current_phase": tuple(PHASES),
+        "?next_step": str,
+        "?phase_history": [{"from": tuple(PHASES), "to": tuple(PHASES), "at": str,
+                            "?commit": (str, type(None))}],
+    },
+    "core_objective": {"impact_target": str, "strict_scope_exclusions": [str]},
+    "implementation_state": {
+        "data_flow_description": str, "test_bed_environment": str,
+        "happy_path_entry_points": [str],
+        "?test_bed_commands": [{"label": str, "command": str}],
+    },
+    "deferred_backlog": {"edge_cases": [BACKLOG_ITEM], "hardening_tasks": [BACKLOG_ITEM]},
+    "testing_strategy": {"target_execution_path": str, "required_integration_assertions": [str]},
+    "architecture_decisions": [{"id": "positive integer", "title": str, "context": str,
+                               "options_considered": [str], "decision_made": str, "rationale": str}],
+}
+
+
+def _validate_shape(value, schema, field):
+    if isinstance(schema, dict):
+        if not isinstance(value, dict):
+            raise ValueError(f"{field}: expected an object")
+        for declared, child_schema in schema.items():
+            key = declared.removeprefix("?")
+            child = key if field == "root" else f"{field}.{key}"
+            if key not in value:
+                if declared.startswith("?"):
+                    continue
+                raise ValueError(f"{child}: missing required key")
+            _validate_shape(value[key], child_schema, child)
+    elif isinstance(schema, list):
+        if not isinstance(value, list):
+            raise ValueError(f"{field}: expected a list")
+        for index, child in enumerate(value):
+            _validate_shape(child, schema[0], f"{field}[{index}]")
+    elif isinstance(schema, tuple):
+        if all(isinstance(option, type) for option in schema):
+            valid = type(value) in schema
+        else:
+            valid = isinstance(value, str) and value in schema
+        if not valid:
+            raise ValueError(f"{field}: invalid type or phase")
+    elif schema == "positive integer":
+        if type(value) is not int or value < 1:
+            raise ValueError(f"{field}: expected a positive integer")
+    elif type(value) is not schema:
+        raise ValueError(f"{field}: expected {schema.__name__}")
+
+
+def validate_manifest(value):
+    _validate_shape(value, MANIFEST_SCHEMA, "root")
+    try:
+        json.dumps(value, allow_nan=False)
+    except (ValueError, TypeError, RecursionError) as error:
+        raise ValueError("root: expected JSON-compatible values") from error
+    pending = [value]
+    while pending:
+        item = pending.pop()
+        if isinstance(item, dict):
+            if any(type(key) is not str for key in item):
+                raise ValueError("root: JSON object keys must be strings")
+            pending.extend(item.values())
+        elif isinstance(item, list):
+            pending.extend(item)
+        elif item is not None and type(item) not in (str, bool, int, float):
+            raise ValueError("root: expected JSON-compatible values without coercion")
+    return value
+
+
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def _invalid_constant(value):
+    raise ValueError("non-JSON numeric constant")
+
+
+def _corrupt_manifest(path, error):
+    die(f"manifest {path}: {error} — stop and preserve this file; "
+        "ask the user to restore a known-good local copy or authorize a separate recovery procedure")
+
 
 def now():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -96,21 +185,10 @@ def load(feature):
     if not p.exists():
         die(f"no manifest at {p} — run: manifest.py init {feature} --impact \"...\"")
     try:
-        m = json.loads(p.read_text())
-    except json.JSONDecodeError as e:
-        die(f"corrupt manifest {p}: {e}")
-    for key in ("project_metadata", "core_objective", "implementation_state",
-                "deferred_backlog", "testing_strategy", "architecture_decisions"):
-        if key not in m:
-            die(f"manifest {p} missing required key '{key}' — stop and preserve this file; "
-                "ask the user to restore a known-good local copy or authorize a separate recovery procedure")
-    phase = m["project_metadata"].get("current_phase")
-    if phase not in PHASES:
-        die(f"manifest {p} has invalid phase {phase!r} — must be one of {', '.join(PHASES)}")
-    for kind in BACKLOG_KEYS.values():
-        for i, item in enumerate(m["deferred_backlog"].get(kind, []), 1):
-            if "description" not in item or "is_resolved" not in item:
-                die(f"manifest {p}: {kind} #{i} missing description/is_resolved")
+        m = json.loads(p.read_text(), object_pairs_hook=_unique_object, parse_constant=_invalid_constant)
+        validate_manifest(m)
+    except ValueError as error:
+        _corrupt_manifest(p, error)
     return m
 
 
@@ -138,8 +216,13 @@ def atomic_write(path, text):
 
 
 def save(feature, m):
+    path = path_for(feature)
+    try:
+        validate_manifest(m)
+    except ValueError as error:
+        _corrupt_manifest(path, error)
     m["project_metadata"]["last_updated"] = now()
-    atomic_write(path_for(feature), json.dumps(m, indent=2) + "\n")
+    atomic_write(path, json.dumps(m, indent=2, allow_nan=False) + "\n")
 
 
 def latest_feature():

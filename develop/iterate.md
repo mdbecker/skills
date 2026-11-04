@@ -1,18 +1,13 @@
----
-name: iterate
-description: Use when starting or resuming feature work that should follow the iterative workflow - architecture first, minimal happy path, live test bed, tweak loop, minimal robust tests, then edge-case finalization. Invoke at session start to resume a feature, at any phase transition, or when tempted to add error handling/tests/abstractions before the core is validated. Replaces plan-heavy or test-first workflows.
----
 
 # Iterate
 
 For a justified specialization/handoff, read only the relevant [optional recipe](resources/combinations.md).
 It does not restart this lifecycle, require sibling installs or replace user checkpoints.
 
-This is the compatibility entrypoint for `/develop iterate`; the method and
-`manifest.py` remain canonical here. The parent export bundles this method/helper
-without requiring a sibling installation. Interpret `/develop iterate` arguments
-as the existing `/iterate` arguments. Read the bundled shared policy when present;
-do not let another mode silently change this lifecycle or its state ownership.
+This is the canonical feature lifecycle selected by `/develop iterate`.
+Its helper is `scripts/manifest.py` in this skill directory. Parse the parent
+mode before interpreting feature, phase, `park` and `list` arguments. Read
+shared policy without silently changing the lifecycle or state ownership.
 
 Iterative feature development driven by a persistent state manifest. Validate the architecture and happy path against a real, running test bed BEFORE writing edge cases, error handling, or tests. Complexity is deferred, not forgotten — it's parked in a backlog and consumed in the final phase.
 
@@ -24,11 +19,18 @@ State lives in the project repo at `.ai-state/<feature-name>.json`. This file is
 
 The state directory and manifest files must be real local paths, not symlinks. If existing state uses symlinks, stop and explain the policy; do not replace links or move their targets automatically. The user can copy the state into a local `.ai-state/` directory before resuming.
 
-**All manifest reads and writes go through the CLI** bundled as `manifest.py` alongside this `SKILL.md`. Resolve its absolute path from the installed skill directory, then run `python3 "<skill-directory>/manifest.py"` from the project root. In the examples below, `manifest.py` means that command; do not assume it is on PATH. Never hand-edit the JSON — the CLI checks required top-level keys, phases, and backlog item fields, stamps `last_updated`, and fails loudly on corruption. Run `manifest.py --help` and `manifest.py <cmd> --help` for full usage.
+**All manifest reads and writes go through the CLI** bundled as `scripts/manifest.py` in this skill directory. Resolve its absolute path from the installed skill directory, then run `python3 "<skill-directory>/scripts/manifest.py"` from the project root. In the examples below, `manifest.py` means that command; do not assume it is on PATH. Never hand-edit the JSON — the CLI checks required top-level keys, phases, and backlog item fields, stamps `last_updated`, and fails loudly on corruption. Run `manifest.py --help` and `manifest.py <cmd> --help` for full usage.
 
 On damaged state, stop and preserve the file. Ask the user to restore a known-good
 local copy or authorize separate maintenance; do not reset, synthesize missing
 keys, or interpret validation failure as a missing feature.
+
+The helper validates required nested fields, list entries, actual booleans, and
+JSON-compatible values before any handler writes state or updates timestamps.
+Duplicate keys, malformed sections, and invalid entry types fail without rewriting
+the file. Compatible extra fields and optional `next_step`, `phase_history`, and
+`test_bed_commands` omissions remain supported; read-only commands do not backfill
+them on disk. Validation does not add phase-order or minimum-option gates.
 
 Tool-registry storage must remain ordinary local directories and a file at
 `testbed/tools/registry.json`; links or escaping storage are rejected before access.
@@ -47,12 +49,12 @@ registration grants no permission to execute them or write an external registry.
 | Resolve / waive backlog item | `manifest.py resolve <feature> edge\|hardening <n> [--waive "reason"]` |
 | Record test bed command | `manifest.py testbed <feature> add --label "seed db" --cmd "..."` |
 | Register / list reusable test bed tools | `manifest.py tool add --name ... --path ... --desc ... [--usage ...] [--feature ...]` / `tool list` |
-| Record architecture decision | `manifest.py decision <feature> --title ... --option A --option B --decision A --rationale ...` |
+| Record architecture decision | `manifest.py decision <feature> --title ... --context ... --option A --option B --decision A --rationale ...` |
 | Set fields (impact, data_flow, entry_point, exclusion, assertion, ...) | `manifest.py set <feature> <field> "value"` |
 
 **Fast paths — handle these and STOP, no phase workflow, no dashboard:**
-- `/iterate park "description"` → run `manifest.py park <most-recent-feature> edge "description"` (use `hardening` if the description is clearly a hardening concern), echo the "parked:" line, done. Parking costs one line.
-- `/iterate list` → run `manifest.py list`, show the table, done.
+- `/develop iterate park "description"` → run `manifest.py park <most-recent-feature> edge "description"` (use `hardening` if the description is clearly a hardening concern), echo the "parked:" line, done. Parking costs one line.
+- `/develop iterate list` → run `manifest.py list`, show the table, done.
 
 **On every other invocation:**
 1. Parse the invocation as either no arguments, a feature name, or a feature name followed by one of the six phase names. Reject other forms with a short usage explanation; do not pass the entire argument string to `status`.
@@ -103,7 +105,7 @@ Manifest schema (managed by the CLI; shown for reference):
 
 - **Park, don't handle.** Any edge case, failure mode, or hardening concern noticed outside FINALIZATION is parked immediately via `manifest.py park`, with no code written for it. The CLI echoes "parked: ..." — surface that line so the user sees it was captured.
 - **Phase transitions are explicit.** Never silently drift into the next phase's work. When the current phase's exit criteria are met, state that, update `current_phase`, and confirm direction with the user if they're present.
-- **The user can jump phases.** `/iterate <feature> TWEAKING` sets the phase directly — the manifest records it and constraints switch accordingly.
+- **The user can jump phases.** `/develop iterate <feature> TWEAKING` sets the phase directly — the manifest records it and constraints switch accordingly.
 - **Leave a handoff note.** At the end of every work stint — and before any risky long-running step — run `manifest.py set <feature> next_step "..."` describing exactly where things stand and what happens next (e.g. "handler written, not yet run against docker; seed script at scripts/seed.sh"). The next session's dashboard leads with it; a stale or missing note costs the first ten minutes of that session.
 
 ## Comments, Docs & Commits

@@ -1,4 +1,5 @@
 import importlib.util
+from copy import deepcopy
 import json
 from pathlib import Path
 import subprocess
@@ -7,7 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-SCRIPT = Path(__file__).resolve().parents[1] / 'manifest.py'
+SCRIPT = Path(__file__).resolve().parents[1] / 'develop/scripts/manifest.py'
 
 
 class ManifestTests(unittest.TestCase):
@@ -238,3 +239,133 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(state.read_text(), '{')
             state.write_bytes(valid)
             self.run_cli(project, 'status', 'demo')
+
+
+class ManifestValidationTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.project = Path(self.temporary.name)
+        completed = self.run_cli('init', 'probe', '--impact', 'Preserve malformed state')
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.state = self.project / '.ai-state/probe.json'
+        self.valid = json.loads(self.state.read_text())
+
+    def run_cli(self, *arguments):
+        return subprocess.run([sys.executable, '-B', str(SCRIPT), *arguments], cwd=self.project,
+                              text=True, capture_output=True, timeout=10)
+
+    def assert_rejected_without_writes(self, content, field):
+        for command in [('set', 'probe', 'next_step', 'Continue'),
+                        ('phase', 'probe', 'TWEAKING'),
+                        ('park', 'probe', 'edge', 'Concern'),
+                        ('decision', 'probe', '--title', 'Choice', '--context', 'Saved context', '--option', 'Keep',
+                         '--decision', 'Keep', '--rationale', 'Preserve behavior')]:
+            with self.subTest(command=command):
+                self.state.write_text(content)
+                original = self.state.read_bytes()
+                completed = self.run_cli(*command)
+                self.assertEqual(completed.returncode, 1, completed.stdout + completed.stderr)
+                self.assertEqual(self.state.read_bytes(), original)
+                self.assertIn(field, completed.stderr)
+                self.assertIn('stop and preserve', completed.stderr)
+                self.assertIn('restore a known-good local copy', completed.stderr)
+                self.assertNotIn('Traceback', completed.stderr)
+
+    def test_malformed_required_sections_cannot_be_rewritten(self):
+        for section in ['project_metadata', 'core_objective', 'implementation_state',
+                        'deferred_backlog', 'testing_strategy', 'architecture_decisions']:
+            with self.subTest(section=section):
+                malformed = deepcopy(self.valid)
+                malformed[section] = None
+                self.assert_rejected_without_writes(json.dumps(malformed), section)
+
+    def test_nested_fields_and_every_list_entry_are_validated(self):
+        cases = [
+            ('core_objective', 'impact_target', None, 'core_objective.impact_target'),
+            ('core_objective', 'strict_scope_exclusions', ['valid', 2], 'strict_scope_exclusions[1]'),
+            ('implementation_state', 'test_bed_commands', [{'label': 'start', 'command': 'run'},
+                                                         {'label': 'bad'}], 'test_bed_commands[1].command'),
+            ('deferred_backlog', 'edge_cases', [{'description': 'valid', 'is_resolved': False},
+                                             {'description': 'bad', 'is_resolved': 'false'}], 'edge_cases[1].is_resolved'),
+            ('project_metadata', 'phase_history', [{'from': 'ARCHITECTURE', 'to': 'UNKNOWN',
+                                                  'at': 'saved'}], 'phase_history[0].to'),
+            ('testing_strategy', 'required_integration_assertions', [False], 'required_integration_assertions[0]'),
+        ]
+        for section, key, value, field in cases:
+            with self.subTest(field=field):
+                malformed = deepcopy(self.valid)
+                malformed[section][key] = value
+                self.assert_rejected_without_writes(json.dumps(malformed), field)
+        malformed = deepcopy(self.valid)
+        del malformed['core_objective']['impact_target']
+        self.assert_rejected_without_writes(json.dumps(malformed), 'core_objective.impact_target')
+
+    def test_decision_ids_reject_boolean_and_nonpositive_values(self):
+        decision = {'id': 1, 'title': '', 'context': '', 'options_considered': [],
+                    'decision_made': '', 'rationale': ''}
+        for identity in [True, 0, -1, '1']:
+            malformed = deepcopy(self.valid)
+            malformed['architecture_decisions'] = [decision, dict(decision, id=identity)]
+            self.assert_rejected_without_writes(json.dumps(malformed), 'architecture_decisions[1].id')
+
+    def test_duplicate_json_keys_and_invalid_roots_preserve_bytes(self):
+        duplicated = json.dumps(self.valid)[:-1] + ', "core_objective": {"impact_target": "duplicate"}}'
+        self.assert_rejected_without_writes(duplicated, 'core_objective')
+        for content in ['null', '[]', '42', '{']:
+            self.assert_rejected_without_writes(content, 'manifest')
+
+    def test_private_invalid_values_are_not_echoed(self):
+        malformed = deepcopy(self.valid)
+        malformed['project_metadata']['current_phase'] = 'private-invalid-phase-sentinel'
+        self.state.write_text(json.dumps(malformed))
+        completed = self.run_cli('status', 'probe')
+        self.assertEqual(completed.returncode, 1)
+        self.assertNotIn('private-invalid-phase-sentinel', completed.stdout + completed.stderr)
+        self.assertIn('project_metadata.current_phase', completed.stderr)
+
+    def test_optional_omissions_and_extra_fields_are_not_backfilled_by_reads(self):
+        self.valid['project_metadata'].pop('next_step')
+        self.valid['project_metadata'].pop('phase_history')
+        self.valid['implementation_state'].pop('test_bed_commands')
+        self.valid['extension'] = {'future': ['saved', None]}
+        self.state.write_text(json.dumps(self.valid))
+        original = self.state.read_bytes()
+        for command in [('status', 'probe'), ('testbed', 'probe', 'list'), ('render', 'probe')]:
+            completed = self.run_cli(*command)
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            self.assertEqual(self.state.read_bytes(), original)
+        self.assertEqual(self.run_cli('set', 'probe', 'next_step', 'Continue').returncode, 0)
+        updated = json.loads(self.state.read_text())
+        self.assertEqual(updated['extension'], self.valid['extension'])
+        self.assertNotIn('phase_history', updated['project_metadata'])
+
+    def test_save_rejects_invalid_values_before_timestamp_or_file_mutation(self):
+        spec = importlib.util.spec_from_file_location('state_validation_probe', SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        malformed = deepcopy(self.valid)
+        malformed['core_objective'] = None
+        original = self.state.read_bytes()
+        before = deepcopy(malformed)
+        with patch.object(module, 'STATE_DIR', self.project / '.ai-state'):
+            with self.assertRaises(SystemExit):
+                module.save('probe', malformed)
+        self.assertEqual(malformed, before)
+        self.assertEqual(self.state.read_bytes(), original)
+
+    def test_save_does_not_normalize_non_json_extension_values(self):
+        spec = importlib.util.spec_from_file_location('state_extension_probe', SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        for extension in [('not', 'a JSON array'), {1: 'not a JSON key'}, {'not a JSON value'}]:
+            with self.subTest(extension=extension):
+                malformed = deepcopy(self.valid)
+                malformed['extension'] = extension
+                before = deepcopy(malformed)
+                original = self.state.read_bytes()
+                with patch.object(module, 'STATE_DIR', self.project / '.ai-state'):
+                    with self.assertRaises(SystemExit):
+                        module.save('probe', malformed)
+                self.assertEqual(malformed, before)
+                self.assertEqual(self.state.read_bytes(), original)

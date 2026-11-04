@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import io
 import json
+import math
 import os
 from pathlib import Path, PurePosixPath
 import posixpath
@@ -22,6 +23,13 @@ PACKAGE = "mdbecker-skills"
 MAX_FILES = 2000
 MAX_BYTES = 32 * 1024 * 1024
 RECEIPT = ".mdbecker-skills.json"
+METADATA_TYPED_SCALARS = (
+    r"(?:yes|Yes|YES|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)",
+    r"(?:~|null|Null|NULL)",
+    r"[-+]?(?:0b[0-1_]+|0[0-7_]+|0|[1-9][0-9_]*|0x[0-9a-fA-F_]+|[1-9][0-9_]*(?::[0-5]?[0-9])+)",
+    r"(?:[-+]?[0-9][0-9_]*\.[0-9_]*(?:[eE][-+][0-9]+)?|\.[0-9][0-9_]*(?:[eE][-+][0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\.[0-9_]*|[-+]?\.(?:inf|Inf|INF)|\.(?:nan|NaN|NAN))",
+    r"(?:[0-9]{4}-[0-9]{2}-[0-9]{2}|[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}(?:[Tt]|[ \t]+)[0-9]{1,2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]*)?(?:[ \t]*(?:Z|[-+][0-9]{1,2}(?::[0-9]{2})?))?)",
+)
 
 
 def digest(content):
@@ -45,7 +53,120 @@ def parse_json(content):
                 raise ValueError(f"Duplicate JSON key: {key}")
             result[key] = value
         return result
-    return json.loads(content, object_pairs_hook=unique_object)
+    def invalid_constant(value):
+        raise ValueError("Non-JSON numeric constant")
+
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError("Nonfinite JSON number")
+        return number
+
+    return json.loads(content, object_pairs_hook=unique_object,
+                      parse_constant=invalid_constant, parse_float=finite_float)
+
+
+def _metadata_scalar(value):
+    value = value.strip()
+    if value.startswith("'"):
+        match = re.fullmatch(r"'((?:[^']|'')*)'(?:\s+#.*)?\s*", value)
+        if not match:
+            raise ValueError("Unsupported single-quoted metadata")
+        return match.group(1).replace("''", "'")
+    if value.startswith('"'):
+        try:
+            parsed, end = json.JSONDecoder().raw_decode(value)
+        except ValueError as error:
+            raise ValueError("Unsupported double-quoted metadata") from error
+        tail = value[end:]
+        if not isinstance(parsed, str) or tail and not re.fullmatch(r"\s+(?:#.*)?", tail):
+            raise ValueError("Unsupported quoted metadata suffix")
+        return parsed
+    value = re.split(r"\s+#", value, maxsplit=1)[0].rstrip()
+    if (not value or value.startswith(tuple("[{*&!|>@`#")) or value.startswith(("- ", "? ", ": "))
+            or re.search(r":(?:\s|$)", value)):
+        raise ValueError("Metadata needs a supported string scalar")
+    if any(re.fullmatch(pattern, value) for pattern in METADATA_TYPED_SCALARS):
+        raise ValueError("Metadata values must be strings, not typed scalars")
+    return value
+
+
+def _metadata_block(lines, index, indicator):
+    content = []
+    indentation = None
+    while index < len(lines):
+        line = lines[index]
+        if line.strip() and not line.startswith((' ', '\t')):
+            break
+        if '\t' in line[:len(line) - len(line.lstrip())]:
+            raise ValueError("Metadata blocks require space indentation")
+        if line.strip():
+            width = len(line) - len(line.lstrip(' '))
+            if indentation is None:
+                indentation = width
+            if width != indentation:
+                raise ValueError("Metadata block indentation must be uniform")
+            content.append(line[width:])
+        else:
+            content.append('')
+        index += 1
+    if indicator.startswith('|'):
+        result = '\n'.join(content)
+    else:
+        pieces = []
+        position = 0
+        while position < len(content):
+            if not content[position]:
+                pieces.append('\n')
+                position += 1
+            else:
+                paragraph = []
+                while position < len(content) and content[position]:
+                    paragraph.append(content[position])
+                    position += 1
+                pieces.append(' '.join(paragraph))
+        result = ''.join(pieces)
+    result = result.rstrip('\n')
+    if result and not indicator.endswith('-'):
+        result += '\n'
+    return result, index
+
+
+def parse_skill_metadata(document, expected_name):
+    try:
+        text = document.decode('utf-8') if isinstance(document, bytes) else document
+        if not isinstance(text, str):
+            raise ValueError("Expected UTF-8 skill document")
+        text = text.replace('\r\n', '\n')
+        if '\r' in text:
+            raise ValueError("Unsupported line endings")
+        match = re.match(r"\A---\n(.*?)\n---(?:\n|$)", text, re.S)
+        if not match:
+            raise ValueError("Missing YAML frontmatter")
+        lines = match.group(1).split('\n')
+        values = {}
+        index = 0
+        while index < len(lines):
+            line = lines[index]
+            index += 1
+            field = re.fullmatch(r"(name|description):(?:[ \t]+(.*))?", line)
+            if not field:
+                continue
+            key, scalar = field.groups()
+            if key in values:
+                raise ValueError("Duplicate required metadata field")
+            scalar = scalar or ''
+            block = re.fullmatch(r"([|>]-?)(?:\s+#.*)?\s*", scalar)
+            if block:
+                values[key], index = _metadata_block(lines, index, block.group(1))
+            else:
+                values[key] = _metadata_scalar(scalar)
+        if (set(values) != {'name', 'description'} or values['name'] != expected_name
+                or not values['description'].strip()):
+            raise ValueError("Required metadata identity or description is invalid")
+        return values
+    except (ValueError, UnicodeError) as error:
+        raise ValueError(f"Invalid skill name/description metadata: {expected_name}: {error}") from error
 
 
 def read_archive(archive, expected_sha256=None):
@@ -104,14 +225,7 @@ def read_archive(archive, expected_sha256=None):
         names.add(name.casefold())
         if f"skills/{name}/SKILL.md" not in contents:
             raise ValueError(f"Missing skill entrypoint: {name}")
-        entrypoint = contents[f"skills/{name}/SKILL.md"].decode("utf-8")
-        frontmatter = re.match(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|$)", entrypoint, re.S)
-        if not frontmatter:
-            raise ValueError(f"Missing skill metadata: {name}")
-        declared_names = re.findall(r"(?m)^name:\s*([^\r\n]+)$", frontmatter.group(1))
-        descriptions = re.findall(r"(?m)^description:\s*([^\r\n]+)$", frontmatter.group(1))
-        if len(declared_names) != 1 or declared_names[0].strip().strip('\"\'') != name or len(descriptions) != 1 or descriptions[0].strip() in {"", ">", "|", "null", "~"} or descriptions[0].lstrip().startswith("#"):
-            raise ValueError(f"Invalid skill name/description metadata: {name}")
+        parse_skill_metadata(contents[f"skills/{name}/SKILL.md"], name)
         required = skill.get("required_files")
         actual = {path[len(f"skills/{name}/"):] for path in contents if path.startswith(f"skills/{name}/")}
         if not isinstance(required, list) or not required or len(set(required)) != len(required) or set(required) != actual:

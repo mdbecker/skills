@@ -77,7 +77,7 @@ declared target and resolved scope to the canonical Debate method; control flags
 are not source paths, shell commands or permission grants.
 
 Scope and execution method are independent. Only explicit Debate selection loads
-the [canonical hierarchy](resources/debate/method.md), [model policy](resources/models.md)
+the [canonical hierarchy](debate.md), [model policy](resources/models.md)
 and the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md)
 capability mapping. This is the existing five-reviewer, three-reconciler,
 one-synthesizer method, not a new orchestration runtime. Missing resources or

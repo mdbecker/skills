@@ -6,16 +6,26 @@ import sys
 
 import yaml
 
-from build_skills import payload
-
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from distribution.install import parse_skill_metadata
+from scripts.build_skills import payload
 
 
 def main():
     errors = []
-    inventory, exported, unused_inputs = payload(ROOT)
-    for name in inventory["parents"] + inventory["compatibility"]:
+    try:
+        inventory, exported, unused_inputs = payload(ROOT)
+    except (ValueError, OSError, KeyError) as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    discovery = ROOT / ".agents/skills"
+    entries = discovery.iterdir() if discovery.is_dir() else []
+    actual = {entry.name for entry in entries if entry.is_symlink() or entry.is_dir()}
+    if actual != set(inventory["parents"]):
+        errors.append(f"{discovery}: discovery entries must match the export inventory")
+    for name in inventory["parents"]:
         directory = ROOT / name
         path = directory / "SKILL.md"
         match = re.match(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|$)",
@@ -24,8 +34,9 @@ def main():
             errors.append(f"{path}: missing YAML frontmatter")
             continue
         try:
-            metadata = yaml.safe_load(match.group(1))
-        except yaml.YAMLError as error:
+            metadata = yaml.safe_load(match.group(1) + '\n')
+            portable = parse_skill_metadata(path.read_bytes(), name)
+        except (yaml.YAMLError, ValueError) as error:
             errors.append(f"{path}: {error}")
             continue
         if not isinstance(metadata, dict):
@@ -36,6 +47,8 @@ def main():
         description = metadata.get("description")
         if not isinstance(description, str) or not description.strip():
             errors.append(f"{path}: description must be a nonempty string")
+        if {key: metadata.get(key) for key in ('name', 'description')} != portable:
+            errors.append(f"{path}: YAML and portable metadata interpretations disagree")
         link = ROOT / ".agents" / "skills" / name
         if not link.is_symlink() or link.resolve() != directory.resolve():
             errors.append(f"{link}: must link to the published skill directory")
@@ -63,7 +76,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print("All five entrypoints, discovery links and complete exported resources are valid.")
+    print(f"All {len(inventory['parents'])} entrypoints, discovery links and complete exported resources are valid.")
     return 0
 
 

@@ -2,7 +2,6 @@
   "schema_version": 1,
   "package": "mdbecker-skills",
   "parents": ["develop", "review", "research"],
-  "compatibility": ["iterate", "debate"],
   "common_resources": [
     "resources/policy.md", "resources/models.md", "resources/adaptation.md",
     "resources/provenance.json", "resources/examples.md", "resources/combinations.md", "resources/hosts/codex.md",
@@ -11,11 +10,9 @@
     "resources/profiles/reliability-study.md"
   ],
   "owned_resources": {
-    "develop": ["bdd.md", "prd.md", "prompt.md", "backlog.md", "validate-repo.md", "bdd-worked.md", "prd-worked.md", "prompt-worked.md", "backlog-worked.md"],
-    "review": ["code.md", "smells.md", "discuss.md", "source-coverage.md", "code-worked.md", "smells-worked.md"],
-    "research": ["report.md", "evidence.md", "disclosure.md", "archives.md", "diagrams.md", "rebuilding.md", "report-worked.md", "report-profile.md", "scripts/report_checks.py"],
-    "iterate": [],
-    "debate": []
+    "develop": ["bdd.md", "prd.md", "prompt.md", "backlog.md", "validate-repo.md", "bdd-worked.md", "prd-worked.md", "prompt-worked.md", "backlog-worked.md", "iterate.md", "scripts/manifest.py"],
+    "review": ["code.md", "smells.md", "discuss.md", "source-coverage.md", "code-worked.md", "smells-worked.md", "debate.md"],
+    "research": ["report.md", "evidence.md", "disclosure.md", "archives.md", "diagrams.md", "rebuilding.md", "report-worked.md", "report-profile.md", "scripts/report_checks.py"]
   },
   "capabilities": {
     "bdd-development": "develop bdd",
@@ -26,9 +23,5 @@
     "code-review": "review code",
     "code-smell-audit": "review smells",
     "research-report-maintenance": "research report create|update"
-  },
-  "method_exports": {
-    "develop": ["iterate"],
-    "review": ["debate"]
   }
 }

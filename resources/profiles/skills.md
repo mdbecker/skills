@@ -2,15 +2,15 @@
 
 Authority: README, CONTRIBUTING, current skill methods and `inventory.json`.
 Protected contracts: Iterate phases/manual checkpoints, CLI-owned local state,
-legacy arguments/fast paths, canonical helper, source-grounded 5→3→1 review,
-reference-only model selection, declared parents/aliases and complete bundles.
+feature arguments/fast paths, canonical helper, source-grounded 5→3→1 review,
+reference-only model selection, three parent entrypoints and complete bundles.
 
 Prerequisite: Python 3.11+; existing suitable `.venv` with development requirements
 for metadata checks. Do not install dependencies without applicable authorization.
 Canonical local checks, from repository root:
 
 ```sh
-.venv/bin/python -m unittest discover -s iterate/tests -v
+.venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
 ```

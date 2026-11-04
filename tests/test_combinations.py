@@ -19,7 +19,7 @@ class CombinationDocumentationTests(unittest.TestCase):
             archive = workspace / 'skills.zip'
             build(archive, 'combination-test')
             for host in HOST_DIRS:
-                for name in names['parents'] + names['compatibility']:
+                for name in names['parents']:
                     with self.subTest(host=host, package=name):
                         project = workspace / host / name
                         project.mkdir(parents=True)
@@ -41,24 +41,25 @@ class CombinationDocumentationTests(unittest.TestCase):
                         entrypoint = (directory / 'SKILL.md').read_text()
                         self.assertIn('resources/combinations.md', entrypoint)
                         if name == 'develop':
-                            method = (directory / 'resources/iterate/method.md').read_text()
-                            self.assertIn('](../combinations.md)', method)
+                            method = (directory / 'iterate.md').read_text()
+                            self.assertIn('](resources/combinations.md)', method)
                         if name == 'review':
-                            method = (directory / 'resources/debate/method.md').read_text()
-                            self.assertIn('](../combinations.md)', method)
+                            method = (directory / 'debate.md').read_text()
+                            self.assertIn('](resources/combinations.md)', method)
             with zipfile.ZipFile(archive) as bundle:
                 self.assertFalse(any('evaluations/' in name for name in bundle.namelist()))
 
     def test_readme_targets_canonical_recipe_anchors(self):
         readme = (ROOT / 'README.md').read_text()
         guide = (ROOT / 'resources/combinations.md').read_text()
+        linked_anchors = set()
         for target in re.findall(r'\]\((resources/combinations\.md(?:#[^)]+)?)\)', readme):
             path, separator, fragment = target.partition('#')
             self.assertTrue((ROOT / path).is_file())
             if separator:
                 self.assertIn(f'<a id="{fragment}">', guide)
-        self.assertIn('### Delivery coverage: C01', readme)
-        self.assertIn('### Coordinated prompt changes: C03', readme)
+                linked_anchors.add(fragment)
+        self.assertEqual(linked_anchors, {'c01', 'c02', 'c03', 'c04', 'c05'})
         self.assertNotIn('**Ready handoff:**', readme)
 
     def test_composition_corpus_is_frozen_and_expected_routes_are_private(self):

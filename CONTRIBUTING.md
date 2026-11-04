@@ -13,9 +13,8 @@ Debate retains five independent reviews, three independent whole-set reconciliat
 Follow the development setup in the README, then run:
 
 ```sh
-.venv/bin/python -m unittest discover -s iterate/tests -v
-.venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/build_skills.py --prepare
+.venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
 ```
 
@@ -23,11 +22,21 @@ Add focused regression coverage when fixing manifest behavior. For prompt change
 
 Keep feature manifests, scratch test beds, credentials, conversation handoffs, and generated review evidence out of commits. New skill resources should serve a concrete purpose; a short self-contained skill does not need extra scaffolding.
 
-Maintain shared references in `resources/`, legacy methods in `iterate/` and
-`debate/`, and the explicit export inventory in `inventory.json`. Prepared per-skill
+Maintain shared resources in `resources/`, the feature lifecycle in
+`develop/iterate.md` with `develop/scripts/manifest.py`, the review hierarchy
+in `review/debate.md`, and the export inventory in `inventory.json`. Prepared per-skill
 resource folders and `dist/` are generated, ignored copies, not separate sources.
-Do not edit those copies. Parents/legacy zip folders must stand alone without
+Do not edit those copies. Exported skill folders must stand alone without
 sibling installations. Run the exporter before checking resource closure.
+
+Required metadata is interpreted by `distribution.install.parse_skill_metadata`
+in authoring, export, and installation; keep its bounded syntax and standalone
+standard-library contract aligned. Preparation ownership lives in ignored
+`dist/.prepared-resources.json`, not feature state or a qualification record.
+Bootstrap matching generated views before changing their canonical inputs. Treat
+modified/unowned files and invalid receipts as conflicts; do not reset them or
+remove locks to manufacture green checks. Preserve recovery copies if another
+writer makes rollback unsafe.
 
 Freeze `evaluations/fixtures.json` and keep `evaluations/expected.json` evaluator-only.
 Approve the model protocol and record actual source-bound evidence before changing

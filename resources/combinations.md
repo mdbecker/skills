@@ -24,9 +24,9 @@ bounded feedback revisits only decisions affected by new evidence.
 ## Enter, hand off and stop
 
 Preflight available methods/tools and authority using [shared policy](policy.md).
-Recognize `/iterate` as the legacy Iterate method and `/debate` as the explicitly
-selected hierarchical engine. Legacy Debate is not permission to launch nine
-agents instead of ordinary discussion. Mode names below are labels to discover
+Use `/develop iterate` for the feature lifecycle and `--engine debate` on a
+`/review` mode for the explicitly selected hierarchy. An ordinary discussion
+does not authorize nine agents. Mode names below are labels to discover
 in the actual host, not links into sibling installations.
 
 A package may be installed alone. If a named method is missing, choose an equivalent

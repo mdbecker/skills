@@ -47,12 +47,44 @@ class DistributionTests(unittest.TestCase):
         second = self.workspace / "second.zip"
         build(second, "first")
         self.assertEqual(self.archive.read_bytes(), second.read_bytes())
-        self.assertEqual([entry["name"] for entry in self.manifest["skills"]], ["develop", "review", "research", "iterate", "debate"])
+        self.assertEqual([entry["name"] for entry in self.manifest["skills"]], ["develop", "review", "research"])
         self.assertEqual(len(json.loads((ROOT / "inventory.json").read_text())["capabilities"]), 8)
         with zipfile.ZipFile(self.archive) as archive:
             self.assertNotIn("evaluations/expected.json", archive.namelist())
             self.assertFalse(any(".ai-state" in path or "__pycache__" in path for path in archive.namelist()))
         read_archive(self.archive)
+
+    def test_only_parent_skills_are_discovered_and_exported(self):
+        names = {entry['name'] for entry in self.manifest['skills']}
+        self.assertEqual(names, {'develop', 'review', 'research'})
+        discovery = ROOT / '.agents/skills'
+        actual = {entry.name for entry in discovery.iterdir() if entry.is_symlink() or entry.is_dir()}
+        self.assertEqual(actual, names)
+        for name in names:
+            link = discovery / name
+            self.assertTrue(link.is_symlink())
+            self.assertEqual(link.resolve(), ROOT / name)
+        with zipfile.ZipFile(self.archive) as archive:
+            self.assertFalse(any(path.startswith(('skills/iterate/', 'skills/debate/'))
+                                 for path in archive.namelist()))
+            self.assertIn('skills/develop/iterate.md', archive.namelist())
+            self.assertIn('skills/develop/scripts/manifest.py', archive.namelist())
+            self.assertIn('skills/review/debate.md', archive.namelist())
+
+    def test_parent_upgrade_preserves_separately_installed_skills(self):
+        install(self.archive, self.project)
+        markers = {}
+        for name in ['iterate', 'debate']:
+            marker = self.project / '.agents/skills' / name / 'SKILL.md'
+            marker.parent.mkdir()
+            marker.write_text('Separately installed; preserve this content.\n')
+            markers[marker] = marker.read_bytes()
+        changed = self.rewrite({'skills/develop/prd.md':
+                                (ROOT / 'develop/prd.md').read_bytes() + b'\nUpdated fixture.\n'})
+        result = install(changed, self.project, upgrade=True)
+        self.assertEqual(result['installed'], ['develop'])
+        for marker, content in markers.items():
+            self.assertEqual(marker.read_bytes(), content)
 
     def test_preview_install_reinstall_and_standalone_helper(self):
         marker = self.project / "keep.txt"
@@ -64,7 +96,7 @@ class DistributionTests(unittest.TestCase):
         result = install(self.archive, self.project, selected=["develop"])
         self.assertEqual(result["installed"], ["develop"])
         self.assertEqual(install(self.archive, self.project, selected=["develop"])["installed"], [])
-        helper = self.project / ".agents/skills/develop/resources/iterate/manifest.py"
+        helper = self.project / ".agents/skills/develop/scripts/manifest.py"
         self.archive.unlink()
         outcome = subprocess.run([sys.executable, str(helper), "init", "standalone", "--impact", "Installed helper survives"],
                                  cwd=self.project, capture_output=True, text=True)
@@ -76,7 +108,7 @@ class DistributionTests(unittest.TestCase):
     def test_required_skill_documents_are_beside_entrypoints_and_not_ignored(self):
         inventory = json.loads((ROOT / "inventory.json").read_text())
         sources = []
-        for name in inventory["parents"] + inventory["compatibility"]:
+        for name in inventory["parents"]:
             sources.append(name + "/SKILL.md")
             for relative in inventory["owned_resources"][name]:
                 self.assertNotIn("references", Path(relative).parts)
@@ -100,7 +132,7 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(actual_inventory, inventory)
         self.assertEqual(actual, expected)
         self.assertEqual(actual_inputs, inputs)
-        for name in inventory["parents"] + inventory["compatibility"]:
+        for name in inventory["parents"]:
             directory = source_root / name / "references"
             directory.mkdir()
             for relative in inventory["owned_resources"][name]:
@@ -404,8 +436,8 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual((project / "report.html").read_bytes(), before)
 
     def test_exported_helpers_preserve_registry_boundary_and_recovery_policy(self):
-        canonical = (ROOT / 'iterate/manifest.py').read_bytes()
-        for name, relative in [('iterate', 'manifest.py'), ('develop', 'resources/iterate/manifest.py')]:
+        canonical = (ROOT / 'develop/scripts/manifest.py').read_bytes()
+        for name, relative in [('develop', 'scripts/manifest.py')]:
             with self.subTest(package=name):
                 project = self.workspace / ('installed-' + name)
                 project.mkdir()
