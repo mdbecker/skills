@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "cases": [
+    {
+      "id": "U01-new-reader-help",
+      "request": "/develop help",
+      "context": "A new reader does not know what csv-import, TWEAKING, or the old subject labels mean. No tracked state exists.",
+      "artifacts": {}
+    },
+    {
+      "id": "U02-contextual-bdd",
+      "request": "/develop bdd",
+      "context": "The user explicitly authorized fixing accept_delivery so a previously seen ID never calls apply again; use failing tests first. Only this synthetic module/tests may change.",
+      "artifacts": {
+        "delivery.py": "def accept_delivery(identity, seen, apply):\n    apply(identity)\n    seen.add(identity)\n"
+      }
+    },
+    {
+      "id": "U02-ambiguous-context",
+      "request": "/develop prd",
+      "context": "Two unrelated subjects are active: a CSV importer and invoice prompt semantics. The user has not selected which to specify.",
+      "artifacts": {}
+    },
+    {
+      "id": "U03-bare-empty-status",
+      "request": "/develop iterate",
+      "context": "No feature state exists. This is the bare mode, not a request to create work.",
+      "artifacts": {}
+    },
+    {
+      "id": "U04-explicit-defer-not-recency",
+      "request": "/develop iterate defer \"Optional progress indicator later\" --feature warehouse",
+      "context": "Billing is newer by file modification time and was mentioned recently; the explicit requested target is warehouse.",
+      "artifacts": {
+        ".ai-state/warehouse.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"warehouse\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"HAPPY_PATH\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic warehouse feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        ".ai-state/billing.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"billing\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"TWEAKING\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic billing feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        "fixture-layout.json": "{\"mtime\": {\".ai-state/warehouse.json\": 100, \".ai-state/billing.json\": 200}}"
+      }
+    },
+    {
+      "id": "U05-missing-resume",
+      "request": "/develop iterate work --feature warehous",
+      "context": "Resume existing work only. The intended ID has not been corrected by the human; warehouse exists, warehous does not.",
+      "artifacts": {
+        ".ai-state/warehouse.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"warehouse\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"HAPPY_PATH\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic warehouse feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        ".ai-state/billing.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"billing\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"TWEAKING\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic billing feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        "fixture-layout.json": "{\"mtime\": {\".ai-state/warehouse.json\": 100, \".ai-state/billing.json\": 200}}"
+      }
+    },
+    {
+      "id": "U05-reserved-word-ambiguity",
+      "request": "/develop iterate status",
+      "context": "An existing feature is named status. The user has not clarified whether this is a status action or legacy feature resume.",
+      "artifacts": {
+        ".ai-state/status.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"status\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"ARCHITECTURE\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic status feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n"
+      }
+    },
+    {
+      "id": "U06-explicit-override",
+      "request": "/develop iterate work --feature warehouse --phase TWEAKING",
+      "context": "The user explicitly requests only the stage override and resulting view; do not implement further work now. Earlier manual acceptance is not established.",
+      "artifacts": {
+        ".ai-state/warehouse.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"warehouse\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"HAPPY_PATH\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic warehouse feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        ".ai-state/billing.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"billing\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"TWEAKING\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic billing feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        "fixture-layout.json": "{\"mtime\": {\".ai-state/warehouse.json\": 100, \".ai-state/billing.json\": 200}}"
+      }
+    },
+    {
+      "id": "U07-native-cli-demo",
+      "request": "/develop iterate work --feature checksum",
+      "context": "Existing work is at TEST_BED. The user agreed on a local Node command demo, not a web UI. No services, packages, notebook or provider calls are authorized.",
+      "artifacts": {
+        ".ai-state/checksum.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"checksum\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"TEST_BED\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic checksum feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        "demo.js": "console.log(\"sample checksum output\");\n"
+      }
+    },
+    {
+      "id": "U08-reuse-approved-spec",
+      "request": "/develop iterate work --feature warehouse",
+      "context": "The existing feature is at ARCHITECTURE and the user approved the supplied bounded design. Confirm current assumptions and agreement, rather than inventing another options exercise.",
+      "artifacts": {
+        ".ai-state/warehouse.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"warehouse\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"ARCHITECTURE\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic warehouse feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n",
+        "approved-spec.md": "# Approved importer\nValidate supplied rows locally, retain IDs, and apply one atomic batch. No queue or service is needed for this bounded input.\n"
+      }
+    },
+    {
+      "id": "U09-required-guard-not-deferred",
+      "request": "/develop iterate work --feature archive-export",
+      "context": "Continue the permitted local export flow. The user explicitly requires path containment before any writes; it is in scope, not optional future hardening. Only synthetic local inputs may be used.",
+      "artifacts": {
+        ".ai-state/archive-export.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"archive-export\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"HAPPY_PATH\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic archive-export feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n"
+      }
+    },
+    {
+      "id": "U10-combined-review-boundary",
+      "request": "/review code \"Assess this change and give a structural coverage/remediation plan for src/importing\" --input source",
+      "context": "Read-only. src/importing contains these two files and declares transport.py unavailable. No rest-of-repository audit is requested.",
+      "artifacts": {
+        "src/importing/runtime.py": "def timeout(values):\n    return values.get(\"timeout\", 15)\n",
+        "src/importing/deploy.py": "def timeout(values):\n    return values.get(\"timeout\", 30)\n"
+      }
+    },
+    {
+      "id": "U11-literal-engine-in-topic",
+      "request": "/review discuss \"Should --engine debate become the default?\"",
+      "context": "Discuss this decision single-pass. The option text is inside the question, not selected as a control.",
+      "artifacts": {}
+    },
+    {
+      "id": "U11-conflicting-input-aliases",
+      "request": "/review code src/importer.py --input source --scope diff",
+      "context": "No input choice has been resolved; two explicit singleton values conflict.",
+      "artifacts": {
+        "src/importer.py": "def import_rows(rows):\n    return list(rows)\n"
+      }
+    },
+    {
+      "id": "U11-missing-diff-base",
+      "request": "/review code src/importer.py --input diff",
+      "context": "Only current source is supplied. No Git history, comparison base, archive or permission to retrieve one is available.",
+      "artifacts": {
+        "src/importer.py": "def import_rows(rows):\n    return list(rows)\n"
+      }
+    },
+    {
+      "id": "U12-explicit-action-like-id",
+      "request": "/develop iterate status --feature status",
+      "context": "The selected existing feature is literally named status. This is an explicit read-only view.",
+      "artifacts": {
+        ".ai-state/status.json": "{\n  \"project_metadata\": {\n    \"feature_name\": \"status\",\n    \"last_updated\": \"2026-11-01T12:00:00Z\",\n    \"current_phase\": \"ARCHITECTURE\",\n    \"next_step\": \"Synthetic existing work\",\n    \"phase_history\": []\n  },\n  \"core_objective\": {\n    \"impact_target\": \"Synthetic status feature\",\n    \"strict_scope_exclusions\": []\n  },\n  \"architecture_decisions\": [],\n  \"implementation_state\": {\n    \"data_flow_description\": \"Permitted input to visible output\",\n    \"test_bed_environment\": \"Existing local native command\",\n    \"test_bed_commands\": [],\n    \"happy_path_entry_points\": []\n  },\n  \"deferred_backlog\": {\n    \"edge_cases\": [],\n    \"hardening_tasks\": []\n  },\n  \"testing_strategy\": {\n    \"target_execution_path\": \"\",\n    \"required_integration_assertions\": []\n  }\n}\n"
+      }
+    },
+    {
+      "id": "U13-workflow-document-terms",
+      "request": "/develop prd \"Specify an operator guide for the workflow and its saved stages\"",
+      "context": "Draft only. The document is about the workflow itself, not unrelated product marketing or code changes.",
+      "artifacts": {}
+    },
+    {
+      "id": "U14-honest-evidence-status",
+      "request": "/review discuss \"What can these usage checks establish?\"",
+      "context": "Saved package/helper and documentation checks passed; no assistant-routing, live host, model-cost, or human-comprehension trial was run.",
+      "artifacts": {}
+    }
+  ]
+}

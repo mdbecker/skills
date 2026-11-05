@@ -1,75 +1,84 @@
 ---
 name: develop
-description: Implement behavior with Iterate or requested test-first BDD, write decisive PRDs, coordinate prompt contracts and replay, reconcile requirement ownership and coverage, or validate repository changes. Select from natural-language intent or explicit modes; review and research reports belong elsewhere.
+description: Implement behavior with feedback-driven iteration or requested test-first BDD, write implementation specifications, coordinate prompt contracts, reconcile requirement coverage, or validate repository changes. Select from natural-language intent or explicit modes; review and research reports belong elsewhere.
 ---
 
 # Develop
 
-If another method would address a remaining uncertainty or contract, read only the
-relevant [optional recipe](resources/combinations.md). Otherwise use this mode alone.
+Choose the outcome, not every available method. Read [shared boundaries](resources/policy.md)
+and the [usage and effects reference](resources/usage.md) when resolving arguments,
+help, defaults, or compatibility. The prepared `resources/` directory travels with
+this package; do not copy a sibling installation when required resources are missing.
 
-Select one owning mode. Load [shared boundaries](resources/policy.md), then only
-the selected method and applicable project profile. The `resources/` directory
-is prepared from canonical sources by the repository exporter and included in
-published bundles; never substitute a sibling installation when it is missing.
+## Outcomes and owning methods
 
-| Invocation | Method |
-|---|---|
-| `/develop iterate <feature> [phase]` | [Existing Iterate lifecycle](iterate.md) |
-| `/develop bdd <task>` | [Test-first BDD](bdd.md) |
-| `/develop prd <target>` | [Specification authoring](prd.md) |
-| `/develop prompt <target>` | [Prompt/contract editing](prompt.md) |
-| `/develop backlog <scope>` | [Requirement coverage](backlog.md) |
-| `/develop validate-repo [scope]` | [Repository validation](validate-repo.md) |
+| Mode | Role and outcome | Method |
+|---|---|---|
+| `iterate` | Feedback-driven implementation with tracked state and manual acceptance. | [Iterative approach](iterate.md) |
+| `bdd` | Test-first behavioral implementation: intended red before production changes. | [BDD](bdd.md) |
+| `prd` | Implementation specification and preferred developer handoff, not code. | [Specification](prd.md) |
+| `prompt` | Specialized prompt/contract editing inside the permitted executor. | [Prompt contracts](prompt.md) |
+| `backlog` | Requirement coverage, delivery owners, gaps and unknowns, not the deferred feature queue. | [Coverage](backlog.md) |
+| `validate-repo` | Required project checks, preservation, failure attribution and local readiness. | [Repository checks](validate-repo.md) |
 
-Explicit mode wins. Ordinary feature implementation uses Iterate unless current
-project policy or the user's test-first request selects BDD. A BDD-required task
-must not enter code-before-tests merely because Iterate is the ordinary default.
-Do not turn a specification,
-test review, or readiness check into implementation. Reject unknown modes with
-this usage table; ask a targeted question only when consequential ambiguity
-cannot be resolved from the request and project policy.
+Explicit intent and current project policy win. Ordinary feature implementation
+uses feedback-driven iteration unless test-first is requested/required. Bounded
+edits do not automatically need a full feature lifecycle or demonstration. Resolve
+an active-approach conflict rather than silently replacing it. Do not turn planning,
+scenario review, coverage, or validation into implementation.
 
-Natural-language requests select the same modes: “write failing tests, then fix
-this behavior” selects BDD; “review these acceptance scenarios” is read-only BDD;
-“write a complete implementer handoff” selects PRD; “change extraction while
-keeping validation and replay aligned” selects prompt; “which requirements have
-delivery owners and implementation evidence?” selects backlog. PRD drafting is
-not implementation; backlog coverage is not completion or tracker-write authority.
-Prompt edits preserve application-owned evidence fields and require actual mapped
-surfaces, not an invented pipeline. Explicit intent and current project policy
-govern selection; resolve a conflicting active lifecycle rather than silently
-replacing it.
+## Inputs, help, and context
 
-“Validate these changes,” “Run the repository checks,” and “Check whether this
-patch is locally ready” select `validate-repo`: execute the target project's
-required checks, inspect affected contracts, preserve unrelated work, and report
-local readiness. Validation does not start a feature lifecycle or create feature
-state. It is not authorization for implementation, unrelated fixes, installation,
-commits, live LLM evals, or deployment; findings do not grant permission to fix
-them. Before running a mapped command, inspect its underlying workflow and resolve
-formatting, installation, cleanup and other effects against permitted scope.
-Record before/after file and staging evidence; focused tests do not replace
-required canonical validation. Load its reference for the contract evidence,
-failure classification and reporting procedure, without loading other methods.
+Natural language and explicit modes select the same methods. Subjects are meaningful
+requests or actual targets, not registered labels such as `import-spec`. An omitted
+subject may come from one clear current conversational target; ambiguity needs one
+question before consequential work. Context supplies information, not permission.
 
-For Iterate, interpret the remaining arguments as feature and phase controls,
-including `park`, `list`, and no-argument behavior. Its bundled helper is
-`scripts/manifest.py`; resolve that absolute path and run it from the
-target project, not the installation directory. Preserve phases, manual feedback,
-state and user edits.
-Do not change an active Iterate lifecycle merely because BDD was suggested.
+`/develop help [<mode>]` and a bare parent without an actionable request give a
+read-only overview. Help does not initialize feature state, create a test bed,
+prepare resources, install tools, or start services. Unknown controls/modes and
+conflicting singleton values give usage without effects. Controls inside quoted
+subject text remain data. The complete grammar and defaults live in the usage guide.
 
-Specifications choose a preferred design but do not replace Iterate's architecture
-discussion and user agreement. Prompt specialization respects the selected
-lifecycle's testing stage. Requirement coverage is not the deferred feature queue;
-feature-state changes use the existing helper only when authorized.
+## Iterate state actions
 
-For profile mapping read [adaptation](resources/adaptation.md). Relevant profiles:
+Use `iterate work`, `status`, `defer`, or `list` with the guide's named controls.
+Bare `/develop iterate` is read-only status, replacing the older automatic resume.
+Status may disclose most-recent viewing by file modification time. Work/defer require
+an explicit or exactly one human-established feature; never select a mutation from
+recency. Show the selected ID/effect; ask only when unclear. Missing resume state is
+not permission to initialize a misspelling. New work needs ID, outcome, and start-new
+intent and begins in ARCHITECTURE.
+
+Unambiguous legacy feature/phase and list forms remain. Legacy park maps to defer
+without implicit recent-work writes; clarify IDs that collide with action words.
+Existing phase codes, state/history, unknown fields and optional omissions remain.
+An override is intent, not proof that prior checkpoints passed.
+
+All actual state operations use this package's `scripts/manifest.py`, resolved by
+absolute installed path and invoked from the target project. Skill flags are not
+identical to positional helper arguments. Preserve corrupted/linked state; do not
+repair or reset it. Read [the full method](iterate.md) before performing work.
+
+## Reuse and stopping boundaries
+
+Reuse adequate approved specifications/discussions as architecture inputs; confirm
+remaining assumptions and user agreement without repeating an options exercise.
+Prompt guidance specializes one executor, preserving application-owned evidence,
+identity/time meaning, validation, accepted replay and versioning. Never invent
+missing pipelines or claim generation quality from deterministic contract checks.
+Coverage is not completion or tracker authority and does not synchronize feature
+state. Feature-state changes require their own explicit or established target.
+
+Validation executes mapped required checks and inspects affected contracts under
+permitted command effects. It neither starts a lifecycle nor authorizes fixes,
+installation, Git changes, live model calls, or deployment. Record before/after
+source and staging, full versus focused checks, failures and omissions. Findings do
+not grant implementation permission; focused green never replaces canonical gates.
+
+Read only a useful [optional combination](resources/combinations.md), not a mandatory
+chain. Apply [adaptation](resources/adaptation.md) and only the relevant profile:
 [this repository](resources/profiles/skills.md), [Riskonnect](resources/profiles/riskonnect.md),
-[template](resources/profiles/template.md), or the target project's own mapping.
-Load the selected mode's [worked cases](resources/examples.md) only as needed.
-No mode automatically invokes audits, nine-agent review, installation or deployment.
-
-Return the selected scope, actual work/checks, results and limits. Never claim
-tests, live checks, or user acceptance that did not occur.
+[template](resources/profiles/template.md), or the target's current instructions.
+Selected methods link complete [worked cases](resources/examples.md). Return actual
+work, checks, evidence and limits; do not claim acceptance or live verification.

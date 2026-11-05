@@ -1,5 +1,8 @@
 # Explicit BDD
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Use for requests to implement specified behavior with failing tests first, or to
 review Given/When/Then scenarios. Natural-language intent counts; an explicit
 command is not required. Behavioral-test review is read-only. Ordinary testing

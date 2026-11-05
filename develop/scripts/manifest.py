@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""State manifest CLI for the iterate skill.
+"""Project-local feature state CLI for Develop's feedback-driven approach.
 
-Manages .ai-state/<feature>.json in the current project. Designed to be the
-single seam through which agents (and later a REST/MCP API) touch the state.
+Run this terminal helper from the project being developed, using its installed
+absolute path. Assistant slash requests have different instruction grammar.
+Feature IDs such as csv-import are chosen names for .ai-state/<id>.json, not
+built-in features. Status/list only read; phase/park/set change explicitly
+selected state. Implicit status selects file modification time, not conversation.
 
 Usage examples:
   manifest.py init csv-import --impact "Users upload a CSV and see rows in the dashboard"
@@ -31,9 +34,14 @@ STATE_DIR = Path(".ai-state")
 # Committed alongside the tools so future feature iterations can discover them.
 TOOLS_REGISTRY = Path("testbed/tools/registry.json")
 PHASES = ["ARCHITECTURE", "HAPPY_PATH", "TEST_BED", "TWEAKING", "TESTING", "FINALIZATION"]
+PHASE_LABELS = {
+    "ARCHITECTURE": "Agree direction", "HAPPY_PATH": "Minimal working flow",
+    "TEST_BED": "Manual demonstration", "TWEAKING": "Refine with feedback",
+    "TESTING": "Regression protection", "FINALIZATION": "Agreed follow-ups",
+}
 
 EXIT_CRITERIA = {
-    "ARCHITECTURE": "major decisions recorded (2+ options each) and user agrees on direction",
+    "ARCHITECTURE": "unsettled choices compared, adequate plans reused, and user agrees on direction",
     "HAPPY_PATH": "primary flow code-complete against the recorded data flow",
     "TEST_BED": "test bed runs and happy path exercised at least once (pass or reproducible failure)",
     "TWEAKING": "user says the behavior feels right",
@@ -283,6 +291,9 @@ def cmd_status(args):
 
     print(f"feature:      {feature}")
     print(f"phase:        {phase}")
+    print(f"stage:        {PHASE_LABELS[phase]}")
+    selection = "explicit feature" if args.feature else "most recent manifest by file modification time"
+    print(f"selection:    {selection}")
     print(f"updated:      {meta['last_updated']}")
     print(f"impact:       {m['core_objective']['impact_target']}")
     if meta.get("next_step"):
@@ -518,25 +529,25 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="command", required=True)
 
-    s = sub.add_parser("init", help="create a new manifest in ARCHITECTURE phase")
-    s.add_argument("feature")
+    s = sub.add_parser("init", help="create established new feature state in ARCHITECTURE")
+    s.add_argument("feature", help="chosen persistent feature ID, not a task description")
     s.add_argument("--impact", required=True, help="one-sentence impact target")
     s.set_defaults(fn=cmd_init)
 
-    s = sub.add_parser("status", help="print the status dashboard")
-    s.add_argument("feature", nargs="?", help="defaults to most recently updated manifest")
+    s = sub.add_parser("status", help="read-only status and disclosed feature selection")
+    s.add_argument("feature", nargs="?", help="optional ID; defaults to most recent file modification time")
     s.add_argument("-v", "--verbose", action="store_true", help="include backlog items")
     s.set_defaults(fn=cmd_status)
 
     s = sub.add_parser("list", help="list all features in .ai-state/ (most recent first)")
     s.set_defaults(fn=cmd_list)
 
-    s = sub.add_parser("phase", help="transition to a phase (records git commit in phase_history)")
+    s = sub.add_parser("phase", help="change an explicit feature's stage; records current Git SHA, never creates a commit")
     s.add_argument("feature")
-    s.add_argument("phase", choices=PHASES)
+    s.add_argument("phase", choices=PHASES, help="stored stage code; does not certify acceptance")
     s.set_defaults(fn=cmd_phase)
 
-    s = sub.add_parser("park", help="park an edge case or hardening task")
+    s = sub.add_parser("park", help="record explicitly targeted deferred work; does not implement it")
     s.add_argument("feature")
     s.add_argument("kind", choices=["edge", "hardening"])
     s.add_argument("description")
@@ -551,7 +562,7 @@ def main():
 
     s = sub.add_parser("testbed", help="record or list test bed commands")
     s.add_argument("feature")
-    s.add_argument("action", choices=["add", "list", "remove"])
+    s.add_argument("action", choices=["add", "list", "remove"], help="add requires --label/--cmd; remove requires an existing --label")
     s.add_argument("--label")
     s.add_argument("--cmd")
     s.set_defaults(fn=cmd_testbed)
@@ -567,7 +578,7 @@ def main():
     s.add_argument("--path", help="repo-relative path, conventionally under testbed/tools/")
     s.add_argument("--desc")
     s.add_argument("--usage", help="one-line invocation example")
-    s.add_argument("--feature", help="feature that produced this tool")
+    s.add_argument("--feature", help="creator annotation for a tool, not a state-operation selector")
     s.set_defaults(fn=cmd_tool)
 
     s = sub.add_parser("decision", help="record an architecture decision")

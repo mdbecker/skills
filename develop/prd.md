@@ -1,5 +1,8 @@
 # Implementation specification
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Use for requests to write or revise a concise, decisive implementation handoff,
 including natural-language requests without a mode command. Drafting does not
 implement the proposed feature.

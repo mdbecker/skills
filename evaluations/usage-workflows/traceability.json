@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "scope": "PRD usage-workflows U01-U14",
+  "requirements": [
+    {
+      "id": "U01",
+      "sources": [
+        "resources/usage.md",
+        "README.md"
+      ],
+      "cases": [
+        "U01-new-reader-help"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U02",
+      "sources": [
+        "resources/usage.md",
+        "develop/SKILL.md"
+      ],
+      "cases": [
+        "U02-contextual-bdd",
+        "U02-ambiguous-context"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U03",
+      "sources": [
+        "resources/usage.md",
+        "develop/iterate.md"
+      ],
+      "cases": [
+        "U03-bare-empty-status"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U04",
+      "sources": [
+        "resources/usage.md",
+        "develop/iterate.md"
+      ],
+      "cases": [
+        "U04-explicit-defer-not-recency"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U05",
+      "sources": [
+        "resources/usage.md",
+        "develop/iterate.md"
+      ],
+      "cases": [
+        "U05-missing-resume",
+        "U05-reserved-word-ambiguity"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U06",
+      "sources": [
+        "resources/usage.md",
+        "develop/scripts/manifest.py"
+      ],
+      "cases": [
+        "U06-explicit-override"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U07",
+      "sources": [
+        "resources/usage.md",
+        "develop/iterate.md"
+      ],
+      "cases": [
+        "U07-native-cli-demo"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U08",
+      "sources": [
+        "resources/combinations.md",
+        "develop/prd.md"
+      ],
+      "cases": [
+        "U08-reuse-approved-spec"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U09",
+      "sources": [
+        "resources/policy.md",
+        "develop/iterate.md"
+      ],
+      "cases": [
+        "U09-required-guard-not-deferred"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U10",
+      "sources": [
+        "review/SKILL.md",
+        "resources/combinations.md"
+      ],
+      "cases": [
+        "U10-combined-review-boundary"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U11",
+      "sources": [
+        "resources/usage.md",
+        "review/SKILL.md"
+      ],
+      "cases": [
+        "U11-literal-engine-in-topic",
+        "U11-conflicting-input-aliases",
+        "U11-missing-diff-base"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U12",
+      "sources": [
+        "resources/usage.md",
+        "tests/test_usage_contract.py"
+      ],
+      "cases": [
+        "U12-explicit-action-like-id"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U13",
+      "sources": [
+        "develop/iterate.md",
+        "resources/usage.md"
+      ],
+      "cases": [
+        "U13-workflow-document-terms"
+      ],
+      "assistant_behavior": "not_run"
+    },
+    {
+      "id": "U14",
+      "sources": [
+        "evaluations/usage-workflows/README.md",
+        "resources/hosts/codex.md"
+      ],
+      "cases": [
+        "U14-honest-evidence-status"
+      ],
+      "assistant_behavior": "not_run"
+    }
+  ]
+}

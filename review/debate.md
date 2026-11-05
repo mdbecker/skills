@@ -8,7 +8,7 @@ Run code review or technical discussion through **5 independent reviews → 3 in
 
 Read [shared boundaries](resources/policy.md), [reference model policy](resources/models.md), and the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md) capability mapping. Resources are included in exports and prepared locally from canonical sources. Missing resources must be reported, not replaced with a sibling installation or guessed defaults.
 
-For `/review code <target> --engine debate` or `/review smells <scope> --engine debate`, use the assessment and source scope selected by the parent. For `/review discuss "topic" --engine debate`, apply the hierarchy to that question. Parse scope/engine controls before passing the subject. Use the conversation's explicit target when available; otherwise ask what to challenge.
+For `/review code <target> --engine debate` or `/review smells <scope> --engine debate`, use the assessment and source scope selected by the parent. For `/review discuss "topic" --engine debate`, apply the hierarchy to that question. Resolve input/legacy-scope and engine controls with [shared usage](resources/usage.md#review) before passing the subject. Use the conversation's explicit target when available; otherwise ask what to challenge.
 
 ## Codex subagent route
 
@@ -75,3 +75,9 @@ Report model eligibility, evidence-stage completion, preferred-tier conformance 
 For `/review discuss ... --engine debate`, use the same 5→3→1 hierarchy with the same question, relevant evidence, constraints, and competing options. Source claims still require evidence.
 
 Present conclusions with their evidence and remaining disagreements. Treat model findings as claims to assess, not verified facts. Do not apply fixes or replace the project's development workflow merely because a reviewer suggests them.
+
+An explicitly combined implementation/structural request reuses source gathering
+within each independent reviewer while retaining the requested coverage/remediation
+and deduplicated IDs. No profile expands finding scope or shares initial peer
+conclusions. New usage/context controls are not a host-routing benchmark merely
+because this hierarchy completed.

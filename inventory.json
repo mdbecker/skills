@@ -4,7 +4,7 @@
   "parents": ["develop", "review", "research"],
   "common_resources": [
     "resources/policy.md", "resources/models.md", "resources/adaptation.md",
-    "resources/provenance.json", "resources/examples.md", "resources/combinations.md", "resources/hosts/codex.md",
+    "resources/provenance.json", "resources/examples.md", "resources/combinations.md", "resources/usage.md", "resources/hosts/codex.md",
     "resources/hosts/claude.md", "resources/profiles/skills.md", "resources/profiles/riskonnect.md",
     "resources/profiles/template.md", "resources/profiles/incidental-findings.md",
     "resources/profiles/reliability-study.md"

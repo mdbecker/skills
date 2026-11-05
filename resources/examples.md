@@ -80,3 +80,11 @@ Failure: missing restricted data or build configuration blocks work; failed rebu
 preserves output/inputs; unavailable visual checks remain not-run. An explicit
 saved-evidence correction is distinct from editorial work and never a clinical
 accuracy or matched-cohort improvement claim.
+
+## Reading invocation examples
+
+[Shared usage](usage.md) defines argument roles and effects. `csv-import` is an
+example persistent ID, while specification/prompt/coverage subjects are requests,
+not registered filenames. Use descriptive task text and actual paths where known.
+Defer only an explicitly optional future improvement, not an in-scope correctness
+requirement also presented as a test-first task.

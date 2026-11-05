@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "commit": "70664594e567e97396e5c7e48904cf06e50c4cf6",
+  "identity": "clean current instructions before this usage-contract implementation",
+  "source_sha256": {
+    "README.md": "421d8ee9f9cb96bf8e42f2f114eb1315a9dbb4d04c710c420cbe4c07b6635f51",
+    "develop/SKILL.md": "02103270558166442d8540f440fb9c502c7460d38d6ca954564cbd1932661601",
+    "develop/iterate.md": "8a306dc95f88f15297f145b1ebff4a4db94f0c637f7861905f9eb8e2b3b18d91",
+    "review/SKILL.md": "a3d2433d55beee28973bbcdd7968496a767f5b4964dc965abbc27f2a85060ff2",
+    "resources/policy.md": "994417ef7519a7b55d0698ac9ebb546607f16ad0a1d212122e9542142139a6c2",
+    "resources/combinations.md": "94d97774900173860aa3dddc73485c2631bbe9654f6ad620c536cfc3b9dbdb98",
+    "resources/hosts/codex.md": "16b656c59735c581d98aedc3f4be5da55ff1dd91caab294e277afe09ac4b8c23",
+    "inventory.json": "b23b44b11c4715b5dbc3a025ce71944a1ac512218732309d8ec3a321c7b3e655"
+  },
+  "reconstruction": "Recover these exact commit files/hashes into a separate approved workspace; do not give baseline the new usage guide or evaluator answers."
+}

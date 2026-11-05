@@ -15,7 +15,10 @@ installation is required.
 Natural-language requests select the same modes as the command examples below.
 Explicit intent and current project instructions govern selection. Use the smallest
 applicable method: a simple answer or document edit does not need a feature lifecycle
-or a hierarchical review.
+or a hierarchical review. [Usage and effects](resources/usage.md) defines arguments,
+context/defaults, state actions, and helper syntax. Slash examples are assistant
+requests, not commands to paste into Bash. `/develop help` and `/review help` are
+read-only overviews when you need to choose a method.
 
 All modes follow the [shared boundaries](resources/policy.md). A specification,
 review, or check does not grant permission to implement, install dependencies, edit
@@ -101,36 +104,59 @@ BDD. Resolve a conflict with an active lifecycle rather than silently replacing 
 
 #### Modes
 
-| Mode | Outcome | Guide |
+| Mode | Responsibility and outcome | Guide |
 |---|---|---|
-| `iterate` | Architecture agreement, a minimal running flow, manual feedback, focused integration tests, and explicitly tracked deferred work. | [Feature lifecycle](develop/iterate.md) |
-| `bdd` | Observable behavioral red before production changes, followed by the minimum implementation and verified green. | [Test-first development](develop/bdd.md) |
-| `prd` | One preferred, complete implementation design with contracts, acceptance scenarios, prerequisites, and blocking owner decisions. | [Specification](develop/prd.md) |
-| `prompt` | Coordinated generation, wire/schema, validation, application enrichment, accepted replay, consumers, and prompt version/hash changes. | [Prompt contracts](develop/prompt.md) |
-| `backlog` | An evidence-linked register separating delivery, enabling work, validation, ownership, gaps, and unknowns. | [Requirement coverage](develop/backlog.md) |
-| `validate-repo` | The project's required checks, affected-contract evidence, file/staging preservation, failure attribution, and local-readiness report. | [Repository validation](develop/validate-repo.md) |
+| `iterate` | Feedback-driven implementation approach: architecture agreement, a minimal running flow, manual feedback, focused integration tests, and explicitly tracked deferred work. | [Feature lifecycle](develop/iterate.md) |
+| `bdd` | Test-first behavioral implementation approach: observable red before production changes, followed by the minimum implementation and verified green. | [Test-first development](develop/bdd.md) |
+| `prd` | Implementation specification: one preferred, complete implementation design with contracts, acceptance scenarios, prerequisites, and blocking owner decisions. | [Specification](develop/prd.md) |
+| `prompt` | Specialized prompt/contract editing: coordinated generation, wire/schema, validation, application enrichment, accepted replay, consumers, and prompt version/hash changes. | [Prompt contracts](develop/prompt.md) |
+| `backlog` | Requirement coverage: an evidence-linked register separating delivery, enabling work, validation, ownership, gaps, and unknowns. | [Requirement coverage](develop/backlog.md) |
+| `validate-repo` | Repository checks: the project's required commands, affected-contract evidence, file/staging preservation, failure attribution, and local-readiness report. | [Repository validation](develop/validate-repo.md) |
 
 #### Examples
 
+`csv-import` below is an example feature ID you choose, not a bundled importer.
+Establish its actual outcome first. Work resumes/starts that selected feature;
+status and list only view state; defer records an explicitly optional follow-up.
+
 ```text
-/develop iterate csv-import
-/develop iterate csv-import TWEAKING
-/develop iterate park "Reject duplicate deliveries"
+/develop iterate work --feature csv-import
+/develop iterate status --feature csv-import
+/develop iterate defer "Optional import progress display later" --feature csv-import
 /develop iterate list
-/develop bdd reject-duplicate-delivery
-/develop prd import-spec
-/develop prompt invoice-extraction
-/develop backlog import-requirements
+```
+
+For a precisely defined behavior or bounded handoff, describe what you want rather
+than copying an unexplained task label. Context may supply an omitted subject;
+otherwise the assistant asks for the missing request/source, not an arbitrary ID.
+
+```text
+/develop bdd "Reject a repeated delivery without applying its effects twice"
+/develop prd "Specify the CSV import feature"
+/develop prompt "Preserve uncertainty in invoice extraction and its output contract"
+/develop backlog "Compare import requirements with existing tickets and implementation"
 /develop validate-repo
 ```
 
+`import-spec`, `invoice-extraction`, and `import-requirements` were illustrative
+subjects, not registered filenames/tickets. Output paths are separate requests.
+[Shared usage](resources/usage.md#subjects) distinguishes these argument roles.
+
 #### Boundaries
 
-The iterative lifecycle retains six phases: architecture, minimal happy path,
-manual test bed, tweaking, testing, and finalization. Its test bed includes a basic
-web UI and editable Python driver; user feedback precedes stabilized tests and
-hardening. It also supports local-only work without initializing Git or requiring
-commits, a remote, or PRs. See the [complete method](develop/iterate.md).
+The iterative approach keeps six [readable checkpoints](resources/usage.md#phases):
+agree direction, minimal working flow, manual demonstration, refine with feedback,
+regression protection, and agreed follow-ups. Choose an architecture-agreed existing
+UI, CLI/sample files, native driver, or thin page; web/Python is not mandatory for
+every task. Required protections/checks apply from the start. Local-only work does
+not initialize Git or require commits, a remote, or PRs. See the
+[complete method](develop/iterate.md).
+
+Bare `/develop iterate` now shows read-only status instead of automatically resuming
+recent work. Work/defer need an explicit or human-established ID, not file recency.
+Legacy feature/phase and park forms remain when unambiguous, with safer targeting.
+Advanced `--phase TWEAKING` means "Refine with feedback" and changes existing state;
+it does not prove earlier checkpoints passed. All stored phase codes stay unchanged.
 
 The Python 3.11+ standard-library helper is owned by Develop. Resolve its installed
 absolute path and run it from the project being developed, not the skill directory:
@@ -151,7 +177,8 @@ extra fields and existing optional omissions survive; reads do not backfill file
 
 BDD import/setup errors do not count as behavioral red. Reviewing acceptance
 scenarios is read-only. A PRD does not implement its design or bypass architecture
-agreement. Prompt guidance specializes one executor/lifecycle, preserves
+agreement; reuse an adequate approved plan instead of repeating analysis.
+Prompt guidance specializes one executor/lifecycle, preserves
 application-owned identity and timestamp meaning, and never invents missing
 consumers or evidence. Deterministic contract validity is not generation quality.
 
@@ -180,22 +207,30 @@ Ordinary review is single-pass.
 
 | Mode | Outcome | Guide |
 |---|---|---|
-| `code` | Findings on intent, architecture, correctness, contracts, compatibility, and maintainability, with evidence and preferred remedies. | [Code review](review/code.md) |
-| `smells` | Consequence-grounded structural findings, a file-coverage ledger, and a dependency-aware remediation plan. | [Structural audit](review/smells.md) |
-| `discuss` | One supported technical recommendation with tradeoffs, conditional claims, and consequential unknowns. | [Technical discussion](review/discuss.md) |
+| `code` | Implementation review: findings on intent, architecture, correctness, contracts, compatibility, and maintainability, with evidence and preferred remedies. | [Code review](review/code.md) |
+| `smells` | Structural audit: consequence-grounded findings, a file-coverage ledger, and a dependency-aware remediation plan. | [Structural audit](review/smells.md) |
+| `discuss` | Technical decision: one supported recommendation with tradeoffs, conditional claims, and consequential unknowns. | [Technical discussion](review/discuss.md) |
 
 #### Examples
 
+`src/importer.py` and `src/importing` are example paths; replace them with accessible
+source in the selected project. A diff request needs the actual comparison base.
+
 ```text
-/review code src/importer.py --scope source
-/review code the current diff --scope diff
+/review code src/importer.py --input source
+/review code "Assess the current changes" --input diff
 /review smells src/importing
 /review discuss "Synchronous import or queue?" --engine debate
 ```
 
 #### Boundaries
 
-Provide accessible current source, a declared scope, the real comparison base for
+[Shared usage](resources/usage.md#review) separates the outcome, inspected boundary,
+input representation, and engine. `--input diff|source` is canonical for code review;
+legacy `--scope` is its alias, not a breadth control. Conflicting values stop with
+usage. Literal controls inside a question do not select an engine.
+
+Provide accessible current source, a declared boundary, the real comparison base for
 a diff review, and prior findings for re-review. Current-source review without a
 base cannot establish when a defect was introduced. Missing sources stay
 unreviewed; disclose coverage and checks that were not performed. No findings is
@@ -206,6 +241,9 @@ audit diagnoses demonstrated maintenance or behavioral consequences, not file
 length or style alone; it does not automatically refactor. Review findings include
 locations, evidence or a safe reproduction, impact, urgency, compatibility, and one
 preferred complete remedy. Reviews neither apply fixes nor post comments.
+Explicit combined implementation/structural requests can reuse snapshot-matched
+inspection per reviewer and return one deduplicated report plus requested coverage;
+a structural observation alone does not automatically launch another full audit.
 
 Only explicit `--engine debate` selects the [hierarchical method](review/debate.md):
 five independent reviews, three whole-set reconciliations, and one final synthesis.
@@ -241,6 +279,10 @@ Despite its name, it does not conduct new research.
 | `report update` | Presentation, explanation, or a narrowly supported saved-evidence correction with protected values and meanings. | [Report maintenance](research/report.md) |
 
 #### Examples
+
+`reliability-summary` is an illustrative report subject, not a registered template
+or filename. Identify the actual report/project, approved saved inputs, and existing
+build mapping before assembly or updates.
 
 ```text
 /research report create reliability-summary
@@ -281,6 +323,9 @@ Combine methods only when the next one answers an unresolved question or protect
 a specific contract. A sufficient specification can hand off to authorized
 development; a changed implementation can hand off to scoped review and validation.
 Skip redundant stages and reuse current evidence rather than repeating analysis.
+Prompt rules specialize the selected executor; requirement coverage is distinct
+from deferred feature work. Existing choices/checks remain inputs, not another
+mandatory lifecycle or an approval invented by a handoff.
 
 | Situation | Useful handoff | Recipe |
 |---|---|---|
@@ -344,7 +389,10 @@ model-protocol, and composition-protocol approvals remain separately gated.
 
 Focused evidence lives in [workflow methods](evaluations/workflow-methods/README.md),
 [review](evaluations/review/README.md), [repository validation](evaluations/validation/README.md),
-and [report maintenance](evaluations/research-report/README.md). Worked examples are
+and [report maintenance](evaluations/research-report/README.md).
+[Usage-workflow scenarios](evaluations/usage-workflows/README.md) separate package/
+helper evidence from separately approved assistant/host/user-comprehension trials.
+Worked examples are
 illustrations, not observed agent outcomes. Frozen inputs/expectations and historical
 snapshots retain their identities; evaluator answers are excluded from runtime
 bundles. Local deterministic checks do not certify behavioral parity.
@@ -360,6 +408,11 @@ allowance—requires explicit approval and is not unchanged performance.
 record sources, attribution, and licensing.
 
 ## Releases
+
+The [usage-contract rollout notes](resources/usage.md#rollout) announce changed bare
+Iterate/parking defaults and proportionate demonstrations. They are instruction
+changes, not a new runtime router or an automatic upgrade of copied installations.
+
 
 [Release automation](.github/workflows/release.yml) handles an existing
 `vMAJOR.MINOR.PATCH[-prerelease]` tag or manual dispatch. It verifies tag identity

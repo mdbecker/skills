@@ -16,3 +16,8 @@ selection/arguments and installed helper paths; metadata alone is not observed
 invocation. Unsupported delegation leaves the Debate engine unavailable while
 ordinary single-pass methods may remain usable. Model references do not imply
 the model is actually available through this host.
+
+Use [shared usage](../usage.md) for named controls, context, read-only help and
+compatibility. Those forms are instruction grammar, not a new terminal router.
+Helper data-preservation and package checks do not prove assistant/host selection;
+observe routing only within separately approved evaluation scope.

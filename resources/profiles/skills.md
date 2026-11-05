@@ -23,3 +23,9 @@ model adherence, real host invocation, scientific validity or live workloads.
 
 Permission scope: requested local edits/checks only. No Git mutations, global
 installation, publication/deployment or model-mediated evaluations are implicit.
+
+[Shared usage](../usage.md) owns grammar/defaults. Help/status/list are read-only;
+work/deferral require explicit or human-established targets, not recency. Iterative
+manual acceptance remains, with an agreed task-appropriate surface and essential
+protections from the start. Real helper/package effects and documentation governance
+are not assistant-routing/user-comprehension acceptance.

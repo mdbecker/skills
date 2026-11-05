@@ -23,7 +23,8 @@ bounded feedback revisits only decisions affected by new evidence.
 
 ## Enter, hand off and stop
 
-Preflight available methods/tools and authority using [shared policy](policy.md).
+Resolve inputs, effects and context with [shared usage](usage.md); preflight
+available methods/tools and authority using [shared policy](policy.md).
 Use `/develop iterate` for the feature lifecycle and `--engine debate` on a
 `/review` mode for the explicitly selected hierarchy. An ordinary discussion
 does not authorize nine agents. Mode names below are labels to discover
@@ -53,7 +54,8 @@ Keep one lifecycle. Iterate owns phases/manual feedback and its CLI-managed stat
 Explicit BDD owns test-first sequence and observable promises; prompt guidance
 specializes the same executor, not another lifecycle or editor. Do not re-enter a
 full lifecycle merely to load a reference. Existing green characterization is not
-manufactured red/green BDD and does not authorize early new tests in Iterate.
+manufactured red/green BDD. Required project/safety checks may occur early; optional
+completeness and the wider suite follow the agreed approach.
 
 Stop at evidence sufficiency, a user checkpoint, critical missing input, or budget.
 Agree evidence and applicable limits before costly experiments/model work. Revisit
@@ -189,7 +191,7 @@ urgency remain distinct.
 the guarantee consistent while preserving public adapters. Verify the divergence
 is resolved rather than relocated behind another abstraction.” A behavioral fix
 can use explicit BDD red/green; a pure refactor can reuse green characterization
-without manufacturing failure or adding early tests to Iterate.
+without manufacturing failure; required safety checks still apply early.
 
 **Ask:** “Audit this declared policy scope and show its consequence/remedy. Preserve
 public behavior; recommend only until edits are authorized.”
@@ -233,3 +235,9 @@ assembly/claims. Preserve prior output/creation inputs; no fabricated data,
 notebook runs, model gap-filling or silent section omission.
 **Exit:** supported requested edits with actual evidence/visual-check status, or
 the precise blocker. No implied publication, expert score or clinical validity.
+
+Combined implementation assessment and structural planning reuse snapshot-matched
+source gathering within each reviewer, preserve declared boundaries and requested
+coverage/remediation, and return a deduplicated report. Supporting inspection does
+not expand finding scope. Initial Debate reviewers remain independent; ordinary
+combined requests do not select that engine or authorize implementation.

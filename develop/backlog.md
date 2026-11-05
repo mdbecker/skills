@@ -1,5 +1,8 @@
 # Requirement and work-item coverage
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Use this mode for “reconcile these requirements against our tickets and code” or
 “identify coverage and ownership gaps.” It produces a coverage register, not a
 completion certificate, implementation task, or permission to change a tracker.

@@ -1,5 +1,8 @@
 # Repository validation
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Execute the target project's required checks, inspect affected contracts, preserve
 unrelated work, and report local readiness. Select this mode for “Validate these
 changes,” “Run the repository checks,” or “Check whether this patch is locally

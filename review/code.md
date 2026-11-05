@@ -1,5 +1,8 @@
 # Code review
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Review whether the declared change or current implementation is desirable,
 well-placed, correct and maintainable. This is a source-grounded review, not an
 automatic repository-wide audit or permission to apply the recommendations.

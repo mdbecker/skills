@@ -32,3 +32,10 @@ model gap-filling or clinical-certification claim is permitted by report work.
 Sources for these boundaries are recorded in [provenance](provenance.json).
 Profiles describe applicable context; they are neither authorization nor current
 facts about an uninspected project. Use [adaptation](adaptation.md) for transfer.
+
+Usage and omission rules live in [the shared reference](usage.md). Help/status/list
+are read-only; explicit or human-established targets are required for work/deferral,
+not inferred from file recency. Context supplies information, not new authority.
+Early verification of required safety/project contracts is allowed; only optional
+completeness is deferred. Demonstration technology is selected for the task under
+its permissions, not required merely to complete a phase.

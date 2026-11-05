@@ -4,7 +4,10 @@ Keep changes focused on an observable improvement. Describe the problem, the res
 
 ## Preserve the skills' intent
 
-Iterate is deliberately driven by hands-on feedback: architecture, minimal happy path, manual test bed, tweaking, meaningful tests, then finalization. Changes should support that sequence. Avoid adding mandatory test-first development, planning artifacts, or automatic phase gates as incidental cleanup.
+Iterate is deliberately driven by hands-on feedback: architecture, minimal happy path, manual test bed, tweaking, meaningful tests, then finalization. Changes should support that sequence while preserving required contracts from
+the start. Choose an agreed usable demonstration, not mandatory web/Python
+scaffolding. Required project/safety checks may occur early; this does not impose
+mandatory test-first development or automatic phase gates.
 
 Debate retains five independent reviews, three independent whole-set reconciliations, and one final synthesis. Model names are reference profiles, not whitelists; prefer economical capable reviewers, stronger middle-stage models and strongest final synthesis within available host/data/budget limits. Preserve dissent, evidence checking and distinct-agent stages independently of model-tier preference. Codex/Claude invocation and quality claims require actual host evidence.
 
@@ -48,3 +51,17 @@ publishing or globally installing requires separate authorization.
 ## Pull requests
 
 Use a concrete title and explain the changed behavior and validation. Cite source evidence for review findings and distinguish verified defects from hypotheses or preferences. Preserve attribution when adapting existing work.
+
+## Usage contracts and evidence
+
+Maintain the canonical argument/effects guide in `resources/usage.md`; README and
+entrypoints link it instead of owning competing default rules. Keep read-only
+help/status separate from explicit-target work/deferral. Preserve stored IDs,
+phase values, helper CLI syntax and corrupted/user-edited state during usage changes.
+Named input controls do not widen review boundaries or authorize effects.
+
+Documented-routing and structural checks are governance, not observed assistant
+behavior. New usage fixtures/expectations stay evaluator-only and independent;
+model/host/user-comprehension runs need their separate approved scope and budget.
+The existing frozen corpora and qualification records must not be rewritten or
+promoted from documentation/package success.

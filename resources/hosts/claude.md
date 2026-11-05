@@ -14,3 +14,8 @@ Test discovery, explicit/indirect invocation, parsing, helper resolution, permis
 tooling and observed results in the actual host. A copied package or successful
 file validation is only installation evidence. This repository has not yet run
 the real Claude invocation/quality gates; that status must not be reported as passed.
+
+Use [shared usage](../usage.md) for named controls, context, read-only help and
+compatibility. Those forms are instruction grammar, not a new terminal router.
+Helper data-preservation and package checks do not prove assistant/host selection;
+observe routing only within separately approved evaluation scope.

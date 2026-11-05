@@ -6,12 +6,15 @@ It does not restart this lifecycle, require sibling installs or replace user che
 
 This is the canonical feature lifecycle selected by `/develop iterate`.
 Its helper is `scripts/manifest.py` in this skill directory. Parse the parent
-mode before interpreting feature, phase, `park` and `list` arguments. Read
-shared policy without silently changing the lifecycle or state ownership.
+mode before resolving work/status/defer/list, contextual targets, or legacy forms
+with [shared usage](resources/usage.md#iterate). Read shared policy without silently
+changing the lifecycle or state ownership.
 
-Iterative feature development driven by a persistent state manifest. Validate the architecture and happy path against a real, running test bed BEFORE writing edge cases, error handling, or tests. Complexity is deferred, not forgotten — it's parked in a backlog and consumed in the final phase.
-
-**Core principle: nothing gets hardened until it has been proven to work by hand.**
+Feedback-driven implementation uses persistent project state. Agree direction,
+implement a minimal primary flow, exercise it manually, and refine it with the user
+before stabilizing the regression suite. Required project checks and essential
+access, integrity, and resource protections apply from the start. Only discretionary
+completeness is deferred; it is not forgotten or mistaken for safe delivery.
 
 ## State Manifest & CLI
 
@@ -52,15 +55,30 @@ registration grants no permission to execute them or write an external registry.
 | Record architecture decision | `manifest.py decision <feature> --title ... --context ... --option A --option B --decision A --rationale ...` |
 | Set fields (impact, data_flow, entry_point, exclusion, assertion, ...) | `manifest.py set <feature> <field> "value"` |
 
-**Fast paths — handle these and STOP, no phase workflow, no dashboard:**
-- `/develop iterate park "description"` → run `manifest.py park <most-recent-feature> edge "description"` (use `hardening` if the description is clearly a hardening concern), echo the "parked:" line, done. Parking costs one line.
-- `/develop iterate list` → run `manifest.py list`, show the table, done.
+## Resolve the requested action
 
-**On every other invocation:**
-1. Parse the invocation as either no arguments, a feature name, or a feature name followed by one of the six phase names. Reject other forms with a short usage explanation; do not pass the entire argument string to `status`.
-2. Run `manifest.py status <feature> -v`, or `manifest.py status -v` when no feature is supplied. If the named feature has no manifest, initialize it with `manifest.py init <feature> --impact "..."` after establishing its impact, add `.ai-state/` to `.gitignore`, and start in `ARCHITECTURE`. If no feature was supplied and none exists, ask which feature to start. Do not treat other errors as a missing manifest.
-3. If a phase was supplied for an existing feature, run `manifest.py phase <feature> <phase>` before displaying the dashboard. A new feature starts in `ARCHITECTURE`; establish it before allowing a later phase jump. Show the output of `manifest.py status <feature> -v` verbatim as the re-orientation: phase, impact target, open backlog counts, test bed commands, and the current phase's exit criterion.
-4. Adopt the current phase's constraints below. **Record state after every meaningful step** — a decision made, an edge case parked, a phase transition — via the CLI, immediately. Do not batch updates to the end of the session; sessions get cut off.
+[Shared usage](resources/usage.md#iterate) is the grammar/default authority. These
+are assistant instructions, not new helper subcommands.
+
+- Help, bare Iterate, status, and list are read-only. Explain/view the selected
+  feature and recency basis when used; no state note, initialization, ignore edit,
+  demonstration, or implementation follows. No state means no tracked work.
+- Defer and legacy park require an explicit or one human-established feature,
+  never modification-time selection. Call the helper with its explicit positional
+  ID/kind/description, show the recorded follow-up, and stop. No test/ticket/fix.
+- Work and unambiguous legacy feature forms need a resolved target and outcome.
+  Show the ID/effect. Resume existing state; a missing resume target is not a new
+  feature. Initialize only established start-new intent, ID, and impact; then add
+  the local state ignore rule and start ARCHITECTURE. Do not interpret corruption
+  or a misspelling as absence. Clarify action-like IDs rather than renaming them.
+- An explicit work phase override applies only to the selected existing feature.
+  Record the old/new stage, then display status. A new feature begins in architecture;
+  a phase record is not proof that earlier exit criteria passed.
+
+Only authorized work adopts the phase constraints. Show its status dashboard and
+[readable stage label](resources/usage.md#phases), with real limits and prior
+acceptance. Record meaningful work decisions and transitions immediately via the
+CLI. Do not write state merely to answer help/status or an argument question.
 
 Manifest schema (managed by the CLI; shown for reference):
 
@@ -103,9 +121,16 @@ Manifest schema (managed by the CLI; shown for reference):
   branches, squashing, pushes or PR creation. When those actions are not authorized,
   retain the local phase/check summary and user checkpoints without mutating Git.
 
-- **Park, don't handle.** Any edge case, failure mode, or hardening concern noticed outside FINALIZATION is parked immediately via `manifest.py park`, with no code written for it. The CLI echoes "parked: ..." — surface that line so the user sees it was captured.
-- **Phase transitions are explicit.** Never silently drift into the next phase's work. When the current phase's exit criteria are met, state that, update `current_phase`, and confirm direction with the user if they're present.
-- **The user can jump phases.** `/develop iterate <feature> TWEAKING` sets the phase directly — the manifest records it and constraints switch accordingly.
+- **Defer optional completeness.** Record out-of-scope refinements against the
+  explicit feature and show the helper's recorded line. Essential safety and in-scope
+  correctness are not optional polish: preserve them or contain/block unsafe exercise.
+  Do not defer required validation or failure handling merely because of the phase.
+- **Phase transitions are explicit.** Obtain required exit agreement before
+  advancing, state the next direction, then update via the CLI. Do not imply that
+  the helper verifies manual acceptance or ordinary exit criteria.
+- **The user can jump phases.** An explicit work `--phase` or unambiguous legacy
+  feature/phase request records the selected existing stage. Keep skipped prerequisites
+  and unperformed checks visible; do not silently switch implementation approaches.
 - **Leave a handoff note.** At the end of every work stint — and before any risky long-running step — run `manifest.py set <feature> next_step "..."` describing exactly where things stand and what happens next (e.g. "handler written, not yet run against docker; seed script at scripts/seed.sh"). The next session's dashboard leads with it; a stale or missing note costs the first ten minutes of that session.
 
 ## Comments, Docs & Commits
@@ -122,7 +147,10 @@ Manifest schema (managed by the CLI; shown for reference):
 - **Never commit specs or planning artifacts:** `.ai-state/`, plan/design docs, and feature-specific test bed scratch (`testbed/scratch/`); gitignore both at init. **Exception — reusable test bed tools:** pieces likely useful to future features (seed scripts, UI shells, server wrappers) are promoted to `testbed/tools/`, registered via `manifest.py tool add`, and committed along with `registry.json` — they are temporary tooling, kept generic (no feature-specific hardcoding). Do the promotion at TWEAKING or FINALIZATION exit, when it's clear which pieces earned reuse; when in doubt whether something is reusable, ask the user. If a test bed artifact is worth keeping (a seed script others would use), that's a deliberate decision to surface to the user, not a default.
 - **Commit messages:** imperative subject line under ~65 chars stating what changed; body only when it earns it — the why, a constraint, or a tradeoff the diff can't show, in one or two short paragraphs of plain prose. No bullet-list inventories of the diff, no phase names or workflow vocabulary ("happy path", "parked", "FINALIZATION"), no co-author/generated-by trailers.
 
-**Documentation** — any prose this workflow produces (docs-site pages, READMEs, PR descriptions, the rendered architecture doc) must read like a senior engineer wrote it for a colleague. A doc page is allowed to be long, but use this voice:
+**Product-facing documentation** should describe the product, not irrelevant
+delivery-process detail. Skill/workflow manuals must define their inputs, effects,
+checkpoints, and limits; architecture/progress reports may show state and phases.
+All prose should read like a developer writing for a colleague:
 
 - **Plain words over jargon.** Write for someone who knows the language but not this system. If a term is load-bearing, define it once in a sentence and then use it; if it's decoration, cut it.
 - **No flourish.** No "seamlessly", "robust", "powerful", "leverage", "elegant", "under the hood", "it's worth noting that", "in today's fast-paced". No selling the feature — the reader already decided to use it. No exclamation marks.
@@ -130,7 +158,9 @@ Manifest schema (managed by the CLI; shown for reference):
 - **Concrete over abstract.** A short runnable example beats three paragraphs describing what the example would show. Real identifiers and realistic data, not `foo`/`bar`.
 - **Lead with the sharp edges.** The things that actually cost someone an afternoon — the failure that looks like a bug but is a config error, the call that must happen first, the default that surprises — get their own headings or callouts. That's what makes a doc worth reading over the source.
 - **No AI tells.** No emoji, no bold-lead bullet lists where every bullet is `**Word** — sentence`, no rhetorical questions as headings, no "Let's dive in", no tables of one-word cells padded to look thorough.
-- **Never mention the workflow.** No phase names, no manifest, no backlog vocabulary. The reader is a user of the code, not a participant in how it got built.
+- **Keep the topic clear.** Omit internal process jargon from unrelated product
+  docs. When the workflow itself is the topic, explain load-bearing terms rather
+  than suppressing phases, state, or follow-up information.
 
 ```text
 # Wrong (reads like an AI wrote it):
@@ -147,7 +177,10 @@ about anyone. Your application knows who the caller is, and answers
 the question when asked.
 ```
 
-Docs are written when the thing they document is settled — TESTING at the earliest, alongside the main PR. Documenting the happy path before TWEAKING ends means rewriting it. Where the project already has a docs site, follow its existing structure and register the page in the site's nav; a page nothing links to is a page nobody reads. Build the site once before committing to confirm it renders.
+Document settled product behavior alongside its tests and accepted flow. Usage,
+safety, and workflow-contract changes need accurate guidance when they change;
+they do not wait for a feature phase. Use existing docs navigation and applicable
+render checks under their permissions; do not invent a new docs site.
 
 **Pull requests — the goal is a small, reviewable main PR:**
 
@@ -176,7 +209,9 @@ oversized files are rejected upstream by the ALB body limit.
 
 ### 1. ARCHITECTURE
 Decide direction before code. For each major decision (data storage, access pattern, new service vs. module, sync vs. async, etc.):
-- Present **at least two distinct options** with concrete pros/cons — a real tradeoff matrix, not a strawman next to a favorite.
+- Compare genuine options for unsettled material choices. Reuse an adequate
+  approved specification/discussion and verify current assumptions instead of
+  manufacturing another options exercise; actual user direction agreement remains.
 - Record the outcome in `architecture_decisions` (context, options, decision, rationale).
 - Define `data_flow_description`: inputs, outputs, access patterns.
 - Write the one-sentence `impact_target` and list `strict_scope_exclusions` (things explicitly NOT in v1).
@@ -187,29 +222,44 @@ No implementation code in this phase. **Exit when:** major decisions are recorde
 **On exit, ask the user** if they want the architecture doc generated: `manifest.py render <feature> --out <path>` produces a markdown summary (objective, scope, data flow, decisions, test bed plan) from the manifest. It's a generated artifact — regenerate rather than edit it, and never commit it.
 
 ### 2. HAPPY_PATH
-Write the minimal code that delivers the impact target, and nothing else.
-- **Forbidden:** try/catch (beyond what the language forces to compile), retry logic, input validation, config options, feature flags, abstractions for hypothetical reuse, logging beyond a couple of debug lines.
-- If a forbidden thought appears ("what if the input is null?"), park it in `edge_cases` and keep going.
+Implement the primary outcome with its required contracts and protections.
+- Defer speculative extensions, optional resilience, and unrelated polish. Do not
+  ban required validation, failure handling, or authorization to preserve phase purity.
+- Existing project checks and necessary safety-contract verification may occur early.
+  Stabilize the wider regression suite after feedback; code-before-test is not BDD.
 - Record entry points in `happy_path_entry_points`.
 
-**Exit when:** the primary flow is code-complete against the recorded data flow. It does not need to be verified yet — that's what the test bed is for.
+**Exit when:** the primary flow is code-complete against the recorded data flow,
+with essential protections checked or the exercise safely contained. Full manual
+acceptance follows demonstration/refinement; do not certify unchecked behavior.
 
 ### 3. TEST_BED
-Make the feature real and pokeable. The test bed is a **manual environment for the user** — they will personally click through it, test the ergonomics, and modify the driver script by hand. Build for them, not for automation. Two deliverables, always:
+Make the primary flow manually exercisable through the smallest architecture-agreed
+surface: existing application UI, CLI/sample files, native driver/REPL, or a thin page.
+Require both web and Python only if acceptance genuinely needs both. The helper's
+Python runtime requirement does not dictate the demo language. The test bed is a
+feature playground, not a skill dashboard, production interface, automated test
+suite, or model-evaluation pipeline.
 
-1. **A basic web UI** to exercise the feature interactively. Basic means basic: a single served HTML page (plain HTML + fetch is fine) with the inputs and outputs needed to try the feature and see what happens. If the feature has no UI surface of its own, build a thin page over its API. No framework, no build step, no styling beyond legibility.
-2. **A minimal Python driver script** (e.g. `testbed/demo.py`) that demonstrates the **entire feature end-to-end** — the smallest script that does so. If demonstrating it requires standing up an HTTP server or a small REST API around the feature, the script does that too (stdlib or whatever the project already uses). Optimize for hand-editing: flat top-to-bottom flow, obvious variables at the top for the things the user will want to change (inputs, endpoints, example data), print what happens at each step. No argparse, no classes, no cleverness. Comment it heavily per the test bed exception in Comments & Commits — it's a guided tour the user will edit, not production code.
+Keep representative permitted inputs, visible end-to-end outputs/side effects,
+editable variables, and reproduction commands. A new server, notebook, dependency,
+restricted data source, or live model call needs its actual project/user permission;
+no demonstration rule supplies it. No generic scaffolding for planning or checks.
 
-**Reuse before building:** execute the tool plan recorded in `test_bed_env` during ARCHITECTURE (run `manifest.py tool list` to refresh; if no plan was recorded, make one now). Adapt what exists instead of rebuilding it. Feature-specific scratch (this feature's `demo.py`, UI page, one-off data) lives in `testbed/scratch/<feature>/` and stays local.
+Execute the existing tool plan rather than discovering it again. Feature-local
+scratch stays in `testbed/scratch/<feature>`; reuse approved tools before creating
+new ones. Shared-tool changes remain generic and preserve old defaults; otherwise
+keep a feature-local copy. Update registry usage when an authorized shared invocation
+changes; promotion to reusable tooling is deliberate, not an automatic side effect.
 
-**Modifying a registered tool:** registered tools are shared across features, so changes must stay generic. Extend via a new parameter or flag with the old behavior as its default — never hardcode this feature's data, endpoints, or assumptions into the shared tool. If the change only makes sense for this feature, copy the tool into `testbed/scratch/<feature>/` and modify the copy instead. After modifying a shared tool, update its registry usage with `manifest.py tool update --name <name> --usage "..."` if the invocation changed.
+Record each successful startup/seed/exercise command with its label through the
+helper. Reusing a label replaces it while preserving ordering; remove obsolete
+labels explicitly. Run the actual primary flow once and report the result, including
+failure, before handing the agreed mechanism to the user. Preserve their edits.
 
-Also:
-- Stand up the project's services (usually `docker compose up`; check the repo for an existing dev-environment convention first) and seed real, representative example data.
-- **Record every command that matters** — start services, seed data, serve the UI, run the driver script — via `manifest.py testbed <feature> add --label ... --cmd ...` the moment it works. Reusing a label replaces its old command at the same position, preserving startup order; any older duplicate entries with that label are collapsed at their first position. New labels append. Remove obsolete commands with `manifest.py testbed <feature> remove --label "..."`, so a future session (or the TWEAKING loop) rebuilds the environment from `testbed list` alone. Use `test_bed_env` prose only for what commands can't capture.
-- Drive the happy path end-to-end yourself once and report what actually happened, including failures, verbatim — then hand it to the user for manual verification.
-
-**Exit when:** the UI and driver script both run, the happy path has been exercised at least once (working or not — a reproducible failure moves you to TWEAKING too), and the user has what they need to poke it themselves.
+**Exit when:** the agreed mechanism works as a reproducible way to exercise the flow,
+an end-to-end observation is recorded, and the user can try it. A reproducible flow
+failure can enter refinement; it is not a passed acceptance check.
 
 ### 4. TWEAKING
 Tight loop: change → run against test bed → observe → repeat. This loop is shared with the user — they iterate manually through the web UI and by editing the driver script; expect their edits and feedback to drive changes.
@@ -224,7 +274,9 @@ Tight loop: change → run against test bed → observe → repeat. This loop is
 Few tests, each one earning its keep.
 - Prefer **one comprehensive integration test per flow** that exercises the same path validated in the test bed, over many mocked unit tests. Set `target_execution_path` to that flow.
 - Each test should assert the things that would actually break: outputs, side effects, persisted state — list them in `required_integration_assertions` first, then write the test to cover them.
-- Do NOT write tests for backlog edge cases yet.
+- Protect accepted behavior and required safety contracts; optional deferred
+  cases wait for their agreed item. Earlier essential checks do not become
+  test-first evidence, and existing green behavior is not manufactured red.
 
 **Exit when:** the happy-path tests pass and run green from a clean environment. In Git/PR mode, ship the main PR: squash the feature branch's commits into one, push, and open it (see Pull requests above). Confirm with the user before pushing. In local-only mode, record the local delivery summary and checks instead. The backlog does not block this; it follows after.
 
@@ -248,8 +300,8 @@ Consume the backlog and interrogate the result. In Git/PR mode, the main PR may 
 
 | Thought | Correction |
 |---|---|
-| "I'll just add a quick try/catch while I'm here" | Park it. HAPPY_PATH forbids it; FINALIZATION consumes it. |
-| "Let me write a test to check this works" | Before TESTING, verification happens in the test bed, by running it. |
+| "I'll add unrelated resilience while I'm here" | Defer optional scope; required safety/failure contracts cannot wait. |
+| "Every check must wait until TESTING" | Required project/safety checks can occur early; stabilize the wider suite after manual feedback. |
 | "This abstraction will help later" | Later hasn't been validated. Write the concrete version. |
 | "I remember where we left off" | The manifest is the truth. Read it. |
 | "I'll update the manifest at the end" | Sessions die. Update after each step. |

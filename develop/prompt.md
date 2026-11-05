@@ -1,5 +1,8 @@
 # Targeted prompt and contract editing
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Use this mode for requests such as “change how the model expresses uncertainty”
 or “update this prompt and its JSON/replay contract.” Review-only requests remain
 read-only. A prompt edit does not select a new development lifecycle, authorize

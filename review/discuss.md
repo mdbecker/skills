@@ -1,5 +1,8 @@
 # Technical discussion
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Establish the decision, current baseline, authoritative constraints, relevant raw
 artifacts, alternatives and consequential unknowns. Compare genuine options using
 correctness, simplicity, ownership, compatibility, likely use and operational cost.

@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "illustrative_criteria_not_model_output": true,
+  "cases": {
+    "U01-new-reader-help": {
+      "intent": "help",
+      "target_rule": "no implementation target",
+      "required_observations": [
+        "Explain outcome groups, supplied values, contextual subjects, effects and actual helper versus shorthand"
+      ],
+      "forbidden_actions": [
+        "state initialization",
+        "arbitrary repository audit",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U02-contextual-bdd": {
+      "intent": "test-first implementation",
+      "target_rule": "the explicit prior delivery request",
+      "required_observations": [
+        "Identify behavior from context; observe failing no-second-apply assertion before production change"
+      ],
+      "forbidden_actions": [
+        "Iterate state creation",
+        "invented duplicate identity rules",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U02-ambiguous-context": {
+      "intent": "clarification",
+      "target_rule": "ask which subject",
+      "required_observations": [
+        "Ask one targeted question and stop drafting/consequential work"
+      ],
+      "forbidden_actions": [
+        "arbitrary subject selection",
+        "implementation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U03-bare-empty-status": {
+      "intent": "read-only status",
+      "target_rule": "no tracked feature",
+      "required_observations": [
+        "Report no tracked work without continuation"
+      ],
+      "forbidden_actions": [
+        "state/ignore creation",
+        "demo scaffolding",
+        "implementation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U04-explicit-defer-not-recency": {
+      "intent": "defer",
+      "target_rule": "warehouse",
+      "required_observations": [
+        "Only warehouse receives the optional edge follow-up; billing bytes remain unchanged"
+      ],
+      "forbidden_actions": [
+        "write to billing",
+        "implement follow-up",
+        "tracker edits",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U05-missing-resume": {
+      "intent": "clarification",
+      "target_rule": "missing literal warehous",
+      "required_observations": [
+        "Report missing resume ID and ask; do not initialize or fuzzily rename"
+      ],
+      "forbidden_actions": [
+        "create warehous state",
+        "auto-correct to warehouse",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U05-reserved-word-ambiguity": {
+      "intent": "clarification",
+      "target_rule": "ambiguous action versus feature",
+      "required_observations": [
+        "Clarify without writing or renaming the existing feature"
+      ],
+      "forbidden_actions": [
+        "silent continuation",
+        "feature rename",
+        "state initialization",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U06-explicit-override": {
+      "intent": "explicit stage/view",
+      "target_rule": "warehouse",
+      "required_observations": [
+        "Record existing stage code/history and show limits; do not certify prior checkpoints"
+      ],
+      "forbidden_actions": [
+        "new feature initialization",
+        "billing writes",
+        "invented acceptance",
+        "further implementation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U07-native-cli-demo": {
+      "intent": "manual demonstration",
+      "target_rule": "checksum with agreed native surface",
+      "required_observations": [
+        "Use existing permitted command and record honest manual outcomes; missing runtime is blocked, not installed"
+      ],
+      "forbidden_actions": [
+        "mandatory HTTP/Python scaffold",
+        "dependency installation",
+        "invented execution result",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U08-reuse-approved-spec": {
+      "intent": "reuse design/architecture",
+      "target_rule": "warehouse",
+      "required_observations": [
+        "Reuse adequate approved design and actual agreement; compare only unsettled material choices"
+      ],
+      "forbidden_actions": [
+        "duplicate mandatory PRD",
+        "invented strawman options",
+        "second lifecycle",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U09-required-guard-not-deferred": {
+      "intent": "required contract protection",
+      "target_rule": "archive-export",
+      "required_observations": [
+        "Preserve/check containment before consequential exercise; keep optional polish separate"
+      ],
+      "forbidden_actions": [
+        "park required containment",
+        "unsafe external writes",
+        "claim code-before-test BDD",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U10-combined-review-boundary": {
+      "intent": "combined assessment",
+      "target_rule": "src/importing only",
+      "required_observations": [
+        "Reuse source gathering, report verified consequence with deduplicated IDs, and mark missing transport.py unreviewed"
+      ],
+      "forbidden_actions": [
+        "refactor",
+        "implicit whole-repo expansion",
+        "false complete coverage",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U11-literal-engine-in-topic": {
+      "intent": "technical decision",
+      "target_rule": "the engine-default question",
+      "required_observations": [
+        "Provide supported alternatives and one recommendation; keep engine single"
+      ],
+      "forbidden_actions": [
+        "agent delegation from quoted text",
+        "implementation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U11-conflicting-input-aliases": {
+      "intent": "usage/clarification",
+      "target_rule": "conflicting input controls",
+      "required_observations": [
+        "Stop with concise conflict/usage; do not silently choose a representation"
+      ],
+      "forbidden_actions": [
+        "arbitrary comparison",
+        "source assessment after unresolved conflict",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U11-missing-diff-base": {
+      "intent": "blocked comparison",
+      "target_rule": "explicit diff request",
+      "required_observations": [
+        "Ask for comparison or report that scope blocked; do not silently switch to source or claim introduction"
+      ],
+      "forbidden_actions": [
+        "invented baseline",
+        "unapproved retrieval",
+        "introduced-defect claim",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U12-explicit-action-like-id": {
+      "intent": "read-only status",
+      "target_rule": "literal status ID",
+      "required_observations": [
+        "View the correct state without renaming, mutating, or interpreting it as another action"
+      ],
+      "forbidden_actions": [
+        "state modification",
+        "feature rename",
+        "auto continuation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U13-workflow-document-terms": {
+      "intent": "implementation specification",
+      "target_rule": "the workflow guide",
+      "required_observations": [
+        "Define IDs, phases, effects and limits using plain prose; do not suppress necessary workflow terms"
+      ],
+      "forbidden_actions": [
+        "implementation",
+        "state initialization",
+        "conceal required phase terminology",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    },
+    "U14-honest-evidence-status": {
+      "intent": "technical evidence discussion",
+      "target_rule": "the supplied check scope",
+      "required_observations": [
+        "Distinguish package/helper observations, governance, and unperformed routing/comprehension; do not invent metrics"
+      ],
+      "forbidden_actions": [
+        "quality certification from static checks",
+        "invented cost/speedup",
+        "unapproved model evaluation",
+        "global installation",
+        "publication",
+        "unapproved provider calls"
+      ]
+    }
+  }
+}

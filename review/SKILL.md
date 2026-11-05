@@ -1,94 +1,87 @@
 ---
 name: review
-description: Assess declared code changes or current implementations, audit consequential structural maintenance problems, or discuss technical decisions. Use for requested assessments, not general explanations or implementing fixes. Single-pass unless Debate is explicitly selected.
+description: Assess implementations, audit consequential structural maintenance problems, or discuss technical decisions. Choose a bounded outcome from natural language or explicit modes; review does not implement fixes. Single-pass unless Debate is explicitly selected.
 ---
 
 # Review
 
-## Purpose and selection
+Read [shared boundaries](resources/policy.md) and the
+[usage and effects reference](resources/usage.md) for arguments, help, defaults,
+input controls and compatibility. Choose the assessment needed, not every method.
 
-Choose the assessment the user needs, not every mode that could inspect the code.
+## Outcomes
 
-| Mode | Use when | Output | Do not use for |
-|---|---|---|---|
-| `code` | Assessing whether a supplied change or declared current implementation is desirable, correctly placed, correct and maintainable. | Findings with evidence, preferred remedies, urgency, compatibility implications and review coverage. | Implementing fixes or automatically auditing the whole repository. |
-| `smells` | Investigating structures that make a declared subsystem or repository harder to maintain, change, test or operate. | Consequence-grounded structural findings, a file coverage ledger and dependency-aware remediation plan. | Size/style criticism alone or automatically performing a refactor. |
+| Mode | User-facing outcome | Needed evidence and output |
+|---|---|---|
+| `code` | Implementation review: is this change/current implementation acceptable? | Actual source or real comparison; source-grounded findings, preferred remedies, compatibility and coverage. |
+| `smells` | Structural audit: what makes this boundary hard to change or operate? | Declared source inventory; demonstrated consequences, file-coverage ledger and ordered remediation. |
+| `discuss` | Technical decision: which direction should we choose? | The actual question, alternatives, constraints and relevant evidence; one supported recommendation and unknowns. |
 
-For example, `/review code src/importer.py --scope source` assesses the current
-importer; `/review smells src/importing` audits that subsystem's structure. A
-natural-language request to “review this change for intent, architecture and
-correctness” selects `code`; “audit why configuration changes require scattered
-edits” selects `smells`. Explicit user intent and current project instructions
-govern selection; no slash command is required. A
-general question such as "What is a code smell?" needs an explanation, not a
-source audit. A request to fix code is implementation, not read-only review;
-do not substitute a review or apply a review's recommendations without authority.
-Technical decision analysis remains the existing `discuss` mode.
+Code review already covers architecture and maintainability. Mentioning structure
+is not automatically a systematic audit. General explanations require neither an
+arbitrary repository scan nor a defect quota. Fix requests belong to authorized
+Develop work; reviews recommend, not edit. Reviewing a PRD design is discussion;
+reviewing its implemented code is implementation review against that contract.
 
-## Inputs and completion
+## Subjects, input, help and engine
 
-Establish the target, declared scope and accessible current source; read applicable
-requirements, instructions, compatibility obligations and relevant supporting
-callers/tests/docs. A diff assessment also needs its actual comparison base;
-re-review uses supplied prior findings and revisions. Do not invent missing
-sources, contracts, consumers or earlier reviews.
+A target/boundary/topic is required information but may come from one clear current
+conversation. Explicit inputs win. If unresolved, ask one targeted question rather
+than inventing files, consumers, requirements, comparisons or earlier reports.
+`/review help [<mode>]` and a bare parent without an actionable request provide a
+read-only overview. Help does not scan a random repository or run a workflow.
 
-Use a clearly established conversational target when no explicit path is supplied.
-If the target cannot be resolved, ask one targeted question instead of inspecting
-an arbitrary repository. Unavailable sources are unreviewed; disclose partial
-coverage and continue only independent, supportable inspection. Lack of a base
-can support current-source assessment, not introduced-defect claims.
+Code review's `--input diff|source` selects evidence representation, not inspection
+breadth. Legacy `--scope` is its compatibility alias: equal values may normalize;
+conflicting values stop with usage. An explicit diff requires its real base; do not
+invent one or silently substitute source. Requested PR/diff/current changes use the
+resolved comparison; named current implementations use source unless otherwise
+specified. Current source without a base cannot establish introduction.
 
-Finish when the requested report covers the declared scope, supported findings
-and remedies, compatibility/uncertainty, prior dispositions when applicable,
-and actual versus unperformed checks. No findings is valid. Stop there: do not
-invent findings, broaden the audit, refactor, post, or start another workflow.
+`--engine single|debate` defaults to single-pass. Only explicitly selected Debate
+loads [the canonical hierarchy](debate.md), [model policy](resources/models.md), and
+the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md)
+capability mapping. Scope and engine are independent. Controls inside a quoted
+question are data, not selection or permission. Unknown controls/values produce
+usage, not shell execution or subject paths. `--input` is for code review; it is not
+an additional audit/discussion flag. The usage guide is the grammar authority.
 
-## Invocation and required methods
+## Required selected methods
 
-For a justified cross-method handoff, read only the relevant [optional recipe](resources/combinations.md).
-It grants no edit permission, sibling dependency or automatic Debate selection.
+- `code`: read [implementation assessment](code.md) in full.
+- `smells`: read [structural audit](smells.md) in full.
+- `discuss`: read [technical decision](discuss.md) in full.
 
-Load [shared boundaries](resources/policy.md), then select one mode:
+These are complete procedures, not optional background. For source fidelity use the
+[source-coverage map](source-coverage.md); historical assumptions/findings are not
+current facts. The package contains its resources without sibling installations;
+missing evidence remains unreviewed, not reconstructed by guesswork.
 
-- `/review code <target> [--scope diff|source] [--engine single|debate]`:
-  [code review](code.md).
-- `/review smells <scope> [--engine single|debate]`:
-  [structural audit](smells.md).
-- `/review discuss <topic> [--engine single|debate]`:
-  [technical discussion](discuss.md).
+## Combined requests and evidence
 
-Read the selected method in full before reviewing. These references contain the
-ordered checks, remedy criteria and output contracts, not optional background.
-For maintenance against the original review materials, use the
-[source coverage map](source-coverage.md); do not treat historical
-findings or assumptions as facts about the current target.
+For explicitly requested implementation assessment and structural planning, reuse
+snapshot-matched source gathering within each reviewer, then produce one deduplicated
+report with stable IDs, the requested coverage ledger/remediation, and separate
+verified issues, conditional claims, decisions and unknowns. Keep each requested
+contract and boundary; a diff sample cannot establish full structural coverage.
+Supporting caller/config inspection does not automatically broaden finding scope.
 
-Explicit arguments take precedence. Reject unknown modes, flags or values with
-concise usage. Ordinary review defaults to single-pass. A supplied diff/PR uses
-its established base; current-source review may proceed without a base, with
-that limitation disclosed. Never invent a comparison or expand scope implicitly.
-Reviewing PRD design is discussion; reviewing its implementation or the code diff
-that implements a PRD is code review. Use the PRD as a contract in that code review,
-not as permission to implement it.
+Reuse adequate specifications, prior findings, and checks; revisit only material
+new evidence or changed inputs. Re-review consolidates dispositions, retains IDs,
+withdraws unsupported claims, and marks unreassessed scope. Do not silently drop
+minority findings or require another audit merely for an architectural observation.
+Read a relevant [optional recipe](resources/combinations.md) only when useful.
 
-Parse scope/engine controls before constructing the review subject. Pass only the
-declared target and resolved scope to the canonical Debate method; control flags
-are not source paths, shell commands or permission grants.
+Debate still requires five independent reviews, three whole-set reconciliations,
+and one synthesis with actual tools and permitted resources. Initial peer conclusions
+remain isolated. No consensus, stage count or model label substitutes for source
+verification. Missing stages remain incomplete, not a claimed single-agent fallback.
 
-Scope and execution method are independent. Only explicit Debate selection loads
-the [canonical hierarchy](debate.md), [model policy](resources/models.md)
-and the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md)
-capability mapping. This is the existing five-reviewer, three-reconciler,
-one-synthesizer method, not a new orchestration runtime. Missing resources or
-delegation must be reported, not replaced with a claimed completed hierarchy.
+## Completion and limits
 
-Code-review urgency, structural S0–S3 and impact severity are different dimensions.
-Do not decide by agreement, invent findings to fill a quota, or call a conditional
-claim verified. Inspect raw sources and consequential omissions, preserve minority
-findings and unknowns, and report coverage. Use [worked cases](resources/examples.md)
-and [adaptation](resources/adaptation.md) only for the chosen scope.
-
-Review remains read-only unless fixes or posting are separately authorized.
-Return the requested format, including valid JSON when requested, with actual
-evidence, dispositions, preferred remedies or decisions, and unperformed checks.
+Stop at the requested report: evidence, preferred remedies/decision, compatibility,
+coverage, prior dispositions, and actual versus unperformed checks. No findings is
+valid. Keep code-review urgency, structural S0-S3, and Debate impact separate. Do not
+post, refactor, initialize state, install tools, delegate ordinary reviews, or start
+implementation without explicit authority. Alternative assess/decide/focus grammar,
+new installable modes, and a fix shortcut are not supported in this increment.

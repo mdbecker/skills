@@ -1,5 +1,8 @@
 # Consequence-grounded structural audit
 
+For inputs, context/defaults, named controls and effects, use
+[the shared usage reference](resources/usage.md).
+
 Audit the declared source for structures that make change, testing, security or
 operations materially harder. The supplied Python source is a completed review
 report, not the separately referenced *Code Review Guide to Code Smells in Python*.

@@ -5,6 +5,11 @@ description: Assemble or maintain research reports from approved saved evidence 
 
 # Research reports
 
+Use the [shared usage and effects reference](resources/usage.md) when explaining
+arguments or resolving one clear contextual report target. A subject label does
+not identify saved evidence or an output path. Missing targets require clarification,
+not new research, state initialization, services, or automatic installation.
+
 When a disputed interpretation needs another method, read only the relevant
 [optional recipe](resources/combinations.md); it cannot supply missing evidence or a build graph.
 
