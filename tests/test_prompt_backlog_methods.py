@@ -74,43 +74,43 @@ class PromptContractTests(unittest.TestCase):
         cls.inputs, cls.cases, cls.expected = load_corpus()
 
     def setUp(self):
-        self.profile = self.fixture["PROFILES"]["reference"]
+        self.profile = self.fixture["PROFILES"]["documents"]
         self.context = {
-            "report-0": {"source": "report", "text": "handoff delayed", "Id": "R-48",
-                         "CreatedDate": "2026-10-04T10:00:00Z", "Date_of_Event__c": "2026-10-03T08:00:00Z"},
-            "note-0": {"source": "clinical_note", "text": "review completed", "DurableKey": 208,
-                       "ServiceInstant": "2026-10-04T11:00:00Z", "CreationInstant": "2026-10-05T12:00:00Z"},
+            "notice-alpha": {"source": "notice", "text": "handoff delayed", "document_key": "DOC-ORBIT",
+                         "issued_at": "2026-10-04T10:00:00Z", "occurrence_at": "2026-10-03T08:00:00Z"},
+            "receipt-beta": {"source": "receipt", "text": "review completed", "receipt_key": 208,
+                       "received_at": "2026-10-04T11:00:00Z", "processed_at": "2026-10-05T12:00:00Z"},
         }
         self.wire = {"summary": "The report and note describe a review", "certainty": "supported",
-                     "evidence": [{"source": "report", "reference": "report-0", "quote": "handoff delayed"},
-                                  {"source": "clinical_note", "reference": "note-0", "quote": "review completed"}]}
+                     "evidence": [{"source": "notice", "reference": "notice-alpha", "quote": "handoff delayed"},
+                                  {"source": "receipt", "reference": "receipt-beta", "quote": "review completed"}]}
         self.pack = revised_pack()
         self.journal = []
 
-    def accept(self, wire=None, context=None, profile=None, subject_id="CASE-48"):
+    def accept(self, wire=None, context=None, profile=None, subject_id="DOCUMENT-ORBIT"):
         selected_wire = self.wire if wire is None else wire
         raw = selected_wire if type(selected_wire) is str else json.dumps(selected_wire)
         return self.fixture["accept_and_record"](
             raw, self.context if context is None else context,
             self.profile if profile is None else profile, subject_id,
-            self.pack, 2, self.journal, "reference-run-48")
+            self.pack, 2, self.journal, "document-run-orbit")
 
     def test_reference_identity_timestamp_enrichment_and_consumers(self):
         before = copy.deepcopy(self.context)
         output = self.accept()
-        self.assertEqual(output["subject_id"], "CASE-48")
+        self.assertEqual(output["subject_id"], "DOCUMENT-ORBIT")
         report, note = output["evidence"]
-        self.assertEqual(report["report_id"], "R-48")
-        self.assertIsNone(report["clinical_note_key"])
-        self.assertEqual(note["clinical_note_key"], 208)
-        self.assertEqual(report["source_timestamp"], before["report-0"]["CreatedDate"])
-        self.assertNotEqual(report["source_timestamp"], before["report-0"]["Date_of_Event__c"])
-        self.assertEqual(note["source_timestamp"], before["note-0"]["ServiceInstant"])
-        self.assertNotEqual(note["source_timestamp"], before["note-0"]["CreationInstant"])
+        self.assertEqual(report["document_id"], "DOC-ORBIT")
+        self.assertNotIn("receipt_id", report)
+        self.assertEqual(note["receipt_id"], 208)
+        self.assertEqual(report["source_timestamp"], before["notice-alpha"]["issued_at"])
+        self.assertNotEqual(report["source_timestamp"], before["notice-alpha"]["occurrence_at"])
+        self.assertEqual(note["source_timestamp"], before["receipt-beta"]["received_at"])
+        self.assertNotEqual(note["source_timestamp"], before["receipt-beta"]["processed_at"])
         display = self.fixture["display"](output, self.profile)
-        self.assertEqual(display["evidence_times"], [("report_created", "2026-10-04T10:00:00Z"),
-                                                   ("note_service", "2026-10-04T11:00:00Z")])
-        replay = json.loads(self.fixture["accepted_replay"](self.journal, "reference-run-48", self.profile))
+        self.assertEqual(display["evidence_times"], [("document_issued", "2026-10-04T10:00:00Z"),
+                                                   ("document_received", "2026-10-04T11:00:00Z")])
+        replay = json.loads(self.fixture["accepted_replay"](self.journal, "document-run-orbit", self.profile))
         self.assertEqual(replay[0]["evidence"], output["evidence"])
         self.assertEqual(replay[0]["certainty"], "supported")
         self.assertNotIn("prompt", replay[0])
@@ -126,9 +126,9 @@ class PromptContractTests(unittest.TestCase):
             candidate = copy.deepcopy(self.wire)
             candidate[field] = value
             invalid.append(candidate)
-        for field, value in [("source_timestamp", "2026-01-01T00:00:00Z"), ("report_id", "FORGED"),
-                             ("clinical_note_key", 999), ("reference", "invented"), ("reference", 208),
-                             ("source", "clinical_note"), ("source", "unknown"), ("quote", "not in source")]:
+        for field, value in [("source_timestamp", "2026-01-01T00:00:00Z"), ("document_id", "FORGED"),
+                             ("unexpected_link", 999), ("reference", "invented"), ("reference", 208),
+                             ("source", "receipt"), ("source", "unknown"), ("quote", "not in source")]:
             candidate = copy.deepcopy(self.wire)
             candidate["evidence"][0][field] = value
             invalid.append(candidate)
@@ -136,7 +136,7 @@ class PromptContractTests(unittest.TestCase):
         del candidate["certainty"]
         invalid.append(candidate)
         invalid.extend(["not json", '{"summary":"first","summary":"second","certainty":"uncertain","evidence":[]}',
-                        '{"summary":"ok","certainty":"supported","evidence":[{"source":"report","reference":"report-0","quote":"handoff delayed","quote":"handoff delayed"}]}'])
+                        '{"summary":"ok","certainty":"supported","evidence":[{"source":"notice","reference":"notice-alpha","quote":"handoff delayed","quote":"handoff delayed"}]}'])
         for candidate in invalid:
             with self.subTest(candidate=candidate):
                 with self.assertRaises(ValueError):
@@ -144,7 +144,7 @@ class PromptContractTests(unittest.TestCase):
                 self.assertEqual(self.journal, [])
 
     def test_missing_authoritative_times_never_fall_back(self):
-        for reference, field in [("report-0", "CreatedDate"), ("note-0", "ServiceInstant")]:
+        for reference, field in [("notice-alpha", "issued_at"), ("receipt-beta", "received_at")]:
             for replacement in [None, "", "2026-01-01T10:00:00", "2026-01-01"]:
                 with self.subTest(reference=reference, replacement=replacement):
                     context = copy.deepcopy(self.context)
@@ -159,9 +159,9 @@ class PromptContractTests(unittest.TestCase):
             self.assertEqual(self.journal, [])
 
     def test_canonical_identity_is_application_supplied_and_strict(self):
-        for reference, field, value in [("report-0", "Id", ""), ("report-0", "Id", 48),
-                                         ("note-0", "DurableKey", True), ("note-0", "DurableKey", "208"),
-                                         ("note-0", "DurableKey", 0)]:
+        for reference, field, value in [("notice-alpha", "document_key", ""), ("notice-alpha", "document_key", 48),
+                                         ("receipt-beta", "receipt_key", True), ("receipt-beta", "receipt_key", "208"),
+                                         ("receipt-beta", "receipt_key", 0)]:
             with self.subTest(reference=reference, value=value):
                 context = copy.deepcopy(self.context)
                 context[reference][field] = value
@@ -176,8 +176,8 @@ class PromptContractTests(unittest.TestCase):
     def test_final_validator_rejects_invalid_shape_metadata_and_time_meaning(self):
         output = self.accept()
         invalid = []
-        for field, value in [("clinical_note_key", 208), ("source_timestamp", "2026-10-04T10:00:00"),
-                             ("timestamp_kind", "event_occurred"), ("report_id", True), ("extra", "value")]:
+        for field, value in [("unexpected_link", 208), ("source_timestamp", "2026-10-04T10:00:00"),
+                             ("timestamp_kind", "event_occurred"), ("document_id", True), ("extra", "value")]:
             candidate = copy.deepcopy(output)
             candidate["evidence"][0][field] = value
             invalid.append(candidate)
@@ -200,17 +200,17 @@ class PromptContractTests(unittest.TestCase):
         output = self.accept(uncertain)
         self.assertEqual(self.fixture["display"](output, self.profile),
                          {"summary": "Cause is not established", "certainty": "uncertain", "evidence_times": []})
-        replay = json.loads(self.fixture["accepted_replay"](self.journal, "reference-run-48", self.profile))
-        self.assertEqual(replay, [{"subject_id": "CASE-48", **uncertain}])
+        replay = json.loads(self.fixture["accepted_replay"](self.journal, "document-run-orbit", self.profile))
+        self.assertEqual(replay, [{"subject_id": "DOCUMENT-ORBIT", **uncertain}])
 
     def test_replay_rejects_malformed_accepted_output_instead_of_downgrading(self):
         output = self.accept()
         malformed = copy.deepcopy(output)
         malformed["evidence"][0]["source"] = []
-        self.journal.append({"event": "validated_response", "run_key": "reference-run-48",
+        self.journal.append({"event": "validated_response", "run_key": "document-run-orbit",
                              "step": "summary", "output": malformed})
         with self.assertRaises(ValueError):
-            self.fixture["accepted_replay"](self.journal, "reference-run-48", self.profile)
+            self.fixture["accepted_replay"](self.journal, "document-run-orbit", self.profile)
 
     def test_every_model_visible_surface_changes_hash_and_registered_identity(self):
         baseline = {"generation": "Return summary and evidence", "hint": '{"summary":"ok","evidence":[]}',
@@ -229,7 +229,7 @@ class PromptContractTests(unittest.TestCase):
             self.assertNotEqual(self.fixture["prompt_metadata"](changed, 2)["sha256"], current["sha256"])
         self.assertEqual(self.accept()["prompt"], current)
 
-    def test_municipal_issued_and_processing_times_are_separate_without_clinical_fields(self):
+    def test_equipment_issued_and_processing_times_are_separate_without_domain_fields(self):
         context = {
             "notice-0": {"source": "notice", "text": "permit issued", "DocumentId": "NOTICE-71",
                          "IssuedAt": "2026-09-08T09:00:00Z", "ProcessedAt": "2026-09-09T14:00:00Z"},
@@ -239,14 +239,14 @@ class PromptContractTests(unittest.TestCase):
         wire = {"summary": "The issued notice was indexed", "certainty": "supported",
                 "evidence": [{"source": "notice", "reference": "notice-0", "quote": "permit issued"},
                              {"source": "receipt", "reference": "receipt-0", "quote": "notice indexed"}]}
-        profile = self.fixture["PROFILES"]["municipal"]
+        profile = self.fixture["PROFILES"]["equipment"]
         output = self.accept(wire, context, profile, "PERMIT-71")
         self.assertEqual(self.fixture["display"](output, profile)["evidence_times"],
                          [("document_issued", "2026-09-08T09:00:00Z"), ("processing", "2026-09-09T14:00:00Z")])
         self.assertEqual(output["evidence"][0]["document_id"], "NOTICE-71")
         self.assertEqual(output["evidence"][1]["receipt_id"], "INTAKE-71")
         for citation in output["evidence"]:
-            self.assertNotIn("clinical_note_key", citation)
+            self.assertNotIn("receipt_key", citation)
         del context["notice-0"]["IssuedAt"]
         before = copy.deepcopy(self.journal)
         with self.assertRaises(KeyError):
@@ -321,7 +321,7 @@ class BacklogContractTests(unittest.TestCase):
         result = self.fixture["reconcile"](requirements, selected_pages, selected_evidence)
         return {row["id"]: row for row in result}
 
-    def test_nonclinical_warehouse_source_proves_baseline_and_only_partial_increment(self):
+    def test_equipment_warehouse_source_proves_baseline_and_only_partial_increment(self):
         records = [{"sku": "SKU-71", "quantity": "2", "threshold": "5", "supplier_id": "SUP-71"},
                    {"sku": "SKU-72", "quantity": "8", "threshold": "5", "supplier_id": "SUP-72"}]
         stock = [self.fixture["normalize_stock"](record) for record in records]
@@ -413,7 +413,7 @@ class BacklogContractTests(unittest.TestCase):
             self.assertEqual(result, {"learner_id": "LEARNER-W3", "completed": completed})
             self.assertEqual(source["award_preview"](result), {"learner_id": "LEARNER-W3", "eligible": completed})
         self.assertNotIn("deliver_award", source)
-        self.assertNotIn("employer_send", source)
+        self.assertNotIn("partner_send", source)
         register = self.register(identity)
         expected = self.expected["cases"][identity]["deterministic"]
         self.assertEqual(set(register), set(expected))
@@ -531,7 +531,7 @@ class PromptBacklogCorpusTests(unittest.TestCase):
 
     def test_frozen_baseline_source_hashes_are_internally_consistent(self):
         baseline = json.loads((ROOT / "evaluations/workflow-methods/baseline.json").read_text())
-        for filename in ["develop/references/prompt.md", "develop/references/backlog.md"]:
+        for filename in ["develop/prompt.md", "develop/backlog.md"]:
             frozen = baseline["sources"][filename]
             self.assertEqual(hashlib.sha256(frozen["content"].encode()).hexdigest(), frozen["sha256"])
             current = ROOT / filename.replace("/references/", "/")

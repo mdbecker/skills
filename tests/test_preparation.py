@@ -164,7 +164,7 @@ class PreparationTests(unittest.TestCase):
         self.seed_receipt()
         external = self.workspace / 'external.md'
         external.write_text('Outside content.\n')
-        linked = self.source / 'research/resources/profiles/template.md'
+        linked = self.source / 'research/resources/project-profile.md'
         linked.unlink()
         linked.symlink_to(external)
         before = self.snapshot()

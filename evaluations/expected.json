@@ -8,7 +8,7 @@
     "bdd-transfer": [
       "read-only",
       "observable $68 outcome",
-      "not incidental collaborator assertions"
+      "not internal collaborator assertions"
     ],
     "prd-reference": [
       "one preferred complete design",

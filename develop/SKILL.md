@@ -78,7 +78,7 @@ not grant implementation permission; focused green never replaces canonical gate
 
 Read only a useful [optional combination](resources/combinations.md), not a mandatory
 chain. Apply [adaptation](resources/adaptation.md) and only the relevant profile:
-[this repository](resources/profiles/skills.md), [Riskonnect](resources/profiles/riskonnect.md),
-[template](resources/profiles/template.md), or the target's current instructions.
+[this repository](resources/profiles/skills.md) or the
+[generic project mapping](resources/project-profile.md) completed from the target's current instructions.
 Selected methods link complete [worked cases](resources/examples.md). Return actual
 work, checks, evidence and limits; do not claim acceptance or live verification.

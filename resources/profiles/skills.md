@@ -13,6 +13,7 @@ Canonical local checks, from repository root:
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
+.venv/bin/python scripts/check_public_content.py --with-export
 ```
 
 The distribution tests/check are applicable after those resources exist; a missing

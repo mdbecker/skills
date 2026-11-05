@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "prd": "Preserve the Missing Research-Report Maintenance Methods",
-  "scope": "One existing research report-maintenance skill; no original-project dependency, new research, other skill routing, installer, release or deployment changes.",
+  "scope": "One existing research report-maintenance skill; no external fixture dependency, new research, other skill routing, installer, release or deployment changes.",
   "test_results": "results.json",
   "test_suite": "tests/test_research_report.py",
   "requirements": [
@@ -66,7 +66,7 @@
     },
     {
       "id": "A-protection",
-      "requirement": "Compare protected values and meanings, uncertainty, source identity and comparison limits; preserve 24/120 random A and 16/40 incident-enriched B except an explicit saved-source correction.",
+      "requirement": "Compare protected values and meanings, uncertainty, source identity and comparison limits; preserve 24/120 random A and 16/40 targeted B except an explicit saved-source correction.",
       "implementation": [
         "research/evidence.md",
         "research/scripts/report_checks.py",
@@ -157,7 +157,7 @@
       ],
       "verification": [
         "separated groups",
-        "coincident group",
+        "colocated group",
         "input permutations",
         "record-disclosure",
         "aggregate accounting mutation"
@@ -274,7 +274,7 @@
       "requirement": "Reuse existing palette/typography/encodings, count marker-area meaning and mixed-group-opacity meaning; check keyboard, narrow layout, readable print and offline behavior as applicable.",
       "implementation": [
         "research/diagrams.md",
-        "resources/profiles/incidental-findings.md",
+        "resources/project-profile.md",
         "resources/profiles/reliability-study.md",
         "evaluations/research-report/fixtures.py"
       ],
@@ -353,7 +353,7 @@
       "verification": [
         "frozen corpus hash checks",
         "reference task",
-        "nonclinical transfer task",
+        "independent transfer task",
         "mutation suite"
       ],
       "limit": "Local synthetic task execution is not paired baseline parity, another host qualification or historical reproducibility.",

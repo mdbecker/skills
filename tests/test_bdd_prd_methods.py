@@ -124,7 +124,7 @@ class BddPrdMethodTests(unittest.TestCase):
             "test_intake.IntakeTests.test_missing_identity_never_writes", 3
         )
 
-    def test_nonclinical_bdd_executes_intended_red_then_green(self):
+    def test_fictional_bdd_executes_intended_red_then_green(self):
         self.assert_red_then_green(
             self.bdd[("dispatch.py", "baseline")],
             {"test_dispatch.py": self.bdd[("test_dispatch.py", "test")]},

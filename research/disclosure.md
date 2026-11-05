@@ -2,7 +2,7 @@
 
 Load when an approved pipeline processes restricted observations or when counts,
 centroids, legends, tooltips or embedded data can disclose small groups. Use the
-project's authorized disclosure policy, not a threshold borrowed from a clinical
+project's authorized disclosure policy, not a threshold borrowed from a domain
 example. Missing policy blocks the affected aggregate release.
 
 ## Required policy mapping

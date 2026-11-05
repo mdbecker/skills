@@ -28,7 +28,7 @@ Do not fill missing information by inference. Return only summary, certainty,
 evidence.” The wire hint returns:
 
 ```json
-{"summary":"The report describes a delayed handoff.","certainty":"supported","evidence":[{"source":"report","reference":"report-0","quote":"handoff delayed"}]}
+{"summary":"The document records a delayed handoff.","certainty":"supported","evidence":[{"source":"notice","reference":"notice-alpha","quote":"handoff delayed"}]}
 ```
 
 ```json
@@ -39,27 +39,30 @@ The TL;DR contract is: “Replay accepted summary, certainty and verified eviden
 identities/timestamp meanings only. Preserve uncertainty for downstream reasoning.”
 None of these model-facing resources delegates timestamp ownership to the model.
 
-## Application-owned source mapping
+## Independently fictional application-owned mappings
 
-| Profile / source | Supplied canonical identity | Authoritative evidence timestamp | Distinct, not substituted |
+This document-processing service and the equipment intake example are invented
+contexts, not renamed source records or a reconstruction of real business schemas.
+The fixture owns these policies only; the target's current contract always wins.
+
+| Profile / source | Canonical identity | Authoritative time | Different meaning |
 |---|---|---|---|
-| Reference / report | `Id` → `report_id`; `clinical_note_key=null` | `CreatedDate` → report creation | `Date_of_Event__c` is event occurrence. |
-| Reference / clinical note | `DurableKey` → `clinical_note_key` | `ServiceInstant` → note service | `CreationInstant` is note creation; service is not automatically event occurrence. |
-| Nonclinical municipal permit / notice | `DocumentId` → `document_id` | `IssuedAt` → document issuance | Receipt processing is a separate activity, not document issuance. |
-| Nonclinical municipal permit / receipt | `ReceiptId` → `receipt_id` | `ProcessedAt` → intake processing | Neither this nor `IssuedAt` establishes when the building work occurred. |
+| documents / notice | document_key -> document_id, exact string | issued_at -> document_issued | occurrence_at is not document issuance. |
+| documents / receipt | receipt_key -> receipt_id, positive integer | received_at -> document_received | processed_at is later processing, not receipt. |
+| equipment / notice | DocumentId -> document_id, exact string | IssuedAt -> document_issued | Receipt processing is separate. |
+| equipment / receipt | ReceiptId -> receipt_id, exact string | ProcessedAt -> processing | Processing does not establish issuance. |
 
-The application supplies the subject identity and the source-context reference
-map; a model may select a supplied reference, never create an authoritative ID.
-Unknown or inconsistent references fail. The strict application output includes
-source timestamps, but the model wire does not. Reference-only clinical fields
-are not present in the municipal final output.
+Application context supplies canonical metadata. The model can select only a
+supplied source/reference and returns no application-owned fields. Unknown identity,
+missing authoritative time or forged enrichment fails before any accepted event.
+There is no shared universal source schema or default null/link field.
 
-## Executable synthetic fixture
+## Executable fictional fixture
 
-This deliberately small in-memory fixture realizes all mapped seams. Exact
-substring quote checking illustrates the boundary, not a replacement for an
-existing project's reconciliation/redaction/fuzzy-match order. Tests execute this
-fence with local synthetic inputs; they do not treat it as production code.
+Exact substring checking is a deliberately strict fixture policy. It is not a
+replacement for a target's redaction/reconciliation/fuzzy-match order or a claim
+that accepted evidence is adjudicated interpretation. A target may retain explicitly
+unverified evidence only under its actual contract. No model/data calls occur here.
 
 ```python
 import hashlib
@@ -68,11 +71,11 @@ from datetime import datetime
 
 
 PROFILES = {
-    "reference": {
-        "report": ("Id", "report_id", str, "CreatedDate", "report_created"),
-        "clinical_note": ("DurableKey", "clinical_note_key", int, "ServiceInstant", "note_service"),
+    "documents": {
+        "notice": ("document_key", "document_id", str, "issued_at", "document_issued"),
+        "receipt": ("receipt_key", "receipt_id", int, "received_at", "document_received"),
     },
-    "municipal": {
+    "equipment": {
         "notice": ("DocumentId", "document_id", str, "IssuedAt", "document_issued"),
         "receipt": ("ReceiptId", "receipt_id", str, "ProcessedAt", "processing"),
     },
@@ -159,10 +162,6 @@ def validate_final(output, profile):
             raise ValueError("invalid final source")
         unused_input, identity_field, identity_type, unused_time, meaning = profile[citation["source"]]
         keys = {"source", "quote", identity_field, "source_timestamp", "timestamp_kind"}
-        if citation["source"] == "report" and identity_field == "report_id":
-            keys.add("clinical_note_key")
-            if citation.get("clinical_note_key") is not None:
-                raise ValueError("report note key must be null")
         exact_keys(citation, keys)
         if type(citation[identity_field]) is not identity_type:
             raise ValueError("invalid canonical identity")
@@ -187,8 +186,6 @@ def accept_and_record(raw, context, profile, subject_id, pack, version, journal,
         evidence = {"source": citation["source"], "quote": citation["quote"],
                     output_identity: supplied[input_identity],
                     "source_timestamp": supplied[input_time], "timestamp_kind": meaning}
-        if citation["source"] == "report" and output_identity == "report_id":
-            evidence["clinical_note_key"] = None
         enriched.append(evidence)
     output = {"subject_id": subject_id, "summary": wire["summary"], "certainty": wire["certainty"],
               "evidence": enriched, "prompt": prompt_metadata(pack, version)}
@@ -211,50 +208,30 @@ def display(output, profile):
                                for citation in output["evidence"]]}
 ```
 
-## Reference output and failure result
+## Complete observations and failure paths
 
-Application subject `CASE-48` has report `report-0`: `Id=R-48`, text “handoff
-delayed”, `CreatedDate=2026-10-04T10:00:00Z`, and
-`Date_of_Event__c=2026-10-03T08:00:00Z`. Note `note-0` has `DurableKey=208`, text
-“review completed”, `ServiceInstant=2026-10-04T11:00:00Z`, and
-`CreationInstant=2026-10-05T12:00:00Z`. Event occurrence remains October 3; the
-note service and note creation are October 4 and October 5 respectively.
+For documents, notice-alpha has document_key DOC-ORBIT, text "handoff delayed",
+issued_at 2026-10-04T10:00:00Z and occurrence_at 2026-10-03T08:00:00Z. Receipt-beta
+has receipt_key 208, text "review completed", received_at 2026-10-04T11:00:00Z and
+processed_at 2026-10-05T12:00:00Z. Application subject DOCUMENT-ORBIT accepts supplied
+citations with document_id or receipt_id and their separate authoritative meanings.
+No linked receipt field is added to a notice, and no time is inferred from its quote.
 
-With the first wire example, acceptance produces `subject_id=CASE-48`, supported
-certainty and report evidence `{source: report, report_id: R-48,
-clinical_note_key: null, quote: handoff delayed,
-source_timestamp: 2026-10-04T10:00:00Z, timestamp_kind: report_created}` plus the
-application's v2 prompt metadata. A supplied note citation similarly receives key
-208 and **service** timestamp `2026-10-04T11:00:00Z`, never its creation timestamp.
-Display and compact replay retain certainty and those meanings.
+The equipment profile uses independent string IDs for documents and receipts. Its
+fixture wire/final contract differs from documents' numeric receipt key. Missing
+issuance cannot be filled by a known processing time. An uncertain empty-evidence
+result is a valid nonclaim; a supported result requires accepted supplied evidence.
 
-A model citation containing `source_timestamp`, an invented reference, a false
-quote, or a supported answer with no evidence is rejected with no accepted event.
-Missing `CreatedDate` or `ServiceInstant` fails even when an event/creation date
-is present. Failed/repair/error events do not enter replay. A subsequent repaired
-output enters only after it independently passes the same acceptance boundary.
-
-## Nonclinical complete output
-
-Municipal subject `PERMIT-71` contains notice reference `notice-0`, identity
-`NOTICE-71`, text “permit issued”, `IssuedAt=2026-09-08T09:00:00Z`; receipt
-reference `receipt-0`, identity `INTAKE-71`, text “notice indexed”,
-`ProcessedAt=2026-09-09T14:00:00Z`. Building work occurrence is not supplied.
-The revised wire is supported summary “The issued notice was indexed” with both
-supplied citations. Final evidence has respectively `document_id=NOTICE-71`,
-`timestamp_kind=document_issued` and `receipt_id=INTAKE-71`,
-`timestamp_kind=processing`, using their separate authoritative timestamps.
-There is no `clinical_note_key`, `CreatedDate` or `ServiceInstant` in this domain's
-wire/final output. Processing cannot substitute for issuance. If the issuance
-field is unavailable, that citation cannot be accepted, even though receipt
-processing is known. An uncertain empty-evidence result remains a valid nonclaim.
+Both profiles reject forged timestamps, extra/coerced fields, unknown references,
+false quotes and malformed accepted events. Failed/repair events stay out of exact
+run/step replay. Only independently accepted outputs enter display and compact
+replay. Every model-visible surface advances the registered logical identity/hash;
+resource filenames stay stable under the mapped contract.
 
 ## Verification boundary
 
-The repository's `tests/test_prompt_backlog_methods.py` executes this fixture:
-strict rejection, enrichment ownership, final shape, accepted-only exact-run replay,
-downstream uncertainty, and logical identity/version/hash changes. Independent
-held-out raw inputs and evaluator-only illustrative expectations live in the
-repository evaluation corpus, not this distributed reference. Deterministic tests
-establish these fixture consequences, not generation quality, real application
-integration or model adherence. No live model evaluation is implied.
+`tests/test_prompt_backlog_methods.py` exercises actual fixture rejection, canonical
+metadata enrichment, final shape, uncertainty, accepted-only exact-run replay and
+logical version/hash. Held-out fictional cases and evaluator-only expectations are
+not package dependencies. Deterministic results do not certify generation quality,
+real project integration, host invocation or agent adherence.

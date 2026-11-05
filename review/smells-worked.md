@@ -1,8 +1,8 @@
 # Complete consequence-grounded structural audit
 
-Synthetic reference-style workflow runner and nonclinical deployment configuration.
+Synthetic reference-style workflow runner and fictional deployment configuration.
 This is a complete illustrative report over the raw sources below, not a claim that
-the historical Riskonnect findings still exist. Locations count from the first
+findings exist in a target project. Locations count from the first
 line in each block. None of the proposed remediation is applied by an audit.
 
 ## Scope, contracts and raw evidence

@@ -191,9 +191,9 @@ green tests never replace full canonical checks; preserve unrelated files/stagin
 and report patch-related, pre-existing, environmental, or unresolved failures.
 
 Complete [worked cases](resources/examples.md) are linked from each selected
-method. [This repository](resources/profiles/skills.md),
-[Riskonnect](resources/profiles/riskonnect.md), and the
-[agent template](resources/profiles/template.md) provide contextual mappings.
+method. [This repository](resources/profiles/skills.md) supplies its own tooling contract;
+the [project mapping](resources/project-profile.md) records the target's current
+contracts, runtime, acceptance and permitted effects.
 
 ### Review
 
@@ -309,15 +309,20 @@ Keep reference output aggregate-only: no records, identifiers, sensitive quotes,
 credentials, or private coordinates. Failed rebuilding preserves prior outputs
 and inputs. Report actual evidence, automated, visual, and offline checks separately
 as completed, failed, blocked, or not run; assembly proves neither visual acceptance
-nor independent review or clinical accuracy.
+nor independent review or domain accuracy.
 
 Use the [worked ledger](research/report-worked.md) and
 [profile template](research/report-profile.md) alongside the selected methods.
-The [incidental-findings](resources/profiles/incidental-findings.md) and
-[reliability-study](resources/profiles/reliability-study.md) profiles demonstrate
-contextual mappings, not universal clinical/privacy defaults.
+The [fictional reliability-study](resources/profiles/reliability-study.md) example
+and [generic project mapping](resources/project-profile.md) demonstrate context,
+not universal business or disclosure defaults.
 
 ## Combining methods
+
+Each worked example defines its own inputs and acceptance contract. Complete the
+target's [project mapping](resources/project-profile.md) before consequential work.
+See the [release checks](PUBLICATION.md) for artifact inspection, scoped verification
+and explicit publication approval.
 
 Combine methods only when the next one answers an unresolved question or protects
 a specific contract. A sufficient specification can hand off to authorized

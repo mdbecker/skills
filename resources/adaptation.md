@@ -7,8 +7,8 @@ generated artifacts and host capabilities. Missing critical mappings are blocker
 for the affected operation, not opportunities to guess historical defaults.
 
 Use project-relative paths. Resolve installed helpers beside the bundled method
-and run from the target project. Do not assume Python, pre-commit, Databricks,
-particular table/issue identifiers, source windows, model IDs or clinical categories.
+and run from the target project. Do not assume a language, vendor, check engine, table/issue identifiers,
+source windows, model IDs or business categories. Use the [project mapping](project-profile.md).
 The manifest helper alone has the retained Python 3.11+ runtime requirement.
 
 Preserve the method's decisions, evidence requirements and ordering. Choose BDD
@@ -24,5 +24,5 @@ new evidence acquisition is outside report assembly/maintenance.
 
 Test both a reference case and a substantive separate-project case, including
 failure and non-trigger requests. Static/installation checks do not prove host
-invocation or quality. Pin adapted source identities/hashes and disclose unavailable
-engines, guides, data and historical artifacts. Do not distribute restricted inputs.
+invocation or quality. Record actual public artifact identities and disclose unavailable
+engines, guides, data and historical artifacts. Distribute only authorized inputs.

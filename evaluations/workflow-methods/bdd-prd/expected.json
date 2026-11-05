@@ -48,7 +48,7 @@
         {"selector": {"id": "room-000"}, "result": {"status": "not_found"}},
         {"selector": {"name": "Quiet Studio"}, "complete": false, "result": {"status": "catalog_unavailable"}}
       ],
-      "contract_note": "The event key in these executable generic-contract checks maps to room in the actual handoff; clinical field names are not prescribed for the library/campus application.",
+      "contract_note": "The event key in these executable generic-contract checks maps to room in the actual handoff; domain field names are not prescribed for the library/campus application.",
       "verification": ["test_held_out_room_contract_preserves_identity_and_ambiguity"]
     },
     "prd-library-donation-csv": {

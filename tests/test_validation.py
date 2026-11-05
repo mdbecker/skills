@@ -12,11 +12,7 @@ from evaluations.validation import evaluator, fixtures
 
 
 ROOT = Path(__file__).resolve().parent.parent
-LEGACY_HASHES = {
-    "fixtures.json": "6b89095f05bba27ccc0138379ef64d99877d74eedc7089f47a92a96cbed567b0",
-    "expected.json": "69f3e2cb3a24a47bbdfc5abb905fd6cef28772c54de4f22a2e2c22634f38055e",
-    "artifacts.json": "d9619b9fcfd088df85631e2698b9bf578aa8ebfeb65c8e437d28bdeb70bea9c9",
-}
+PUBLIC_CORPUS_FILES = {"fixtures.json", "expected.json", "artifacts.json"}
 
 
 class ValidationFixtureTests(unittest.TestCase):
@@ -58,8 +54,10 @@ class ValidationFixtureTests(unittest.TestCase):
                     self.assertFalse(Path(relative).is_absolute())
                     self.assertNotIn("..", Path(relative).parts)
 
-    def test_retained_boundary_corpus_is_byte_for_byte_unchanged(self):
-        for name, checksum in LEGACY_HASHES.items():
+    def test_public_boundary_corpus_matches_its_new_frozen_identities(self):
+        frozen = json.loads((ROOT / 'evaluations/validation/freeze.json').read_text())
+        self.assertEqual(set(frozen['retained_root_corpus_hashes']), PUBLIC_CORPUS_FILES)
+        for name, checksum in frozen['retained_root_corpus_hashes'].items():
             with self.subTest(name=name):
                 self.assertEqual(hashlib.sha256((ROOT / "evaluations" / name).read_bytes()).hexdigest(), checksum)
 

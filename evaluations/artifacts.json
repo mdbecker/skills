@@ -70,9 +70,9 @@
     },
     "report-reference": {
       "evidence.json": "{\"cohorts\":[{\"id\":\"A\",\"fingerprint\":\"random-A\",\"denominator\":120,\"count\":24},{\"id\":\"B\",\"fingerprint\":\"enriched-B\",\"denominator\":40,\"count\":16}]}",
-      "build.json": "{\"command\":[\"python\",\"scripts/assemble_report.py\"],\"requires\":[\"restricted/atlas.json\"],\"restricted_access\":false}",
+      "build.json": "{\"command\":[\"python\",\"scripts/assemble_report.py\"],\"requires\":[\"restricted/observations.json\"],\"restricted_access\":false}",
       "report.html": "<html><body><h1>Saved report</h1><p>Cohorts A and B are unmatched; counts do not imply improvement.</p></body></html>",
-      "templates/report.html": "<html><body><!-- METRICS --><p>Unmatched cohorts; no clinical validation.</p></body></html>"
+      "templates/report.html": "<html><body><!-- METRICS --><p>Unmatched cohorts; no domain validation.</p></body></html>"
     },
     "report-transfer": {
       "evidence/cohorts.json": "{\"A\":{\"fingerprint\":\"random-A\",\"denominator\":120,\"count\":24},\"B\":{\"fingerprint\":\"enriched-B\",\"denominator\":40,\"count\":16}}",
@@ -255,7 +255,7 @@
       "saved-check.json": "{\"kind\":\"synthetic-baseline-evidence\",\"result\":\"green\"}"
     },
     "combo-incomparable-cohorts": {
-      "cohorts.json": "{\"A\":{\"fingerprint\":\"random-A\",\"selection\":\"random\",\"denominator\":120,\"count\":24},\"B\":{\"fingerprint\":\"enriched-B\",\"selection\":\"incident-enriched\",\"denominator\":40,\"count\":16}}",
+      "cohorts.json": "{\"A\":{\"fingerprint\":\"random-A\",\"selection\":\"random\",\"denominator\":120,\"count\":24},\"B\":{\"fingerprint\":\"enriched-B\",\"selection\":\"targeted\",\"denominator\":40,\"count\":16}}",
       "headline.md": "New version improved reliability.",
       "build.md": "Existing report template/checker; any actual update needs requested scope and protected before/after checks."
     },

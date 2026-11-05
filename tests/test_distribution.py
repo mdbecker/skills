@@ -316,6 +316,9 @@ class DistributionTests(unittest.TestCase):
         status["hosts"] = {host: {key: "passed" for key in ("installation", "invocation", "hierarchy")} for host in ("codex", "claude")}
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
         status["source_inputs_sha256"] = hashlib.sha256(json.dumps(self.manifest["source_inputs"], sort_keys=True).encode()).hexdigest()
+        status['publication'] = {gate: 'passed' for gate in
+                                 ['public_content', 'private_markers', 'semantic_review',
+                                  'distribution_rights', 'history_review']}
         self.assertTrue(release_ready(status, self.manifest["source_inputs"]))
         status["hosts"]["claude"]["invocation"] = "not_run"
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
@@ -346,10 +349,15 @@ class DistributionTests(unittest.TestCase):
         output = self.workspace / "release.zip"
         clean_source = [SimpleNamespace(stdout="a" * 40), SimpleNamespace(stdout="")]
         with patch("scripts.build_skills.subprocess.run", side_effect=clean_source):
-            with self.assertRaisesRegex(ValueError, "Stable release blocked"):
+            with self.assertRaisesRegex(ValueError, "release blocked"):
                 build(output, "v0.1.0", release=True)
         self.assertFalse(output.exists())
-        with patch("scripts.build_skills.subprocess.run", side_effect=clean_source):
+        status = dict(self.manifest['qualification'])
+        status['publication'] = {gate: 'passed' for gate in
+                                 ['public_content', 'private_markers', 'semantic_review',
+                                  'distribution_rights', 'history_review']}
+        with patch("scripts.build_skills.subprocess.run", side_effect=clean_source), \
+                patch('scripts.build_skills.qualification', return_value=status):
             manifest = build(output, "v0.1.0-rc.1", release=True, prerelease=True)
         self.assertTrue(manifest["prerelease"])
         self.assertEqual(manifest["qualification"]["model_quality"], "not_run")
@@ -380,11 +388,11 @@ class DistributionTests(unittest.TestCase):
     def test_explicit_inventory_does_not_sweep_private_files(self):
         root = self.copied_sources()
         (root / "resources/credentials.env").write_text("synthetic secret")
-        (root / "resources/clinical-data.json").write_text("synthetic restricted payload")
+        (root / "resources/restricted-data.json").write_text("synthetic restricted payload")
         unused_inventory, files, inputs = payload(root)
-        self.assertFalse(any("credentials.env" in name or "clinical-data.json" in name for name in files))
+        self.assertFalse(any("credentials.env" in name or "restricted-data.json" in name for name in files))
         self.assertNotIn("resources/credentials.env", inputs)
-        self.assertNotIn("resources/clinical-data.json", inputs)
+        self.assertNotIn("resources/restricted-data.json", inputs)
 
     def test_source_mutation_during_export_is_rejected(self):
         root = self.copied_sources()

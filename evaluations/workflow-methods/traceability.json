@@ -59,7 +59,7 @@
       "supplied_requirements": [
         "Observable outcomes and real architectural seams",
         "Preserve characterization tests; static/governance checks separate",
-        "Missing canonical identity rejects without write; successful nonclinical implementation",
+        "Missing canonical identity rejects without write; successful independent implementation",
         "Scenario review remains read-only; BDD not universal default"
       ],
       "disposition": "generalized",
@@ -106,7 +106,7 @@
       "disposition": "generalized",
       "instruction_or_reference": [
         "develop/references/prd.md",
-        "resources/profiles/riskonnect.md"
+        "resources/project-profile.md"
       ],
       "worked_case": [
         "develop/references/prd-worked.md"
@@ -139,14 +139,14 @@
       "id": "PROMPT-TIME",
       "supplied_requirements": [
         "Application supplies evidence identities and timestamps",
-        "Reference report CreatedDate and note ServiceInstant stay distinct from clinical occurrence",
+        "Reference report issued_at and note received_at stay distinct from domain occurrence",
         "No event-date or note-creation substitution",
-        "Nonclinical document-issued and processing timestamps remain separate; clinical names not universal"
+        "independent document-issued and processing timestamps remain separate; domain names not universal"
       ],
       "disposition": "generalized",
       "instruction_or_reference": [
         "develop/references/prompt.md",
-        "resources/profiles/riskonnect.md"
+        "resources/project-profile.md"
       ],
       "worked_case": [
         "develop/references/prompt-worked.md"
@@ -339,13 +339,13 @@
         "Keep parent/mode structure; no new skills",
         "No report/research/deployment/install workstream or Iterate/Debate redesign/general cleanup",
         "Source documents are context, not the user request",
-        "Historical clinical fields, issue keys, project commands, counts and cleanroom assumptions not universal defaults"
+        "Historical domain fields, issue keys, project commands, counts and cleanroom assumptions not universal defaults"
       ],
       "disposition": "excluded",
       "instruction_or_reference": [
         "evaluations/workflow-methods/README.md",
         "resources/provenance.json",
-        "resources/profiles/riskonnect.md"
+        "resources/project-profile.md"
       ],
       "worked_case": [
         "develop/references/prompt-worked.md",

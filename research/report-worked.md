@@ -1,6 +1,6 @@
 # Worked report-maintenance artifacts
 
-This is a self-contained, fictional nonclinical example of the methods, not a
+This is a self-contained, fictional example of the methods, not a
 new reporting platform, runnable dependency bundle, or claim of agent execution.
 The existing target pipeline must first be mapped using
 [the profile template](report-profile.md). Evaluation fixtures may use different
@@ -12,11 +12,11 @@ For this example alone, `evidence/cohorts.json` version `reliability-v1` consist
 of the following single UTF-8 line **plus one LF newline**:
 
 ```json
-{"A":{"identity":"cohort-A-random-v1","selection":"random service-day sample","unit":"service-days","numerator":24,"denominator":120},"B":{"identity":"cohort-B-incident-v1","selection":"incident-enriched service-day sample","unit":"service-days","numerator":16,"denominator":40}}
+{"A":{"identity":"cohort-A-random-v1","selection":"random service-day sample","unit":"service-days","numerator":24,"denominator":120},"B":{"identity":"cohort-B-targeted-v1","selection":"targeted service-day sample","unit":"service-days","numerator":16,"denominator":40}}
 ```
 
 Its full SHA-256 is
-`e193b79648c8e84581c29c6cfec2217662f2d55e16d98c21f836268e14ae2a01`.
+`0eec20d44ff15093fe85d09ae584750beab80ef7db7fb72c482d72c64a33c1bd`.
 The numerator means service-days with the saved qualifying event, denominator
 means eligible service-days in that cohort. This is a supplied aggregate
 definition; no record-level data or new computation is required. Cohort overlap
@@ -35,7 +35,7 @@ entries:
     source:
       artifact: evidence/cohorts.json
       version: reliability-v1
-      sha256: e193b79648c8e84581c29c6cfec2217662f2d55e16d98c21f836268e14ae2a01
+      sha256: 0eec20d44ff15093fe85d09ae584750beab80ef7db7fb72c482d72c64a33c1bd
       locator: /A/numerator
       authority: approved saved aggregate, not a later narrative paraphrase
     cohort: cohort-A-random-v1
@@ -47,7 +47,7 @@ entries:
     denominator_source:
       artifact: evidence/cohorts.json
       version: reliability-v1
-      sha256: e193b79648c8e84581c29c6cfec2217662f2d55e16d98c21f836268e14ae2a01
+      sha256: 0eec20d44ff15093fe85d09ae584750beab80ef7db7fb72c482d72c64a33c1bd
       locator: /A/denominator
     derivation: saved qualifying-event service-days / eligible service-days; percent = 100 * count / denominator, one decimal for this example
     derivation_source: saved aggregate definition stated above; numerator and denominator JSON pointers
@@ -71,11 +71,11 @@ entries:
     source:
       artifact: evidence/cohorts.json
       version: reliability-v1
-      sha256: e193b79648c8e84581c29c6cfec2217662f2d55e16d98c21f836268e14ae2a01
+      sha256: 0eec20d44ff15093fe85d09ae584750beab80ef7db7fb72c482d72c64a33c1bd
       locator: /B/numerator
       authority: approved saved aggregate, not a later narrative paraphrase
-    cohort: cohort-B-incident-v1
-    selection: incident-enriched service-day sample
+    cohort: cohort-B-targeted-v1
+    selection: targeted service-day sample
     unit: service-days
     overlap: unavailable; not assumed disjoint, independent or matched with A
     denominator: 40
@@ -83,14 +83,14 @@ entries:
     denominator_source:
       artifact: evidence/cohorts.json
       version: reliability-v1
-      sha256: e193b79648c8e84581c29c6cfec2217662f2d55e16d98c21f836268e14ae2a01
+      sha256: 0eec20d44ff15093fe85d09ae584750beab80ef7db7fb72c482d72c64a33c1bd
       locator: /B/denominator
     derivation: saved qualifying-event service-days / eligible service-days; percent = 100 * count / denominator, one decimal for this example
     derivation_source: saved aggregate definition stated above; numerator and denominator JSON pointers
     value: 16
     status: exact
     uncertainty: saved interval unavailable; no new interval inferred
-    comparison_limit: incident-enriched cohort is not a random-population prevalence estimate or evidence of improvement
+    comparison_limit: targeted cohort is not a random-population prevalence estimate or evidence of improvement
     editable_source: templates/report.html; cohort-b panel, summary and text alternative
     output_location: ["report.html#cohort-b", "cohort-b series", "cohort-b summary", "cohort-b accessible table"]
     permitted_change:

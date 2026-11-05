@@ -1,24 +1,6 @@
 {
   "schema_version": 1,
   "scope": "develop validate-repo only",
-  "starting_revision": "96528682f7f7fac47d45ab437070aa4364602652",
-  "candidate_state": "working-tree; evidence commands retain their own before/after tested-state hashes; qualification-only metadata recorded after those runs",
-  "candidate_inputs_sha256": {
-    "README.md": "94ce5df9db17dfeed22ea4feffe84b7abdad5a062776a1786efcc597cbe63308",
-    "develop/SKILL.md": "e7a9b1d1500f493ba1e65ca8c93b3e1b6ec80b533575d65c8c6624020536830b",
-    "develop/references/validate-repo.md": "40475d0c1efe6469b256d17368008c56c5329b1c78b3820fe2e09727cdb7c78f",
-    "resources/profiles/template.md": "2f26a718edc5e32b830ef9d36b302acf649a836a3776c78f9ff02660515a1ec5",
-    "evaluations/protocol.md": "c9f6d7f4294288688dd1d5522a5b9b5d660ace5fd82eeb0fb3f1827a778a4326",
-    "evaluations/validation/README.md": "bea3a6f8a68c62faaa1a595a68e20af15a0aa96b9cd31dca293aa1d9c1b8f3ff",
-    "evaluations/validation/baseline.md": "1283bc541faf506af1c7a01aec4f98021e36152e573fe4af5e6421502e837dae",
-    "evaluations/validation/traceability.json": "6a79145bc1b3556e471c714f91d01d4b2e7e4154e702f9202f43ee0e7b7a76bc",
-    "evaluations/validation/fixtures.py": "62c1fc8e3853d9a941d22821ebe94fbbb1c3a6f2ea836b3bab99d20cded3c4de",
-    "evaluations/validation/evaluator.py": "cd23c5fac4e8c86f61ff46fb7b1fa109fcc0f0dfd5cee681ca831c0e84434389",
-    "evaluations/validation/cases.json": "1f5c0fd6abacb552d9bbe3f198f8ba0efe200f7237042f8f2743cda4c56a4b62",
-    "evaluations/validation/expected.json": "dbd22ffdb8890c378d58b6d7880102349fde26c52dbd84ca89ef072d0efb9aee",
-    "evaluations/validation/freeze.json": "ce0e8cbbe439c4614258664769580f0bea99dab04fa0bb9e9a83a320b6ef1f0a",
-    "tests/test_validation.py": "89c1656cbab3a5bc5a2007c2c2bb47c7c0cdf8f1c6f648fb19445bfe9e02c54b"
-  },
   "deterministic": {
     "status": "passed",
     "commands": [
@@ -29,25 +11,13 @@
         "discover",
         "-s",
         "tests",
-        "-p",
-        "test_validation.py",
         "-v"
-      ],
-      [
-        ".venv/bin/python",
-        "-m",
-        "evaluations.validation.evaluator",
-        "--output",
-        "/private/tmp/juniper-otter-fixture-results.json"
       ]
     ],
     "evidence": [
-      "evaluations/validation/deterministic.json"
+      "evaluations/workflow-methods/results.json"
     ],
-    "limits": "Real isolated command/file/index checks and evaluator tests do not establish model adherence.",
-    "validation_tests_passed": 28,
-    "substantive_cases_passed": 6,
-    "real_fixture_command_receipts": 19
+    "limits": "Local command/file/index fixtures; matched actor/model/deployed observations are separate."
   },
   "matched_agent_runs": {
     "status": "not_run",
@@ -92,15 +62,10 @@
   "live_agent_verification": "not_run",
   "deployed_workload_verification": "not_run",
   "repository_checks": {
-    "status": "failed",
-    "root_suite": {
-      "tests_run": 121,
-      "failures": 1,
-      "classification": "baseline_confirmed_preexisting_relative_to_validation_patch",
-      "evidence": "evaluations/validation/deterministic.json"
-    },
-    "iterate_tests": "passed",
-    "export_and_metadata": "passed",
-    "local_repository_readiness": "not_ready"
-  }
+    "status": "passed",
+    "local_repository_readiness": "local_checks_passed",
+    "source_inputs_sha256": "413c5514ea1ea83b78f7510d9d6915e530510c51c8a008203fe9486a3939fa31"
+  },
+  "artifact_kind": "qualification_record",
+  "limits": "Only recorded local observations are certified; model, host and deployed behavior remain separate."
 }

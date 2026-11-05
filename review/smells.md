@@ -4,17 +4,15 @@ For inputs, context/defaults, named controls and effects, use
 [the shared usage reference](resources/usage.md).
 
 Audit the declared source for structures that make change, testing, security or
-operations materially harder. The supplied Python source is a completed review
-report, not the separately referenced *Code Review Guide to Code Smells in Python*.
-Its findings illustrate reasoning and remedies; they are not current defects,
-universal size thresholds or instructions to refactor those historical files.
-The separate guide remains unavailable; do not claim to have applied its full
-catalog. See the [source coverage map](source-coverage.md) for that boundary.
+operations materially harder. Inspect actual contracts and consequences, not a
+historical project's findings or universal size thresholds. The [current coverage
+map](source-coverage.md) records the maintained diagnostic mechanisms; it does not
+claim a missing original guide's complete catalog or authenticate upstream text.
 
 Load [the worked audit](smells-worked.md) when a complete evidence-to-remedy example
 would help: divergent terminal policy, event ownership, scattered configuration,
 legitimate no-findings and incomplete coverage. These are synthetic sources, not
-new claims about the historical project.
+claims about real work or a historical project.
 
 Use this mode when the requested outcome is structural diagnosis and a maintenance
 plan for a declared scope. Assessing whether a particular implementation/change
@@ -35,7 +33,7 @@ not authorization to inspect a repository or refactor its code.
 - Track every eligible file as reviewed, partially reviewed or unreviewed. Calculate
   file/line counts from the actual snapshot if reporting them, explain the counting
   basis, and separate inventory totals from inspected totals. Never reuse the
-  historical report's 56 files, 10,012 lines or July 22, 2026 line references.
+  any historical file counts, metrics or source locations.
 - Inventory responsibility and mutable-state clusters, collaborators, repeated
   algorithms and schema knowledge, and changes requiring coordinated edits. Trace
   actual uses before judging the design; a missing source limits the claim.

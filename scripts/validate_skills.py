@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 
 from distribution.install import parse_skill_metadata
 from scripts.build_skills import payload
+from scripts.check_public_content import scan
 
 
 def main():
@@ -21,6 +22,9 @@ def main():
         print(str(error), file=sys.stderr)
         return 1
     discovery = ROOT / ".agents/skills"
+    content_check = scan(ROOT, paths=unused_inputs, exported=exported)
+    for finding in content_check['findings']:
+        errors.append(f"{finding['path']}: publication content rule {finding['rule_id']}")
     entries = discovery.iterdir() if discovery.is_dir() else []
     actual = {entry.name for entry in entries if entry.is_symlink() or entry.is_dir()}
     if actual != set(inventory["parents"]):

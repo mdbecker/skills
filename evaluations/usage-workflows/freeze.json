@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "date": "2026-11-04",
-  "status": "frozen_before_assistant_evaluation",
+  "status": "frozen-evaluation-inputs",
   "model_protocol_approval": "pending",
   "corpus_hashes": {
     "cases.json": "d7623e365201e75e5879a458466c195d4b1266862017a6033b6ba36b362a2b24",
     "expected.json": "129cfece87e2148392da538b9181ebc6c4894f55869a0bb7da8ac1d18c5e0452",
-    "baseline.json": "be1ed2da6627da0b86da31fbe6acff292df874b9dae9f533d40201d27cd888ae"
+    "baseline.json": "69d51244c1abe387140943881242d24b54afa679cc56d26877bd2493ea4a6213"
   },
   "case_ids": [
     "U01-new-reader-help",

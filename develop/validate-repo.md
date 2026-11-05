@@ -39,16 +39,15 @@ For each affected area record:
 **obligation → authoritative project source → relevant check → observed result**.
 
 Name the current source/section and actual test or command, its tested state and
-result. Protect observable behavior and stable documented contracts, not incidental
+result. Protect observable behavior and stable documented contracts, not noncontractual
 implementation structure or noncontractual event ordering. A label such as
 “storage checked” is not evidence. Missing authority, absent behavioral coverage,
 or an unperformed check remains a disclosed gap, not a pass. Unaffected areas may
 be marked out of scope with a reason.
 
-Use the [template profile](resources/profiles/template.md) only when those
-contracts apply. For other projects, map their own obligations, language, runtime
-and checks; do not transplant Databricks routing, Spark or entrypoint requirements.
-The [skills profile](resources/profiles/skills.md) maps this repository.
+Use the [generic project mapping](resources/project-profile.md) to record the
+target's obligations, language, existing runtime, checks and allowed effects.
+The [skills profile](resources/profiles/skills.md) maps this repository only.
 
 ## Resolve command effects before execution
 
@@ -73,13 +72,10 @@ Compare **all effects** with permitted scope before execution:
   cannot validate an uncommitted patch. Do not silently create Git worktrees,
   stash edits, copy sensitive data or treat isolation as permission to install.
 
-For the template, the canonical command is
-`python3.12 -m pre_commit run --all-files --show-diff-on-failure`. It performs
-hygiene, Ruff formatting/fixes, unit and contract tests with a 90% coverage gate,
-Markdown linting and wheel validation. Its hooks/nox sessions can install
-dependencies and remove/rebuild `build/` and `dist/`; it is not read-only.
-`python3.12 -m pre_commit install` is separate hook setup, not validation.
-Even a check-only alternative may install dependencies or rebuild artifacts.
+A canonical workflow may format/fix files, install dependencies, generate
+coverage, clean build outputs or invoke external systems. Hook installation is
+separate setup, not validation. A check-only alternative can still have effects;
+inspect the actual configuration rather than assuming its name makes it read-only.
 
 Focused tests assist diagnosis; they do not replace required full validation.
 Do not silently substitute weaker checks, skip hooks, reduce coverage gates or

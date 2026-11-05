@@ -48,14 +48,14 @@ class WorkflowMethodTests(unittest.TestCase):
 
     def test_frozen_current_instruction_snapshot_has_verifiable_content(self):
         baseline = load_json("baseline.json")
-        self.assertEqual(baseline["kind"], "current_workspace_instructions_before_this_PRD")
+        self.assertEqual(baseline["kind"], "synthetic_public_instruction_snapshot")
         for relative, record in baseline["sources"].items():
             with self.subTest(source=relative):
                 self.assertFalse(Path(relative).is_absolute())
                 self.assertNotIn("..", Path(relative).parts)
                 self.assertEqual(hashlib.sha256(record["content"].encode()).hexdigest(), record["sha256"])
-        modes = ["develop/references/" + name + ".md" for name in ["bdd", "prd", "prompt", "backlog"]]
-        modes += ["review/references/" + name + ".md" for name in ["code", "smells"]]
+        modes = ["develop/" + name + ".md" for name in ["bdd", "prd", "prompt", "backlog"]]
+        modes += ["review/" + name + ".md" for name in ["code", "smells"]]
         self.assertTrue(set(modes).issubset(baseline["sources"]))
 
     def test_raw_cases_do_not_receive_evaluator_answers(self):

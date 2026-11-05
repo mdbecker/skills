@@ -262,10 +262,10 @@ an end-to-end observation is recorded, and the user can try it. A reproducible f
 failure can enter refinement; it is not a passed acceptance check.
 
 ### 4. TWEAKING
-Tight loop: change → run against test bed → observe → repeat. This loop is shared with the user — they iterate manually through the web UI and by editing the driver script; expect their edits and feedback to drive changes.
+Tight loop: change → run against test bed → observe → repeat. This loop is shared with the user — they try the agreed task-appropriate surface and edit its representative inputs; expect their edits and feedback to drive changes.
 - Keep changes small and observable; verify each by re-running the recorded commands (`manifest.py testbed <feature> list`), not by reading code.
-- Keep the UI and driver script working as the feature changes — they are the verification surface for the whole loop. Before touching `demo.py`, read its current contents immediately before editing and apply a targeted patch that preserves user changes. Scratch files are ignored by Git, so do not rely on `git diff` to detect their edits; do not regenerate the driver wholesale.
-- Continue parking edge cases; the loop is for making the happy path *good*, not complete.
+- Keep the agreed demonstration working as the feature changes — it is the verification surface for the whole loop. Before touching a user-editable demo, read its current contents immediately before editing and apply a targeted patch that preserves user changes. Scratch files are ignored by Git, so do not rely on `git diff` to detect their edits; do not regenerate the driver wholesale.
+- Park only explicitly optional future improvements; required correctness, validation and safety remain in scope.
 - Log any decision reversals in `architecture_decisions` (new entry, don't rewrite history).
 
 **Exit when:** the user says the behavior feels right.

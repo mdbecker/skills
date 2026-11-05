@@ -86,6 +86,8 @@ def qualification(root=ROOT):
 
 
 def release_ready(status, inputs):
+    if not publication_ready(status):
+        return False
     gates = [status.get(key) for key in ("release_approval", "model_protocol_approval", "manual_acceptance", "deterministic", "model_quality", "reference_fidelity", "transfer")]
     for host in ("codex", "claude"):
         record = status.get("hosts", {}).get(host, {})
@@ -94,6 +96,12 @@ def release_ready(status, inputs):
         gates.extend(record.get(key) for key in ("installation", "invocation", "hierarchy"))
     fingerprint_matches = isinstance(inputs, dict) and status.get("source_inputs_sha256") == digest(json.dumps(inputs, sort_keys=True).encode())
     return all(gate == "passed" for gate in gates) and fingerprint_matches
+
+
+def publication_ready(status):
+    publication = status.get('publication', {})
+    return isinstance(publication, dict) and all(publication.get(gate) == 'passed' for gate in
+        ('public_content', 'private_markers', 'semantic_review', 'distribution_rights', 'history_review'))
 
 
 def _checked_preparation_path(root, relative, directory=False):
@@ -374,6 +382,8 @@ def build(output, version="dev", root=ROOT, release=False, prerelease=False):
     dirty = bool(subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True, check=True).stdout)
     if release and dirty:
         raise ValueError("Release archives require a clean committed source snapshot")
+    if release and not publication_ready(status):
+        raise ValueError("Public release blocked: content, private-marker, semantic, rights and history reviews are required, including for prereleases")
     if release and not prerelease and not release_ready(status, inputs):
         raise ValueError("Stable release blocked: required approval, host or model-quality gates have not passed; use an explicitly labeled prerelease")
     manifest = {"schema_version": 1, "package": inventory["package"], "version": version,

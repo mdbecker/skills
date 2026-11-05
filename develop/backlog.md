@@ -76,7 +76,7 @@ note saying they were filed, grant no mutation authority and do not identify new
 live keys without their verified mapping. Ask for an unavailable approved source
 only if it blocks the requested conclusion; otherwise report the limitation.
 
-Read [the complete reference and nonclinical register](backlog-worked.md) for a
+Read [the complete reference and fictional register](backlog-worked.md) for a
 concrete multi-source example and deterministic coverage boundary. Source `backlog`
 is recorded in the bundled provenance resources. Report actual checks, remaining
 unknowns and proposed follow-ups without claiming live refresh or model adherence.

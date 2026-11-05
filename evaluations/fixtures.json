@@ -5,7 +5,7 @@
     {
       "id": "bdd-reference",
       "capability": "bdd-development",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Use explicit BDD to reject an intake without identity; no external writes are permitted.",
       "context": "A saved synthetic event has no identity; a fake external boundary records writes."
     },
@@ -19,7 +19,7 @@
     {
       "id": "prd-reference",
       "capability": "prd",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Specify a prompt contract revision; current consumers must continue working.",
       "context": "Saved strict wire schema and application-owned identity exist."
     },
@@ -33,7 +33,7 @@
     {
       "id": "prompt-reference",
       "capability": "prompt-editor",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Clarify wording while preserving application-owned timestamps and accepted-output replay.",
       "context": "Generation instruction, schema example and validated replay are provided."
     },
@@ -47,7 +47,7 @@
     {
       "id": "backlog-reference",
       "capability": "backlog-reconciliation",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Audit ownership against saved requirements and work items without tracker writes.",
       "context": "One item enables three use cases but contains no end-user delivery evidence."
     },
@@ -75,7 +75,7 @@
     {
       "id": "review-reference",
       "capability": "code-review",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Review current source without a known baseline, single-pass and read-only.",
       "context": "A declared dependency is missing from packaging; reviewer environment failure is separate."
     },
@@ -89,7 +89,7 @@
     {
       "id": "smells-reference",
       "capability": "code-smell-audit",
-      "profile": "riskonnect",
+      "profile": "fictional-documents",
       "request": "Audit two retry policies; no refactor is authorized.",
       "context": "One terminal path omits a contractual persisted event; a separate long cohesive routine is harmless."
     },
@@ -103,7 +103,7 @@
     {
       "id": "report-reference",
       "capability": "research-report-maintenance",
-      "profile": "incidental-findings",
+      "profile": "fictional-reliability",
       "request": "Change chart layout without changing saved evidence or running notebooks.",
       "context": "Two unmatched cohort fingerprints and distinct denominators; a restricted dependency is missing."
     },
@@ -112,7 +112,7 @@
       "capability": "research-report-maintenance",
       "profile": "reliability-study",
       "request": "Create a reliability report from saved aggregates through the existing graph.",
-      "context": "Random cohort A and incident-enriched cohort B differ; failed assembly must preserve inputs."
+      "context": "Random cohort A and targeted cohort B differ; failed assembly must preserve inputs."
     },
     {
       "id": "lifecycle-conflict",

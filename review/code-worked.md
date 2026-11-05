@@ -1,6 +1,6 @@
 # Complete code review and revised review
 
-Synthetic nonclinical order-import example. This is an illustrative deliverable,
+Synthetic fictional order-import example. This is an illustrative deliverable,
 not an instruction to edit the example or a previously executed agent review.
 Line locations count from the first line of each code block. The independent
 evaluation uses different artifacts and does not receive this report as an answer.

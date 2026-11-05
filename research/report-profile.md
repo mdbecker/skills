@@ -182,9 +182,21 @@ verification:
     narrow_views: [<mapped widths and overflow/legibility criteria>]
     print_views: [<readable content/restoration criteria>]
     inspection_artifacts: [<actual screenshots/observations, not prefilled passes>]
+  independent_scoring:
+    requested: false
+    rubric: null
+    scale: null
+    minimum_score: null
+    revision_limit: null
+    stop_criteria: null
+    reviewer_permission: null
+    approved_budget: null
+    observed_score: null
+    evidence: null
+    status: not-run
   outcomes: []
   status_vocabulary: [completed, failed, blocked, not-run]
-  prohibited_inferences: <assembly is not visual, independent, clinical or scientific validation>
+  prohibited_inferences: <assembly is not visual, independent, domain or scientific validation>
 ```
 
 ## Map helpers after the pipeline
@@ -197,7 +209,7 @@ the helper for a missing assembler/browser/renderer.
 | API | Bound adapter and additional required mapping |
 |---|---|
 | `validate_ledger`, `compare_ledger` | Saved JSON pointers, count values and positive integer denominators; immutable baseline, changed output source/value only for supported corrections; separately compare additional meanings/displays. |
-| `aggregate_spatial`, `validate_spatial` | Two-dimensional private observations with `subject` and `coordinates`; only `count` and `centroid` output, mapped dual thresholds and rounding, `withhold-partition` policy. No arbitrary spatial/disclosure formats or clinical guarantee. |
+| `aggregate_spatial`, `validate_spatial` | Two-dimensional private observations with `subject` and `coordinates`; only `count` and `centroid` output, mapped dual thresholds and rounding, `withhold-partition` policy. No arbitrary spatial/disclosure formats or domain guarantee. |
 | `literal_assignment`, `archive_record` | Unambiguous saved literal assignments and completeness decision; exact reconstruction needs the independent full SHA-256. |
 | `namespace_svg`, `verify_diagram`, `checked_asset` | Approved static SVG, mapped JSON `nodes`/`edges`, source/asset hashes; separately check renderer config, complete attribute policy and actual views. |
 | `inspect_html` | Static anchor/resource inspection with hashes of explicitly approved inline scripts; not browser/runtime/visual verification. |
@@ -221,3 +233,14 @@ status, result, actual command or manual observation, evidence and limitations.
 See [worked artifacts](report-worked.md) for complete example ledger entries;
 their paths, values and policies illustrate a fictional task, not defaults for a
 real project.
+
+## Explicitly requested independent scoring
+
+Do not launch a scorer unless the user requests it and reviewer/data/budget effects
+are authorized. Record the exact rubric, scale, minimum and bounded revision/stop
+criteria before review. If a requested minimum is 8/10, preserve that exact gate.
+An observed below-minimum score requires the agreed revision and recheck within
+permission/budget, not a fabricated pass. A missing required reviewer remains
+blocked/not-run; exhausted authorized revisions remain unmet acceptance. Without
+a scoring request, use ordinary mapped integrity/visual/offline checks, no arbitrary
+minimum or additional agent call. Assembly is not independent acceptance.

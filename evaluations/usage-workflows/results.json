@@ -9,13 +9,6 @@
   "model_tokens": null,
   "provider_cost": null,
   "behavioral_quality_acceptance": false,
-  "limits": "Saved criteria and local artifact/helper tests are not observed model/host/user routing trials.",
-  "local_check": {
-    "command": ".venv/bin/python -B -m unittest tests.test_usage_contract tests.test_usage_scenarios tests.test_documentation tests.test_combinations -q",
-    "tests": 14,
-    "exit_status": 0,
-    "scope": "Actual installed-package/helper behavior plus structural/corpus/link governance; not assistant/host/user routing",
-    "package_red": "Before the guide was registered, all six standalone parent/host installs lacked it.",
-    "status_red": "Before display changes, readable stage and modification-time selection disclosure were absent."
-  }
+  "limits": "Recorded observations are scoped to their actual inputs; independent host/model qualification is separate.",
+  "source_inputs_sha256": "413c5514ea1ea83b78f7510d9d6915e530510c51c8a008203fe9486a3939fa31"
 }

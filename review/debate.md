@@ -70,7 +70,7 @@ Each reviewer must inspect actual source and relevant changes, provide concrete 
 
 All stages must check counterevidence and disputed assumptions. Separate verified defects, conditional hypotheses, and stylistic or philosophical preferences. Respect the project's intended methodology.
 
-Report model eligibility, evidence-stage completion, preferred-tier conformance and quality acceptance separately, with exact actual selections/settings, substitutions and limits. Cost/coverage measurements require telemetry; otherwise say unavailable. Stage count or successful dispatch does not prove quality, savings, billing or clinical/scientific validity.
+Report model eligibility, evidence-stage completion, preferred-tier conformance and quality acceptance separately, with exact actual selections/settings, substitutions and limits. Cost/coverage measurements require telemetry; otherwise say unavailable. Stage count or successful dispatch does not prove quality, savings, billing or domain/scientific validity.
 
 For `/review discuss ... --engine debate`, use the same 5→3→1 hierarchy with the same question, relevant evidence, constraints, and competing options. Source claims still require evidence.
 

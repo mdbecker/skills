@@ -1,16 +1,14 @@
 # Research-report maintenance evaluation
 
-This evaluator-only directory expands the existing synthetic reliability case
-into a small saved-evidence report. It is not a research execution tool, production
-reporting platform, dependency bundle for the incidental-findings project, or
-source of real clinical observations. The four source-project attachments informed
-mechanisms only; no source-project file is modified or required at runtime.
+This evaluator-only corpus defines fictional service-reliability reports, not a
+production platform, real source observations or a private project dependency.
+Current methods define the acceptance contracts. Fixture inputs and evaluator
+criteria are self-contained and remain separate.
 
 ## Inputs and independent expectations
 
-`fixtures.py` materializes two isolated fictional target projects: a reference
-mapping resembling the existing incidental-findings report profile, and a
-nonclinical reliability-study transfer mapping. Each has approved saved aggregates,
+`fixtures.py` materializes two isolated fictional target projects: two independently fictional
+service-report mappings with different source/cohort boundaries. Each has approved saved aggregates,
 an existing tiny assembler/checker, editable chart/presentation sources, a decision
 diagram, partial historical archive, supported correction, and failed-build case.
 `cases.json` records requests, including applicability and non-activation examples.

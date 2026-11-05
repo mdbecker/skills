@@ -4,9 +4,9 @@ These complete synthetic handoffs need no earlier conversation or inaccessible
 source repository. The Python blocks are executable design illustrations for
 checking the specified contracts, not deployed implementations. Drafting these
 PRDs does not authorize implementation, tracker writes, model calls or deployment.
-Select the relevant example; the event fields are not nonclinical defaults.
+Select the relevant example; the event fields are not fictional defaults.
 
-## Reference PRD: select a clinical event by name
+## Fictional PRD: select a catalog event by name
 
 ### Prerequisites and blocking decisions
 
@@ -145,7 +145,7 @@ search, new authorization rules, schema changes, fuzzy search and automatic
 submission. Completion is the bounded behavior plus required tests/docs, not a
 new framework or cleanup of the existing submission implementation.
 
-## Nonclinical PRD: atomic warehouse CSV import
+## Fictional PRD: atomic warehouse CSV import
 
 ### Prerequisites and blocking decisions
 

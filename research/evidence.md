@@ -75,7 +75,7 @@ ledger; map an aggregate-only public provenance view separately.
    not establish scientific validity or prove browser inspection occurred.
 
 The [worked ledger](report-worked.md) preserves random cohort A's `24/120` and
-incident-enriched cohort B's `16/40`. Different selection, fingerprints and
+targeted cohort B's `16/40`. Different selection, fingerprints and
 denominators prevent an improvement claim; unknown overlap does not authorize
 pooling, independence, a matched comparison, or a newly calculated pooled rate.
 

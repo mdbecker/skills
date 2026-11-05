@@ -7,7 +7,8 @@ an executable slash router, agent simulator, or model-evaluation service.
 `cases.json` contains only requests, context and raw artifacts; `expected.json`
 contains independent observations/forbidden actions, not model output. Never give
 an actor the criteria, prior reports, or source-implementation conclusions.
-`freeze.json` pins raw inputs, criteria, and the pre-change instruction baseline.
+`freeze.json` pins raw inputs, criteria, and explicitly synthetic public context.
+Baseline instruction context is constructed and hash-bound.
 Do not rewrite its hashes to make a candidate pass. `traceability.json` maps every
 requirement to maintained source and cases; mappings alone do not verify behavior.
 
@@ -24,8 +25,7 @@ behavioral failure. Structural/link/corpus checks are documentation governance,
 not assistant routing or human comprehension. Existing passing helper behaviors
 remain characterization; do not weaken them to manufacture red.
 
-Record actual local evidence separately in `results.json`. Global qualification
-and existing frozen corpora remain untouched. Metadata/packaging success does not
+Record actual local evidence separately in `results.json`. Bind every verification result to the corresponding input identities. Metadata/packaging success does not
 prove that a model will resolve new named controls or choose the right scope.
 
 ## Separately approved observed trials

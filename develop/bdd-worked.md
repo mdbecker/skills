@@ -1,11 +1,11 @@
 # Worked BDD: identity before writes
 
-These are self-contained synthetic implementations, not instructions to change
-the historical Riskonnect project. Select only the relevant example. Both use
+These self-contained fictional implementations exercise two submission contracts.
+Select the example relevant to the target. Both use
 Python 3.11+ standard-library `unittest`, a real public submission boundary and a
 mock of the external write contract, not internal helper-call assertions.
 
-## Reference: clinical-event submission
+## Fictional inventory-event submission
 
 **Outcome:** an intake submission with no canonical event ID returns
 `missing_canonical_event_id` and never calls the writer. The application supplies
@@ -13,7 +13,7 @@ mock of the external write contract, not internal helper-call assertions.
 null, non-string and blank IDs are invalid. Valid IDs are opaque, case-sensitive
 and passed unchanged; this increment does not check catalog membership. Preserve
 all caller-supplied fields, successful receipts and the existing writer-exception
-behavior. No evidence timestamps or clinical judgments are derived here.
+behavior. No evidence timestamps or domain judgments are derived here.
 
 | Given | When | Then |
 |---|---|---|
@@ -114,7 +114,7 @@ green. Update the target API's identity-error documentation in a real project.
 
 ## Transfer: warehouse shipment release
 
-This separate project owns an opaque `order_id`, not a clinical-event identity.
+This separate project owns an opaque `order_id`, not a domain-event identity.
 An order label is not a booking key. The increment rejects a missing/null/blank/
 non-string order ID without calling the carrier's booking boundary. Existing valid
 booking confirmations and exceptions must remain unchanged. This is a successful
@@ -187,7 +187,7 @@ def release_order(order, book_shipment):
 ```
 
 Rerun the identical command: **green**, 3 tests, 0 failures, 0 errors. Document the
-new `missing_order_id` outcome at the warehouse submission API, not a clinical
+new `missing_order_id` outcome at the warehouse submission API, not a domain
 schema. No dependency, registry or intermediate abstraction is needed.
 
 ## Evidence and limits
@@ -196,6 +196,6 @@ The repository's focused test replays each baseline/test pair in a temporary
 workspace, requires this assertion failure with no errors, then installs the
 green implementation and reruns identical tests. These deterministic results
 validate the examples, not model adherence, a live writer, access control,
-catalog validity, transaction atomicity or clinical safety. Static/governance
+catalog validity, transaction atomicity or domain safety. Static/governance
 checks remain separate. If tests already pass in a real project, investigate and
 retain them rather than copying an intentionally defective baseline into it.

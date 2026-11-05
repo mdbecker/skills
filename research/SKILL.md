@@ -16,7 +16,7 @@ When a disputed interpretation needs another method, read only the relevant
 Accept `/research report create <target>` or `/research report update <target>`.
 Reject unknown operations; do not interpret `create` as permission to conduct
 research. Load [shared boundaries](resources/policy.md), [report method](report.md)
-and the existing project's mapping. Use the [incidental-findings profile](resources/profiles/incidental-findings.md)
+and the existing project's mapping. Use the [generic project mapping](resources/project-profile.md)
 or [synthetic reliability profile](resources/profiles/reliability-study.md) where
 applicable; otherwise establish the mapping using [adaptation](resources/adaptation.md).
 
@@ -39,7 +39,7 @@ processing does not authorize changing scientific derivation semantics.
 
 Use the relevant [worked report cases](resources/examples.md) if needed. Report
 actual evidence comparisons and automated/visual/offline checks with completed,
-failed, blocked and not-run status. No claimed clinical validation, independent
+failed, blocked and not-run status. No claimed domain validation, independent
 score, publication, sending or deployment follows from report work.
 
 ## Load the relevant maintenance methods
@@ -59,7 +59,7 @@ score, publication, sending or deployment follows from report work.
   Preserve decisions, loops and optional connections; reuse presentation definitions.
 - For an unmapped project, complete the [report profile](report-profile.md).
   The [worked evidence ledger](report-worked.md) illustrates the methods,
-  not observed model performance or universal clinical/privacy defaults.
+  not observed model performance or universal domain/privacy defaults.
 
 [Deterministic helpers](scripts/report_checks.py) support explicitly mapped ledger,
 aggregation, archive, SVG and staged-output checks. They are not an assembler or a

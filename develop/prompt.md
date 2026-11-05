@@ -33,29 +33,21 @@ and replay summaries on compact validated results. Edit only the affected surfac
 and synchronize their consumers. Preserve authority, uncertainty, redaction,
 application-owned fields and accepted-output-only replay where applicable.
 
-## Reference timestamp contract, not universal field names
+## Map authoritative metadata, not universal field names
 
-In the Riskonnect-derived reference contract, the application supplies canonical
-evidence identities and timestamps. Report evidence uses `CreatedDate`;
-clinical-note evidence uses `ServiceInstant`. `ServiceInstant` is the note's
-service time, distinct from both event occurrence and note creation. Neither
-evidence timestamp is automatically the clinical event's occurrence time. Never
-substitute `Date_of_Event__c`, `CreationInstant`, or a convenient event/note date.
-Missing authoritative metadata is a controlled failure under the mapped contract,
-not permission for a model guess or fallback.
+Use the [project mapping](resources/project-profile.md) to identify canonical
+source IDs, issuance, receipt, processing and occurrence times. They are different
+contracts; never substitute a convenient timestamp or generated identity. Missing
+required metadata is a controlled failure under the actual contract, not permission
+for a model guess. Keep ownership out of model-facing generation/wire examples.
+Inject synthetic application metadata before testing the final strict model only
+where the mapped final-output boundary requires it.
 
-Keep timestamp ownership out of generation instructions, wire hints and
-model-facing examples. Inject synthetic application metadata before testing the
-final strict model where required. Preserve report evidence's
-`clinical_note_key=null` in this reference final contract; that is not a universal
-field for other domains. A nonclinical adapter must map its own authoritative
-document-issued and processing times separately, label their meanings, and never
-collapse them into a generic event date.
-
-For the source profile, keep stable prompt resource filenames; model-visible
-changes advance the registered logical `prompt_name`. Governed templates also
-carry explicit version/SHA-256. Follow the actual target's metadata contract;
-do not introduce historical journal widths, clinical schemas or migration rules.
+Preserve the target's actual null rules, accepted-event selection, enrichment and
+reconciliation order, stable resource filenames and logical prompt version/hash.
+Do not impose a historical schema, vendor field, journal width, retry count or
+quote-matching algorithm. Accepted output can include explicitly unverified evidence
+only if the actual contract allows it; acceptance is not adjudicated interpretation.
 
 ## Verify and deliver
 
@@ -73,6 +65,6 @@ boundaries rather than adopting an illustrative fixture as production architectu
 Return coordinated authorized edits, rationale, actual regression evidence and
 remaining generation uncertainty. In review-only requests make no edits. Source
 `prompt` is recorded in the bundled provenance resources. Read
-[the coordinated reference and nonclinical worked case](prompt-worked.md) when
+[the coordinated reference and fictional worked case](prompt-worked.md) when
 the mapping or acceptance boundary needs a concrete implementation. The case is
-self-contained; no original project checkout or live model access is needed.
+self-contained and uses locally supplied fixture inputs without model calls.

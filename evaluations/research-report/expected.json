@@ -3,10 +3,10 @@
   "evaluator_only": true,
   "origin": "Manually specified from the PRD and delegated API contract before importing or deriving results from report_checks.py.",
   "qualification": "Synthetic deterministic checks only; not model routing, independent agent execution, scientific validity, historical reproducibility or a universal disclosure standard.",
-  "profiles": ["incidental-findings", "reliability-study"],
+  "profiles": ["fictional-reliability", "reliability-study"],
   "baseline": {
     "cohort-a": {"value": 24, "denominator": 120, "selection": "random", "status": "exact"},
-    "cohort-b": {"value": 16, "denominator": 40, "selection": "incident-enriched", "status": "exact"},
+    "cohort-b": {"value": 16, "denominator": 40, "selection": "targeted", "status": "exact"},
     "partition-total": {"value": 20, "denominator": 20, "status": "exact"},
     "partition-disclosed": {"value": 15, "denominator": 20, "status": "exact"},
     "partition-suppressed": {"value": "<11", "denominator": 20, "status": "suppressed"},
@@ -22,14 +22,14 @@
   "correction": {"id": "cohort-a", "before_value": 24, "after_value": 25, "unchanged_denominator": 120, "unchanged_selection": "random"},
   "chart": {
     "A": {"label": "Cohort A — random — 24/120 (20%)", "width": "20%"},
-    "B": {"label": "Cohort B — incident-enriched — 16/40 (40%)", "width": "40%"},
+    "B": {"label": "Cohort B — targeted — 16/40 (40%)", "width": "40%"},
     "corrected_A": {"label": "Cohort A — random — 25/120 (20.8333%)", "width": "20.8333%"}
   },
   "public_projection": {"partition-disclosed": {"value": "Withheld (complementary disclosure)", "status": "withheld-complementary", "denominator": 20}},
   "archive": {"kind": "partial-excerpt", "text": "Keep the saved selection labels.", "complete": false},
   "spatial": {
     "policy": {"min_observations": 11, "min_subjects": 11, "round_digits": 2, "permitted_fields": ["count", "centroid"], "complementary_disclosure": "withhold-partition"},
-    "coincident": [{"count": 24, "centroid": [1.23, 2.35]}],
+    "colocated": [{"count": 24, "centroid": [1.23, 2.35]}],
     "two_subjects": [],
     "separated": [{"count": 12, "centroid": [-9.45, 0.55]}, {"count": 12, "centroid": [10.55, 2.55]}]
   },

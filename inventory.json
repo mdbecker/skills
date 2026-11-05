@@ -1,18 +1,59 @@
 {
   "schema_version": 1,
   "package": "mdbecker-skills",
-  "parents": ["develop", "review", "research"],
+  "parents": [
+    "develop",
+    "review",
+    "research"
+  ],
   "common_resources": [
-    "resources/policy.md", "resources/models.md", "resources/adaptation.md",
-    "resources/provenance.json", "resources/examples.md", "resources/combinations.md", "resources/usage.md", "resources/hosts/codex.md",
-    "resources/hosts/claude.md", "resources/profiles/skills.md", "resources/profiles/riskonnect.md",
-    "resources/profiles/template.md", "resources/profiles/incidental-findings.md",
-    "resources/profiles/reliability-study.md"
+    "resources/policy.md",
+    "resources/models.md",
+    "resources/adaptation.md",
+    "resources/provenance.json",
+    "resources/examples.md",
+    "resources/combinations.md",
+    "resources/usage.md",
+    "resources/hosts/codex.md",
+    "resources/hosts/claude.md",
+    "resources/profiles/skills.md",
+    "resources/profiles/reliability-study.md",
+    "resources/project-profile.md"
   ],
   "owned_resources": {
-    "develop": ["bdd.md", "prd.md", "prompt.md", "backlog.md", "validate-repo.md", "bdd-worked.md", "prd-worked.md", "prompt-worked.md", "backlog-worked.md", "iterate.md", "scripts/manifest.py"],
-    "review": ["code.md", "smells.md", "discuss.md", "source-coverage.md", "code-worked.md", "smells-worked.md", "debate.md"],
-    "research": ["report.md", "evidence.md", "disclosure.md", "archives.md", "diagrams.md", "rebuilding.md", "report-worked.md", "report-profile.md", "scripts/report_checks.py"]
+    "develop": [
+      "bdd.md",
+      "prd.md",
+      "prompt.md",
+      "backlog.md",
+      "validate-repo.md",
+      "bdd-worked.md",
+      "prd-worked.md",
+      "prompt-worked.md",
+      "backlog-worked.md",
+      "iterate.md",
+      "scripts/manifest.py"
+    ],
+    "review": [
+      "code.md",
+      "smells.md",
+      "discuss.md",
+      "source-coverage.md",
+      "code-worked.md",
+      "smells-worked.md",
+      "debate.md"
+    ],
+    "research": [
+      "report.md",
+      "evidence.md",
+      "disclosure.md",
+      "archives.md",
+      "diagrams.md",
+      "rebuilding.md",
+      "report-worked.md",
+      "report-profile.md",
+      "scripts/report_checks.py"
+    ]
   },
   "capabilities": {
     "bdd-development": "develop bdd",

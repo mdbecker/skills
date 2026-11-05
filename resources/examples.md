@@ -14,72 +14,52 @@ the relevant [optional combination](combinations.md). These single-mode examples
 remain sufficient when no additional step contributes useful evidence.
 
 ## BDD
-Reference: a Riskonnect-like intake rejects a missing event identity. Given a saved
-event without an identity, when submitted, then no write occurs and the caller gets
-a precise missing-identity result. In explicit BDD mode observe that behavioral
-failure before implementation, then green at the real external-write boundary.
-Transfer: a coupon with a 10% reduction changes a $100 basket to $90; assertions
-survive calculator/repository refactoring. Failure: import failure is not red
-behavior, and a test-review request makes no edits. An active Iterate feature keeps
-its testing stage unless a lifecycle change is explicitly resolved.
+A fictional inventory intake rejects missing canonical item identity before any
+external write. Define every agreed scenario, confirm intended red on unchanged
+production, then implement and observe green. Preserve already-passing coverage;
+an import/environment error is not behavioral red. The separate document service
+has application-owned IDs and timestamps, not model-created metadata.
 
 ## PRD
-Reference: select an event by full human-readable name while retaining canonical
-identity; distinct IDs sharing a name return explicit ambiguity. Choose one design
-and identify access decisions first. Transfer:
-specify a CSV import's observable output, identities, limits and failure contract.
-Failure: no hidden conversation references, execution, or assumed cleanroom removal
-of a consumer API; genuine owner decisions remain explicit.
+Specify a catalog name resolver with explicit duplicate-name ambiguity, preserved
+canonical identity and no guessed owner approvals. A separate equipment CSV import
+has its own quantity, limits and no-write-on-invalid-input contract. Examples own
+their explicit policies and observable acceptance contracts.
 
 ## Prompt
-Reference: an application owns source timestamps; change wording and wire examples
-without making the model invent them. In the reference profile, report `CreatedDate`
-and note `ServiceInstant` are evidence timestamps, not automatically event occurrence
-or note creation. Transfer: document issuance and application processing remain
-separate, with application-owned identity and strict accepted-output replay. Failure: valid JSON
-alone is not generation quality; no live model assertion or missing replay layer
-is introduced to justify the change.
+Change uncertainty wording across generation, exact wire examples, accepted
+validation, application enrichment, replay, consumers and logical prompt identity.
+The fictional document service distinguishes issuance from receipt/processing.
+Never derive authoritative time from generated text or call valid JSON good reasoning.
 
 ## Backlog
-Reference: one work item supports several use cases but only proves enabling work;
-the register separates owner/delivery/validation. Transfer: authentication middleware
-exists, but the requested SSO increment has no delivery owner. Refine the matching
-owner before duplicating tickets. Failure: truncated tracker pagination is partial
-coverage; absence in this checkout is not proof of absence elsewhere. No feature
-manifest or tracker status is silently synchronized.
+The fictional equipment register separates completed normalization, delivery
+increments, validation, source priorities and tracker state. Reuse the appropriate
+existing owner. A missing terminal page makes an unseen owner unknown, not a gap.
+A complete selected inventory can support a bounded gap, not absence everywhere.
 
 ## Validation
-Reference: run the template's mapped canonical hooks after checking prerequisites,
-not this repository's unrelated command. Transfer: a JavaScript library uses its
-documented package checks. Failure: preserve an unrelated dirty file, report a
-missing tool as a blocker, and never claim a deployed smoke check from local tests.
+Read the target's mapped canonical tooling and effects; this repository's workflow
+is not universal. Preserve staged/unrelated edits, classify failure using actual
+baseline evidence, and never infer deployed success from local tests.
 
 ## Code review and discussion
-Reference: trace a changed evidence adapter through its actual callers before
-claiming a wrong timestamp; retain compatibility unless cleanroom is established.
-Transfer: compare synchronous import versus queued delivery on actual size/latency
-constraints, select one supported design and disclose unknowns. Failure: no-base
-source review cannot claim introduction, and model agreement is not verification.
-Revised review resolves supported fixes and withdraws stale duplicates. A clean
-scope may legitimately produce no findings.
+Trace real consumers and protected contracts; prefer one complete supported remedy.
+A revised review retains open/resolved/withdrawn and aliased prior IDs. Discussion
+compares genuine tradeoffs, remains read-only and is single-pass unless Debate is
+explicitly selected. No-base current source cannot establish introduction.
 
 ## Structural audit
-Reference: duplicated retry state machines diverge in terminal-event persistence;
-identify that concrete operational consequence and preserve ordering/error contracts.
-Transfer: five configuration adapters require coordinated edits for one option;
-consolidate ownership only where contracts match. Failure: a cohesive long routine
-or data-only DTO is not a size violation; a speculative registry merely moving
-complexity is not automatically a remedy. Report omitted files.
+Show how terminal policy, recorder ownership or scattered configuration causes
+change/failure risk. Keep useful DTOs, public facades and cohesive algorithms.
+Retain all diagnostic mechanisms and per-file coverage; do not impose a quota.
 
 ## Reports
-Reference: change an incidental-findings chart's layout while keeping cohort
-fingerprints, counts, denominators and caveats unchanged. Creation assembles approved
-saved inputs through the existing graph, not notebook execution. Transfer: the
-reliability profile keeps random and incident-enriched cohorts separate.
-Failure: missing restricted data or build configuration blocks work; failed rebuild
-preserves output/inputs; unavailable visual checks remain not-run. An explicit
-saved-evidence correction is distinct from editorial work and never a clinical
-accuracy or matched-cohort improvement claim.
+The fictional reliability report preserves distinct saved cohorts, counts,
+denominators, units and caveats through an existing build graph. Source-supported
+correction is separate from presentation. Missing evidence or required inspection
+blocks acceptance; preserve previous output, never fill gaps by queries/model calls.
+No implicit independent scorer or fabricated score follows from assembling a report.
 
 ## Reading invocation examples
 

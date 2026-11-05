@@ -207,7 +207,7 @@ not a smell quota or prettier code alone.
 ## C05 — Claim Firewall
 
 **Enter:** report interpretation is disputed by saved evidence. Random and
-incident-enriched reliability samples with different counts are not a matched
+targeted reliability samples with different counts are not a matched
 improvement comparison.
 
 Report mode owns scientific/provenance/privacy constraints, source edits/rebuild,
@@ -234,7 +234,7 @@ or repository checks unrelated to the changed surface.
 assembly/claims. Preserve prior output/creation inputs; no fabricated data,
 notebook runs, model gap-filling or silent section omission.
 **Exit:** supported requested edits with actual evidence/visual-check status, or
-the precise blocker. No implied publication, expert score or clinical validity.
+the precise blocker. No implied publication, expert score or domain validity.
 
 Combined implementation assessment and structural planning reuse snapshot-matched
 source gathering within each reviewer, preserve declared boundaries and requested

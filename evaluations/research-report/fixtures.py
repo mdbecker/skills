@@ -12,8 +12,8 @@ import sys
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 PROFILES = {
-    "incidental-findings": "Fictional nonclinical incidental-like reference report",
-    "reliability-study": "Fictional nonclinical reliability transfer report",
+    "fictional-reliability": "Fictional service-reliability reference report",
+    "reliability-study": "Fictional reliability transfer report",
 }
 
 ASSEMBLER_SOURCE = '''import html
@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
 FIXTURE_README = '''# Fictional saved-evidence maintenance fixture
 
-This is a nonclinical synthetic project, not a dependency bundle from the motivating study.
+This is a fictional synthetic project, not a dependency bundle from the motivating study.
 Python 3 and its standard library are the only dependencies. No notebooks, data retrieval,
 model calls, source-project files, package installation or deployment are needed.
 
@@ -434,7 +434,7 @@ def create_fixture(root, profile="reliability-study"):
     evidence = {
         "profile": profile, "title": PROFILES[profile],
         "A": {"cohort": "A", "selection": "random", "numerator": 24, "denominator": 120},
-        "B": {"cohort": "B", "selection": "incident-enriched", "numerator": 16, "denominator": 40},
+        "B": {"cohort": "B", "selection": "targeted", "numerator": 16, "denominator": 40},
         "partition": {"total": 20, "disclosed": 15, "suppressed": "<11"},
         "intersection": None, "established_zero": 0, "blank": None, "labeled_aggregate": 7,
         "overlap": [{"count": 8, "denominator": 24}, {"count": 9, "denominator": 16}],
@@ -469,7 +469,7 @@ def create_fixture(root, profile="reliability-study"):
     })
     definitions = [
         ("cohort-a", "/A/numerator", 24, 120, "A", "random", "exact"),
-        ("cohort-b", "/B/numerator", 16, 40, "B", "incident-enriched", "exact"),
+        ("cohort-b", "/B/numerator", 16, 40, "B", "targeted", "exact"),
         ("partition-total", "/partition/total", 20, 20, "partition", "saved-partition", "exact"),
         ("partition-disclosed", "/partition/disclosed", 15, 20, "partition", "saved-partition", "exact"),
         ("partition-suppressed", "/partition/suppressed", "<11", 20, "partition", "saved-partition", "suppressed"),

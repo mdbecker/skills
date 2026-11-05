@@ -1,7 +1,6 @@
 {
   "schema_version": 1,
-  "status": "corpus-frozen-before-first-deterministic-execution",
-  "frozen_at": "2026-11-04T17:04:00.269573+00:00",
+  "status": "frozen-evaluation-inputs",
   "qualification_run": "not_run",
   "model_protocol_approval": "pending",
   "case_ids": [
@@ -19,12 +18,12 @@
   "implementation_hashes": {
     "evaluations/validation/fixtures.py": "62c1fc8e3853d9a941d22821ebe94fbbb1c3a6f2ea836b3bab99d20cded3c4de",
     "evaluations/validation/evaluator.py": "cd23c5fac4e8c86f61ff46fb7b1fa109fcc0f0dfd5cee681ca831c0e84434389",
-    "tests/test_validation.py": "89c1656cbab3a5bc5a2007c2c2bb47c7c0cdf8f1c6f648fb19445bfe9e02c54b"
+    "tests/test_validation.py": "76883b5d7f9192c43a5d4149ed48a6483f00e2faf4743495d47021962b15c6e1"
   },
   "retained_root_corpus_hashes": {
-    "fixtures.json": "6b89095f05bba27ccc0138379ef64d99877d74eedc7089f47a92a96cbed567b0",
-    "expected.json": "69f3e2cb3a24a47bbdfc5abb905fd6cef28772c54de4f22a2e2c22634f38055e",
-    "artifacts.json": "d9619b9fcfd088df85631e2698b9bf578aa8ebfeb65c8e437d28bdeb70bea9c9"
+    "fixtures.json": "db01e6f7ee25c981b946684d6fb7e072fe41b788a370d9d01f6ab1d09ef6c7c8",
+    "expected.json": "7a4dff0514958a3f5484064a30a3b471f3ec694e2e168094ce699175afe49382",
+    "artifacts.json": "140795496e0bbd4546e27ba6e08fb4948e5dab38c26ca68ac7a0aec4b5254cfd"
   },
   "limits": [
     "Corpus outcomes freeze before testing; implementation repairs do not revise expected answers.",

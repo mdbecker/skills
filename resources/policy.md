@@ -27,7 +27,7 @@ development gates.
 Reports use saved evidence and an existing pipeline. Preserve protected claims,
 cohorts, uncertainty, provenance and privacy. Explicit source-supported corrections
 are distinguished from editorial changes. No new queries, notebook execution,
-model gap-filling or clinical-certification claim is permitted by report work.
+model gap-filling or domain-certification claim is permitted by report work.
 
 Sources for these boundaries are recorded in [provenance](provenance.json).
 Profiles describe applicable context; they are neither authorization nor current

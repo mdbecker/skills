@@ -195,7 +195,7 @@ class ReportTaskTests(FixtureCase):
             ("cohort-meaning", '<td class="denominator">120</td>', '<td class="denominator">40</td>'),
             ("bar-width", 'style="width:20%"', 'style="width:30%"'),
             ("bar-percent", '24/120 (20%)', '24/120 (30%)'),
-            ("bar-label", 'Cohort B — incident-enriched', 'Cohort B — random'),
+            ("bar-label", 'Cohort B — targeted', 'Cohort B — random'),
             ("missing-intersection", '<td class="value">Unavailable</td>', '<td class="value">4</td>'),
         ]
         for case, before, after in mutations:
@@ -332,10 +332,10 @@ class SpatialTests(unittest.TestCase):
     def setUp(self):
         self.policy = deepcopy(EXPECTED["spatial"]["policy"])
 
-    def test_coincident_observations_accounted_once_and_centroid_rounded(self):
+    def test_colocated_observations_accounted_once_and_centroid_rounded(self):
         observations = [{"subject": "subject-" + str(index), "coordinates": [1.23456, 2.34567]} for index in range(24)]
         actual = CHECKS.aggregate_spatial(observations, self.policy)
-        self.assertEqual(actual, EXPECTED["spatial"]["coincident"])
+        self.assertEqual(actual, EXPECTED["spatial"]["colocated"])
         CHECKS.validate_spatial(observations, actual, self.policy)
         self.assertEqual(sum(group["count"] for group in actual), len(observations))
         self.assertEqual(CHECKS.aggregate_spatial(list(reversed(observations)), self.policy), actual)

@@ -48,3 +48,9 @@ No notebook/query/model execution, sending, publication or deployment follows.
 Deliver source/output changes when authorized, protected-evidence comparison,
 provenance and actual verification/limits. Schemas, metadata and visual helpers
 are dependencies, not additional skill/extraction/deployment deliverables.
+
+If independent scoring is explicitly requested, complete its fields in the report
+profile and retain the agreed rubric, exact minimum, bounded revision/stop criteria
+and actual score/evidence. Missing required review is blocked/not-run. A below-gate
+result triggers only authorized revision/recheck; no automatic scorer or universal
+minimum applies when scoring is not requested.
