@@ -2,7 +2,7 @@
   "corpus_sha256": {
     "evaluations/research-report/cases.json": "5e34170090a71a8081676ea0f946ae3c44789816546d10b354f4f9e508ba282a",
     "evaluations/research-report/expected.json": "e9ebb305627796f8799d9d7cc1fa96653d11f0c527d5c3a17d762ea60f9e7309",
-    "evaluations/research-report/fixtures.py": "74b4c8f4542064480d99cd1c1c328e47a60fd1b8199bde7a10ace15fadfc94fe"
+    "evaluations/research-report/fixtures.py": "b0417af0d3aac4f1f4573ab879d2dc12b046c1a8a53add3de05eb46be9c01668"
   },
   "expected_origin": "PRD and explicit user/API requirements; manually specified before tests import the candidate. Public projection and cohort widths are explicit mathematical requirements, not candidate-generated outputs.",
   "frozen_on": "2026-11-05",

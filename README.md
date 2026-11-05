@@ -258,10 +258,10 @@ run in order under observed concurrency. Missing delegation, evidence, or stages
 are blockers, not a completed hierarchy; no separate provider CLI, token setup,
 or runtime is required. Report available cost honestly, labeling estimates.
 
-The [source-coverage map](review/source-coverage.md) records the supplied historical
-materials. Old findings and project assumptions are not current facts; the
-separately referenced Python smell guide is unavailable. Detailed checklists,
-severity distinctions, and worked outputs remain in the selected methods.
+The [source-coverage map](review/source-coverage.md) describes the current diagnostic
+mechanisms and method boundaries. Detailed checklists, severity distinctions and
+worked outputs remain in the selected methods. Findings require evidence from the
+actual target and declared scope.
 
 ### Research
 
@@ -321,8 +321,7 @@ not universal business or disclosure defaults.
 
 Each worked example defines its own inputs and acceptance contract. Complete the
 target's [project mapping](resources/project-profile.md) before consequential work.
-See the [release checks](PUBLICATION.md) for artifact inspection, scoped verification
-and explicit publication approval.
+Release artifacts require explicit owner approval and matching verified inputs.
 
 Combine methods only when the next one answers an unresolved question or protects
 a specific contract. A sufficient specification can hand off to authorized
@@ -402,8 +401,8 @@ illustrations, not observed agent outcomes. Frozen inputs/expectations and histo
 snapshots retain their identities; evaluator answers are excluded from runtime
 bundles. Local deterministic checks do not certify behavioral parity.
 
-Unavailable private historical artifacts, the missing Python smell guide, and
-blocked browser inspection remain explicit limits. Approved model access, settings,
+Report unavailable task evidence and unperformed checks explicitly.
+Approved model access, settings,
 data/retention, and budget are required for matched model-mediated comparisons.
 Record actual tokens, provider cost, and elapsed time separately; missing metrics
 are unavailable, not zero. Any performance tolerance—including the proposed 1.5×
@@ -425,10 +424,11 @@ and trusted/default-branch ancestry, runs checks, builds a clean deterministic z
 and checksum, attaches assets to a draft, then publishes. Existing releases/assets
 are not overwritten; a failed draft needs explicit maintainer recovery.
 
-Stable releases require approved host/model/manual acceptance matching the current
-source-resource fingerprint. An explicit prerelease such as `v0.2.0-rc.1` may carry
-honest unverified qualification. Local export does not publish; creating/pushing
-a tag or publishing still needs authorization.
+Every versioned release requires a clean committed source, explicit owner approval
+and a matching source-resource fingerprint. Stable releases additionally require
+approved host/model/manual acceptance. An explicit prerelease such as `v0.2.0-rc.1`
+may carry honest unverified quality status. Local export does not publish;
+creating/pushing a tag or publishing still needs authorization.
 
 ## Repository layout
 

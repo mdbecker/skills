@@ -17,7 +17,7 @@
     "evidence": [
       "evaluations/workflow-methods/results.json"
     ],
-    "limits": "Local command/file/index fixtures; matched actor/model/deployed observations are separate."
+    "limits": "Recorded local fixture/command/index observations, not matched actor/model or deployed behavior."
   },
   "matched_agent_runs": {
     "status": "not_run",
@@ -64,7 +64,7 @@
   "repository_checks": {
     "status": "passed",
     "local_repository_readiness": "local_checks_passed",
-    "source_inputs_sha256": "413c5514ea1ea83b78f7510d9d6915e530510c51c8a008203fe9486a3939fa31"
+    "source_inputs_sha256": "a2368854923f92c49b81713b87b9774623350ec22f884f6ddfe502bf18a981fd"
   },
   "artifact_kind": "qualification_record",
   "limits": "Only recorded local observations are certified; model, host and deployed behavior remain separate."

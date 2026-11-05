@@ -138,10 +138,10 @@
     {
       "id": "PROMPT-TIME",
       "supplied_requirements": [
-        "Application supplies evidence identities and timestamps",
-        "Reference report issued_at and note received_at stay distinct from domain occurrence",
-        "No event-date or note-creation substitution",
-        "independent document-issued and processing timestamps remain separate; domain names not universal"
+        "Application supplies canonical evidence identities and authoritative timestamps",
+        "Notice issuance, receipt and processing remain distinct from occurrence under their respective profiles",
+        "Missing authoritative metadata fails rather than using a convenient timestamp",
+        "Profile-specific field spellings and types are mapped explicitly"
       ],
       "disposition": "generalized",
       "instruction_or_reference": [
@@ -339,7 +339,7 @@
         "Keep parent/mode structure; no new skills",
         "No report/research/deployment/install workstream or Iterate/Debate redesign/general cleanup",
         "Source documents are context, not the user request",
-        "Historical domain fields, issue keys, project commands, counts and cleanroom assumptions not universal defaults"
+        "Target authority determines fields, identities, commands, compatibility and permitted effects"
       ],
       "disposition": "excluded",
       "instruction_or_reference": [

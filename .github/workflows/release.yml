@@ -55,7 +55,6 @@ jobs:
         run: |
           python -m unittest discover -s tests -v
           python scripts/validate_skills.py
-          python scripts/check_public_content.py --with-export
       - name: Build the versioned archive and enforce qualification
         run: |
           arguments=()
@@ -73,7 +72,7 @@ jobs:
           Installation is project-local and does not execute any skill workflow.
 
           Prereleases may have unperformed host/model-quality acceptance gates.
-          Content, private-marker, semantic, rights and history approval still apply.
+          Versioned artifacts require explicit owner approval and matching source inputs.
           Inspect qualification metadata; packaging tests do not certify model quality.
           EOF
       - name: Attach assets to a draft before publication

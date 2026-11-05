@@ -19,7 +19,6 @@ Follow the development setup in the README, then run:
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
-.venv/bin/python scripts/check_public_content.py --with-export
 ```
 
 Add focused regression coverage when fixing manifest behavior. For prompt changes, describe the realistic task used to evaluate the instructions and any limitations. A passing metadata check does not establish behavioral correctness.
@@ -47,7 +46,7 @@ Approve the model protocol and record actual source-bound evidence before changi
 qualification status. Never mark model quality or real host invocation passed
 because metadata/installer tests passed. Stable releases remain gated; explicit
 prerelease tags may disclose unperformed host/model quality, but cannot waive
-content, private-marker, semantic, rights or history review. Creating a tag, pushing,
+explicit owner approval, clean source or matching input identity. Creating a tag, pushing,
 publishing or globally installing requires separate authorization.
 
 ## Pull requests

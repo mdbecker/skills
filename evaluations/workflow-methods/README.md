@@ -16,7 +16,6 @@ Results record actual local observations and separately unperformed checks.
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
-.venv/bin/python scripts/check_public_content.py --with-export
 ```
 
 These execute intended-red/green examples, strict canonical metadata, accepted

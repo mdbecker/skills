@@ -41,9 +41,9 @@ None of these model-facing resources delegates timestamp ownership to the model.
 
 ## Independently fictional application-owned mappings
 
-This document-processing service and the equipment intake example are invented
-contexts, not renamed source records or a reconstruction of real business schemas.
-The fixture owns these policies only; the target's current contract always wins.
+The fictional document-processing and equipment examples define distinct identity,
+source-time and acceptance contracts. The fixture owns these policies only;
+the target's current contract always wins.
 
 | Profile / source | Canonical identity | Authoritative time | Different meaning |
 |---|---|---|---|

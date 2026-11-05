@@ -31,8 +31,8 @@ prove that a model will resolve new named controls or choose the right scope.
 ## Separately approved observed trials
 
 The existing evaluation protocol gates model/settings, data/retention, tools,
-permitted actions, repeat limits and provider spend. The earlier discussion Debate
-was not this approval or a candidate routing evaluation. Without approval leave
+permitted actions, repeat limits and provider spend. A discussion result
+is not approval for model trials or evidence of candidate routing. Without approval leave
 assistant/host/comprehension and cost fields not-run/unavailable.
 
 For an approved trial, materialize bounded raw artifact paths in a fresh temporary

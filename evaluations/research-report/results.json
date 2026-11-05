@@ -4,5 +4,5 @@
   "model_quality": "not_run",
   "real_host_invocation": "not_run",
   "limits": "Recorded observations are scoped to their actual inputs; independent host/model qualification is separate.",
-  "source_inputs_sha256": "413c5514ea1ea83b78f7510d9d6915e530510c51c8a008203fe9486a3939fa31"
+  "source_inputs_sha256": "a2368854923f92c49b81713b87b9774623350ec22f884f6ddfe502bf18a981fd"
 }

@@ -4,14 +4,14 @@
   "status": "frozen-evaluation-inputs",
   "model_protocol_approval": "pending",
   "corpus_hashes": {
-    "baseline.json": "69d51244c1abe387140943881242d24b54afa679cc56d26877bd2493ea4a6213",
+    "baseline.json": "9bc911a17026c52a40e36a159130c53822da2d8a52ffb7a69d77d64f8d0d4d71",
     "cases.json": "549e39b29d169455dc8e60c1b3c41ef975f1a014b51069fb62be6dc99aab827e",
-    "expected.json": "a638190a5f1ccd0bffe8dc236d275448b3224198e4071e68ec3473556e35d220",
+    "expected.json": "ebf6833a0d46a580c2dfe6fb75744bfc9d76368f62c4dfba88c65ad42b50c280",
     "bdd-prd/cases.json": "ee7bb031582edafaee89cea055b629284485f83bf090b65589c88ee7c2a06ef0",
     "bdd-prd/expected.json": "e6c85b4008fa6c7de4ee91012ebde95005bcb94c1fd8b05be188d7422484b835",
-    "prompt-backlog/cases.json": "19cf3c42b1d571c9297fb0d46e6361d4d2e310a26fe9289887813a4489cca6ef",
+    "prompt-backlog/cases.json": "054623bbd655cf2fe22ee98d35492e4bf5181bd2722529780592fb38c2ec46e5",
     "prompt-backlog/expected.json": "4f919f77f3a93a461bbef2b39db29942a94c989c2bfb92a95b3b1ef434a79089",
-    "traceability.json": "419c8e4129230921a6dd0e645deb8344cc98259cc00ac6df6122df4c484c6f4b"
+    "traceability.json": "ecec6fcc84f02e7de71075fc0b7a3f460fcc5bc363f02fa84329acd6b16c91bc"
   },
   "case_ids": [
     "workflow-revised-code",
@@ -26,7 +26,7 @@
     "backlog-course-incomplete-inventory"
   ],
   "limits": [
-    "Current-workspace instruction baseline includes pre-existing review improvements, not an original historical model run.",
+    "Instruction snapshots are constructed, identity-bound evaluator context; they do not establish a model run.",
     "Implementation and deterministic artifact checks are not held-out model evaluations.",
     "No paired task-quality or regression acceptance is claimed before approved matched model execution."
   ]

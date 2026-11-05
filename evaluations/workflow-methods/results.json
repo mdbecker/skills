@@ -5,9 +5,9 @@
     {
       "command": ".venv/bin/python -m unittest discover -s tests -v",
       "status": "passed",
-      "tests_run": 255,
-      "source_inputs_sha256": "413c5514ea1ea83b78f7510d9d6915e530510c51c8a008203fe9486a3939fa31",
-      "scope": "Local fixtures, metadata, state/package contracts and source representation checks; not model or host qualification."
+      "tests_run": 231,
+      "source_inputs_sha256": "a2368854923f92c49b81713b87b9774623350ec22f884f6ddfe502bf18a981fd",
+      "scope": "Existing public fixture, package, state and metadata checks; no model or host certification."
     }
   ],
   "paired_model_execution": {

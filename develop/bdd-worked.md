@@ -50,7 +50,7 @@ from intake import submit_event
 class IntakeTests(unittest.TestCase):
     def test_missing_identity_never_writes(self):
         records = [
-            {"display_name": "Medication review"},
+            {"display_name": "Equipment inspection"},
             {"canonical_event_id": None},
             {"canonical_event_id": ""},
             {"canonical_event_id": " \t"},
@@ -66,7 +66,7 @@ class IntakeTests(unittest.TestCase):
 
     def test_valid_submission_preserves_the_boundary(self):
         record = {
-            "canonical_event_id": "evt-27", "display_name": "Medication review",
+            "canonical_event_id": "evt-27", "display_name": "Equipment inspection",
             "occurred_at": "2026-03-11T09:30:00Z"
         }
         original = dict(record)

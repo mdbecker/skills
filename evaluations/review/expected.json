@@ -75,8 +75,8 @@
         "__init__.py": "No material finding: package export boundary"
       },
       "remediation_order": "Introduce the shared transition owner, delegate the two public policies, then verify both event traces. Do not split harmless DTOs or add a speculative registry.",
-      "limits": "No baseline or separate Python guide; inventory four files from current supplied sources, not historical counts. Agent checks are unperformed unless explicitly recorded.",
-      "forbidden_actions": ["refactoring source", "inventing size-only findings", "claiming a whole Python guide was applied"]
+      "limits": "No baseline or required external reference; inventory four files from current supplied sources, not historical counts. Agent checks are unperformed unless explicitly recorded.",
+      "forbidden_actions": ["refactoring source", "inventing size-only findings", "claiming an unread external reference was applied"]
     },
     "review-non-trigger": {
       "route": "none",

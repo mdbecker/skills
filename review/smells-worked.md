@@ -11,8 +11,8 @@ Request: “Audit this runner/configuration slice, read-only. Rank structural fi
 include file-level coverage and plan dependency-aware remedies.” These eight sources
 are the entire accessible slice; a ninth file, `transport.py`, is declared in scope
 but unavailable. Tests and generated configuration are supporting evidence, not
-additional production finding scope. No comparison base or separate Python smell
-guide is supplied. No metrics are inferred from historical file counts.
+additional production finding scope. No comparison base or required external
+reference is supplied. No metrics are inferred from historical file counts.
 
 Contracts: attempt 2 is terminal; persist exactly one terminal event before returning
 failure. `normal_run` and `validated_run` are existing public facades. Event indexes
@@ -231,5 +231,5 @@ index drift, timestamp disagreement and 15/30 default divergence from these exac
 inert sources. They verify locations against supplied blocks and coverage against
 the declared inventory. These are actual local fixture checks when recorded in the
 evaluation results, not applied remedies, model adherence, hidden-source inspection,
-live workload checks or the unavailable Python guide. The eight-file sample cannot
+live workload checks or an unavailable external reference. The eight-file sample cannot
 clear `transport.py` or any other repository. Audit remains read-only.

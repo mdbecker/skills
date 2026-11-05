@@ -1,10 +1,9 @@
 # Current method coverage and public design boundaries
 
-This is a coverage map of the maintained generic instructions, not a reconstruction
-of private prompts, original upstream files, work portfolios or operating manuals.
-The [public design ledger](resources/provenance.json) separates recorded attribution,
-intentional adaptations, independently fictional cases and unavailable evidence.
-No historical line count, source fingerprint or real finding is a current fact.
+This map describes the maintained methods, diagnostic mechanisms and verification
+scope. The [public design ledger](resources/provenance.json) records current
+contracts and qualified public attribution. Actual findings require the selected
+target's source and authority; inventory and semantic inspection are separate.
 
 ## Implementation assessment
 
@@ -13,7 +12,7 @@ all checklist families; automation-gap exceptions; one complete supported remedy
 actual consumers and conditional cleanroom cleanup; urgency/type/timing distinctions;
 and consolidated open/resolved/withdrawn/aliased/not-reassessed prior claims.
 [The fictional worked review](code-worked.md) exercises identity, ambiguity, consumer
-compatibility and source-grounded revised dispositions without private projects.
+compatibility and source-grounded revised dispositions through its supplied inputs.
 
 ## Ten structural diagnostic mechanisms
 
@@ -42,9 +41,9 @@ actual dependencies, not a copied refactoring sequence or fixed defect count.
 
 The generic project mapping resolves actual identities, time, permissions,
 configuration, diagnostics, domain decisions, readiness, provisioning and recovery.
-Examples do not supply a vendor schema, real ticket policy, journal width, complete
-portfolio or expert acceptance certificate. Exact source-specific reconstruction
-is a non-goal; missing original evidence cannot be filled by a model or similarity.
+Map the target's schema, scope and acceptance from its authoritative instructions.
+Examples define only their own contracts. Missing required evidence blocks the
+relevant conclusion; generated accounts or similarities cannot supply it.
 
 Behavioral red/green fixture checks and package integrity are local observations,
 not agent adherence, host routing, scientific validity or recovered upstream fidelity.

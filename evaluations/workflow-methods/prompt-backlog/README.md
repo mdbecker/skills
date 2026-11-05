@@ -16,7 +16,8 @@ universal matching policy or proof that interpretation is correct.
 Backlog tests execute normalization, partial increments, complete/incomplete page
 chains, role/priority separation, existing-owner reuse, approval versus implementation,
 conflicts, overlap, unknown versus a bounded gap and input immutability. There is
-no real work portfolio, live tracker read, model call or new implementation owner.
+The fixtures use locally supplied inputs; no tracker reads, model calls or
+implementation-owner decisions are authorized.
 
 traceability.json names the exact current tests and resources. Frozen raw inputs, criteria and artifact hashes identify the exact checked context.
 

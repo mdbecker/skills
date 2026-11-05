@@ -27,7 +27,7 @@
     {
       "id": "smells-terminal-policy",
       "request": "/review smells this synthetic package. Include retries.py, models.py, api.py and __init__.py. Single-pass and read-only.",
-      "context": "Every terminal transition must persist exactly one terminal event before returning done. Both policies are public; preserve their signatures and retry behavior. Attempt 3 is terminal. Outcome is an intentionally exported result contract. No baseline, separate Python guide or external access is available.",
+      "context": "Every terminal transition must persist exactly one terminal event before returning done. Both policies are public; preserve their signatures and retry behavior. Attempt 3 is terminal. Outcome is an intentionally exported result contract. No baseline, required external reference or external access is available.",
       "artifacts": {
         "retries.py": "def first_policy(attempt, persist):\n    if attempt == 3:\n        persist('terminal')\n        return 'done'\n    return 'retry'\n\ndef second_policy(attempt, persist):\n    if attempt == 3:\n        return 'done'\n    return 'retry'\n",
         "models.py": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Outcome:\n    status: str\n    attempts: int\n",

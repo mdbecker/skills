@@ -117,6 +117,9 @@ class BddPrdMethodTests(unittest.TestCase):
             )
 
     def test_reference_bdd_executes_intended_red_then_green(self):
+        values = re.findall(r'"display_name":\s*"([^"]+)"', (ROOT / 'develop/bdd-worked.md').read_text())
+        self.assertTrue(values and all(value == 'Equipment inspection' for value in values),
+                        'Submission display values must match the example contract')
         self.assert_red_then_green(
             self.bdd[("intake.py", "baseline")],
             {"test_intake.py": self.bdd[("test_intake.py", "test")]},
@@ -188,6 +191,17 @@ class BddPrdMethodTests(unittest.TestCase):
     def test_event_acceptance_artifact_is_executable_and_order_independent(self):
         contract = self.prd[("event-contract.json", "acceptance")]
         resolve = self.event_design["resolve_event"]
+        selected = {'status': 'selected', 'event': {'id': 'evt-82', 'name': 'Equipment inspection'}}
+        choices = {'status': 'ambiguous_name', 'candidates': [
+            {'id': 'evt-14', 'name': 'Stock audit'}, {'id': 'evt-39', 'name': 'Stock audit'}]}
+        self.assertTrue(resolve({'name': ' equipment INSPECTION '}, contract['catalog']) == selected,
+                        'A unique display name must select its canonical entry')
+        self.assertTrue(resolve({'name': 'Stock audit'}, contract['catalog']) == choices,
+                        'Duplicate names must retain both canonical choices')
+        self.assertEqual(resolve({'id': 'evt-39', 'name': 'Equipment inspection'}, contract['catalog']),
+                         {'status': 'id_name_mismatch'})
+        self.assertEqual(resolve({'name': 'Stock audit'}, contract['catalog'], complete=False),
+                         {'status': 'catalog_unavailable'})
         for check in contract["checks"]:
             for catalog in [contract["catalog"], list(reversed(contract["catalog"]))]:
                 with self.subTest(selector=check["selector"], catalog=catalog):

@@ -114,20 +114,20 @@ is synthetic and complete. Reversing its order must not change any result.
 ```json file=event-contract.json stage=acceptance
 {
   "catalog": [
-    {"id": "evt-39", "name": "Falls review"},
-    {"id": "evt-14", "name": "Falls review"},
-    {"id": "evt-82", "name": "Medication review"}
+    {"id": "evt-39", "name": "Stock audit"},
+    {"id": "evt-14", "name": "Stock audit"},
+    {"id": "evt-82", "name": "Equipment inspection"}
   ],
   "checks": [
-    {"selector": {"name": " medication REVIEW "}, "result": {"status": "selected", "event": {"id": "evt-82", "name": "Medication review"}}},
-    {"selector": {"name": "Falls review"}, "result": {"status": "ambiguous_name", "candidates": [{"id": "evt-14", "name": "Falls review"}, {"id": "evt-39", "name": "Falls review"}]}},
-    {"selector": {"id": "evt-39", "name": "falls review"}, "result": {"status": "selected", "event": {"id": "evt-39", "name": "Falls review"}}},
-    {"selector": {"id": "evt-39", "name": "Medication review"}, "result": {"status": "id_name_mismatch"}},
+    {"selector": {"name": " equipment INSPECTION "}, "result": {"status": "selected", "event": {"id": "evt-82", "name": "Equipment inspection"}}},
+    {"selector": {"name": "Stock audit"}, "result": {"status": "ambiguous_name", "candidates": [{"id": "evt-14", "name": "Stock audit"}, {"id": "evt-39", "name": "Stock audit"}]}},
+    {"selector": {"id": "evt-39", "name": "stock audit"}, "result": {"status": "selected", "event": {"id": "evt-39", "name": "Stock audit"}}},
+    {"selector": {"id": "evt-39", "name": "Equipment inspection"}, "result": {"status": "id_name_mismatch"}},
     {"selector": {}, "result": {"status": "missing_input"}},
     {"selector": {"id": null}, "result": {"status": "invalid_input"}},
     {"selector": {"name": "Missing event"}, "result": {"status": "not_found"}},
     {"selector": {"id": "EVT-39"}, "result": {"status": "not_found"}},
-    {"selector": {"name": "Falls review"}, "complete": false, "result": {"status": "catalog_unavailable"}}
+    {"selector": {"name": "Stock audit"}, "complete": false, "result": {"status": "catalog_unavailable"}}
   ]
 }
 ```

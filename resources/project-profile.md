@@ -36,5 +36,5 @@ score or automatic additional agent call. Scope and authority travel with handof
 
 Public reusable skills contain fictional examples and generic contracts only.
 Project-specific mappings belong to the target project's permitted local context,
-not the reusable package. Publication checks, distribution rights, history review,
-actual host invocation and model quality are separate acceptance decisions.
+not the reusable package. Release/deployment authority, actual host invocation
+and model quality are separate acceptance decisions.

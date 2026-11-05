@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
 FIXTURE_README = '''# Fictional saved-evidence maintenance fixture
 
-This is a fictional synthetic project, not a dependency bundle from the motivating study.
+This fixture defines saved inputs, an existing builder and independent acceptance checks.
 Python 3 and its standard library are the only dependencies. No notebooks, data retrieval,
 model calls, source-project files, package installation or deployment are needed.
 

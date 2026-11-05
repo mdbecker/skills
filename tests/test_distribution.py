@@ -316,9 +316,6 @@ class DistributionTests(unittest.TestCase):
         status["hosts"] = {host: {key: "passed" for key in ("installation", "invocation", "hierarchy")} for host in ("codex", "claude")}
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
         status["source_inputs_sha256"] = hashlib.sha256(json.dumps(self.manifest["source_inputs"], sort_keys=True).encode()).hexdigest()
-        status['publication'] = {gate: 'passed' for gate in
-                                 ['public_content', 'private_markers', 'semantic_review',
-                                  'distribution_rights', 'history_review']}
         self.assertTrue(release_ready(status, self.manifest["source_inputs"]))
         status["hosts"]["claude"]["invocation"] = "not_run"
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
@@ -353,9 +350,8 @@ class DistributionTests(unittest.TestCase):
                 build(output, "v0.1.0", release=True)
         self.assertFalse(output.exists())
         status = dict(self.manifest['qualification'])
-        status['publication'] = {gate: 'passed' for gate in
-                                 ['public_content', 'private_markers', 'semantic_review',
-                                  'distribution_rights', 'history_review']}
+        status['release_approval'] = 'passed'
+        status['source_inputs_sha256'] = hashlib.sha256(json.dumps(self.manifest['source_inputs'], sort_keys=True).encode()).hexdigest()
         with patch("scripts.build_skills.subprocess.run", side_effect=clean_source), \
                 patch('scripts.build_skills.qualification', return_value=status):
             manifest = build(output, "v0.1.0-rc.1", release=True, prerelease=True)

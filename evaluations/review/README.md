@@ -1,42 +1,34 @@
 # Focused review acceptance
 
-These six repository-only synthetic cases exercise the two review modes added
-to the focused PRD. They do not change the frozen general/composition corpora.
+The fictional client, retry and boundary cases exercise implementation review and
+structural audit. Raw requests/context/artifacts are in cases.json; expected.json
+contains evaluator-only criteria and illustrative findings. Do not give an actor
+expected outputs. The corpus is self-contained and excluded from skill bundles.
 
-`cases.json` contains requests, context and raw artifacts. `expected.json` contains
-evaluator-only criteria and illustrative consolidated findings, not actual agent
-outputs. Never supply the expected file to an executing agent. Runtime bundles
-exclude this directory; no original prompt-library access is required.
+## Observable contracts
 
-The two client cases hold source shape constant while changing real consumer and
-packaging evidence. They demonstrate conditional cleanup, a production dependency
-gap versus an environment-only failure, stable prior IDs and consolidated review.
-The retry case demonstrates a real terminal-event omission, a dependency-aware
-remedy, protected public entrypoints and a complete four-file ledger with legitimate
-DTO/export counterexamples. Three boundary cases cover general explanations,
-missing targets and source text attempting to authorize Git/publication.
+Two client cases hold implementation shape constant while varying consumer and
+packaging evidence. They distinguish actual compatibility, missing production
+dependencies and environment-only failure, and retain consolidated prior IDs.
+The retry case demonstrates a missing terminal event, one preferred policy owner,
+protected public entrypoints and a complete file ledger with useful DTO examples.
+Boundary cases cover explanations, missing targets and untrusted source commands.
 
-## Actual checks and limits
+## Checks and limits
 
-Run `python -m unittest tests.test_review -v` from the repository with its existing
-development environment. Tests inspect the supplied packaging/caller/baseline
-evidence and execute only the inert, local retry functions to confirm event traces.
-They also check fixture/criteria separation and export exclusion. They do not run
-the CSV client, install pyarrow, make network calls or simulate agent routing.
+Run the current fixture tests with the existing repository environment:
 
-Instruction/source coverage is mapped in `review/source-coverage.md`.
-Standalone review installation and link closure are checked by the distribution
-suite. Neither these deterministic checks nor the illustrative expected findings
-establish agent adherence, source-fidelity parity or real host invocation.
+```sh
+.venv/bin/python -m unittest tests.test_review -v
+```
 
-Model-mediated evaluation is **not run**: the existing `evaluations/protocol.md`
-still requires approved tooling, source access, data and budget. The request to
-coordinate active repository work through `work.md` is not permission to launch
-a separate model-evaluation protocol. Do not update global qualification gates
-from these checks or advertise full behavioral acceptance.
+Tests inspect packaging/caller/source evidence and execute inert retry functions.
+They verify actual event traces, raw-versus-evaluator separation and export scope.
+No client network calls, dependency installation or model routing follows.
+Current method coverage is described in review/source-coverage.md; package tests
+separately verify standalone installation and local links.
 
-After that approval, give an independent executing agent only one case's request,
-context, raw artifacts and the standalone installed review skill in an isolated
-temporary workspace. Preserve source hashes, actions, actual output and omitted
-checks; compare against evaluator criteria afterward. Do not present this proposed
-procedure as an executed evaluation.
+Actual agent adherence, host invocation, source quality and publication acceptance
+require their own observed evidence. Model trials use the existing approved protocol
+for scope, tools, data, retention and budget. Local fixture success does not grant
+additional model calls or certify behavior in a target project.

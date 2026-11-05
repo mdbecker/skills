@@ -54,9 +54,16 @@ class WorkflowMethodTests(unittest.TestCase):
                 self.assertFalse(Path(relative).is_absolute())
                 self.assertNotIn("..", Path(relative).parts)
                 self.assertEqual(hashlib.sha256(record["content"].encode()).hexdigest(), record["sha256"])
+                expected = 'Evaluator instruction context.\n\n' + (ROOT / relative).read_text()
+                self.assertTrue(record['content'] == expected, 'Instruction context must match canonical source')
         modes = ["develop/" + name + ".md" for name in ["bdd", "prd", "prompt", "backlog"]]
         modes += ["review/" + name + ".md" for name in ["code", "smells"]]
         self.assertTrue(set(modes).issubset(baseline["sources"]))
+        other = json.loads((ROOT / 'evaluations/usage-workflows/baseline.json').read_text())
+        for relative, record in other['sources'].items():
+            expected = 'Evaluator instruction context.\n\n' + (ROOT / relative).read_text()
+            self.assertTrue(record['content'] == expected, 'Instruction context must match canonical source')
+            self.assertEqual(hashlib.sha256(record['content'].encode()).hexdigest(), record['sha256'])
 
     def test_raw_cases_do_not_receive_evaluator_answers(self):
         self.assertTrue(self.expected["evaluator_only"])

@@ -4,15 +4,14 @@ For inputs, context/defaults, named controls and effects, use
 [the shared usage reference](resources/usage.md).
 
 Audit the declared source for structures that make change, testing, security or
-operations materially harder. Inspect actual contracts and consequences, not a
-historical project's findings or universal size thresholds. The [current coverage
-map](source-coverage.md) records the maintained diagnostic mechanisms; it does not
-claim a missing original guide's complete catalog or authenticate upstream text.
+operations materially harder. Inspect actual contracts and consequences; size
+alone is not a finding. The [current coverage map](source-coverage.md) records the
+maintained diagnostic mechanisms and their evidence requirements.
 
 Load [the worked audit](smells-worked.md) when a complete evidence-to-remedy example
 would help: divergent terminal policy, event ownership, scattered configuration,
-legitimate no-findings and incomplete coverage. These are synthetic sources, not
-claims about real work or a historical project.
+useful no-findings and incomplete coverage. Its fictional inputs define the task's
+contracts and accessible scope.
 
 Use this mode when the requested outcome is structural diagnosis and a maintenance
 plan for a declared scope. Assessing whether a particular implementation/change
@@ -60,11 +59,11 @@ do not elevate "could diverge" to a demonstrated failure without evidence.
 
 ## Diagnostic families and concrete probes
 
-These probes retain the pressure points illustrated by F01–F10 in the supplied
-report. Apply those relevant to the current scope, not a requirement to find all
-ten or to introduce the named design patterns everywhere.
+Use these diagnostic families where actual consequences support them. Apply those
+relevant to the declared scope; there is no requirement to find all ten or introduce
+the named design patterns everywhere.
 
-| Family / source pattern | Inspect and substantiate | Preferred direction when supported |
+| Family / diagnostic pattern | Inspect and substantiate | Preferred direction when supported |
 |---|---|---|
 | Bloaters / Large Class; Divergent Change; Couplers / Solution Sprawl (F01) | Unrelated responsibility clusters such as orchestration, retry, tool execution, persistence, failure translation and result construction sharing broad mutable state or collaborators. Show independent reasons to change and focused-test costs. | Keep a purposeful public facade, extracting cohesive collaborators at actual ownership seams rather than splitting by line count. |
 | Dispensables / Duplicated Code; Object-Orientation Abusers / Combinatorial Explosion (F02) | Repeated state machines with differing counters, terminal behavior, repairs or validation. Compare transitions and genuinely different completion policies, not just similar loops. | Extract one shared transition loop with a narrow policy/callback and small distinct completion handlers; avoid multiplying boolean modes. |
@@ -93,7 +92,7 @@ Identify the behavior the remedy must preserve: transition and event ordering,
 retry/terminal rules, errors and diagnostics, redaction, serialization defaults,
 indexes, append-only schemas, configuration precedence/coercion, budget outcomes,
 safe outputs, public APIs and security boundaries, as relevant. Preserve known
-consumers and compatibility; do not infer cleanroom from the source report. If
+consumers and compatibility; establish cleanroom only from current target evidence. If
 the current task establishes cleanroom, obsolete compatibility surfaces can be
 removed, but present behavioral/data/security requirements still apply.
 

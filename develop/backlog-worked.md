@@ -1,7 +1,7 @@
 # Fictional equipment coverage reconciliation
 
-This independently fictional case is a complete selected inventory, not a
-reconstruction of a real work portfolio, issue graph or historical audit.
+This fictional equipment case defines a complete selected inventory, requirements,
+source priorities, ownership roles and inspection limits.
 
 ## Equipment stock monitoring
 
