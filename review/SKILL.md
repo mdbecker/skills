@@ -74,12 +74,20 @@ withdraws unsupported claims, and marks unreassessed scope. Do not silently drop
 minority findings or require another audit merely for an architectural observation.
 Read a relevant [optional recipe](resources/combinations.md) only when useful.
 
-Debate requires the configured independent peers, private ballots from those same
-peers on remaining disagreements, and the main agent's final report. The main agent
-assigns slightly different facet emphases while explicitly requiring every peer
-to assess the full problem. Initial peer conclusions remain isolated. Evidence
-outranks votes; preserve supported minority
-claims. Missing required submissions remain incomplete, not a single-agent fallback.
+Debate requires the configured independent peers, same-peer private ballots, and
+the main agent's final report. For Discuss, ballot every eligible consequential
+choice, including unanimous recommendations and choices other peers did not
+address. Use a decision ledger and actual follow-ups, not inferred agreement;
+skip only an empty eligible set with explicit exclusion reasons. Code/Smells still
+ballot only remaining disagreements. Read the Debate method's canonical packet,
+comparison template, and substantive-validation rules before orchestration.
+
+The main agent assigns slightly different facet emphases while requiring every
+peer to assess the full problem. Initial conclusions remain isolated; retain the
+original handles/history through ballots. Evidence outranks votes; preserve
+supported minority claims. Missing required submissions remain incomplete, not a
+single-agent fallback. No engine turns agreement or a complete tally into proof
+of judgment quality.
 
 ## Completion and limits
 

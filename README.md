@@ -247,9 +247,14 @@ a structural observation alone does not automatically launch another full audit.
 
 Only explicit `--engine debate` selects the [flat voting method](review/debate.md):
 three independent peers by default, then private ballots from those same peers on
-remaining disagreements. The main agent gives each peer a different facet to focus
-especially on, while explicitly requiring every peer to assess the whole problem
-and its full scope. `--agents <COUNT>` selects any integer of at least two,
+eligible decisions. Discuss ballots cover every consequential choice that can be
+compared under the established criteria, including unanimous recommendations and
+choices raised by only one peer. A decision ledger retains `not_addressed` positions;
+the coordinator sends actual follow-ups rather than inferring votes. Only an empty
+eligible set skips Discuss ballots, with explicit exclusion reasons. Code/Smells
+still ballot only remaining disagreements. The main agent gives each peer a
+different facet to focus especially on, while explicitly requiring every peer to
+assess the whole problem and its full scope. `--agents <COUNT>` selects any integer of at least two,
 excluding the coordinator, and requires explicit Debate. For example:
 `/review discuss "Synchronous import or queue?" --engine debate --agents 5`.
 The main agent maps disagreements, verifies evidence, and writes the final report;
@@ -257,6 +262,16 @@ it casts a deciding vote only on valid ties. A unique plurality is not a majorit
 and abstentions or multiple alternatives can yield ties even with three peers.
 Preserve dissent; evidence outranks votes. Three is a practical default, not a
 research-established optimum. Scope and single-pass defaults remain unchanged.
+
+Discuss uses neutral, atomic decision packets and requires each peer to compare
+all alternatives under the same criteria, explain the decisive tradeoff, and state
+the strongest competing case and reversal condition. Ballots receive substantive
+validation before tallying; filled fields alone do not establish deliberation.
+Defective packets require abstention/unresolved disposition, not silent rewrites.
+Substantive revisions need a separately authorized new run. The report includes
+actual follow-up completion, votes, validation failures, changes, dissent, and
+exclusions. Complete voting is procedural evidence, not proof of factual correctness
+or model quality. The [Debate protocol](review/debate.md) owns the full procedure.
 
 [Model policy](resources/models.md) uses the current model unless an override is
 explicitly authorized; there is no model-tier ladder or downstream worker layer.
@@ -401,6 +416,9 @@ model-protocol, and composition-protocol approvals remain separately gated.
 Focused evidence lives in [workflow methods](evaluations/workflow-methods/README.md),
 [review](evaluations/review/README.md), [repository validation](evaluations/validation/README.md),
 and [report maintenance](evaluations/research-report/README.md).
+[Discuss ballot scenarios](evaluations/review/discuss-ballots/README.md) cover
+decision coverage, packet/comparison quality, recovery and tally boundaries; live
+trials remain separately approved and unperformed.
 [Usage-workflow scenarios](evaluations/usage-workflows/README.md) separate package/
 helper evidence from separately approved assistant/host/user-comprehension trials.
 Worked examples are

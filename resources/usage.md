@@ -144,7 +144,7 @@ executes notebooks nor acquires evidence.
 | Outcome | Implementation acceptability, systematic structural diagnosis, or a technical decision. |
 | Target/boundary | What files, subsystem, changes, or question are in scope; establish it explicitly or from unambiguous context. |
 | Input | Code review's `diff` comparison versus current `source`. This does not widen finding scope. |
-| Engine | Single-pass by default; explicitly selected Debate uses independent peers, private disagreement ballots, and the main agent's report. |
+| Engine | Single-pass by default; explicitly selected Debate uses independent peers, same-peer private ballots, and the main agent's report. Discuss ballots cover all eligible consequential choices; Code/Smells cover remaining disagreements. |
 | Agents | Debate-only peer count: integer at least 2, default 3; excludes the main coordinator. |
 
 `--agents` requires explicit `--engine debate`; it never selects Debate implicitly.
@@ -154,8 +154,15 @@ remain subject data. A requested count exceeding actual concurrency may be batch
 unsupported capabilities or budget limits are reported, not silently reduced.
 
 For example: `/review discuss "Queue or synchronous import?" --engine debate --agents 5`.
-Use the same peers for one private ballot round on remaining disagreements. The
-main agent facilitates, verifies evidence, and writes the report; it votes only on
+Use the same peers for one private ballot round. Discuss requires actual follow-ups
+on all eligible consequential choices, including unanimous recommendations and
+choices raised by one peer alone. Its ledger records initial positions, including
+`not_addressed`, and explicit exclusions; only an empty eligible set skips voting.
+Facts and constraints are verified, not voted on. Code/Smells continue to ballot
+remaining disagreements. The bundled Debate method owns neutral packet preparation,
+all-option comparison, substantive validation, and incomplete/defective-packet rules.
+
+The main agent facilitates, verifies evidence, and writes the report; it votes only on
 a valid tie, never on a unique plurality or majority. Abstentions and multiple
 alternatives can produce ties even with three peers. The selected Debate method
 defines tally, tie-break, and incomplete-run rules; agreement is not verification.

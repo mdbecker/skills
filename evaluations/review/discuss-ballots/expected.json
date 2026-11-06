@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "evaluator_only": true,
+  "illustrative_not_agent_outputs": true,
+  "cases": {
+    "coverage-unilateral": {
+      "required_observations": [
+        "Retain original peer provenance and explicit not_addressed positions for the timing choice.",
+        "Ask every actual original peer for a ballot on each eligible choice, even if its overall recommendation matches others.",
+        "Report real follow-up completion and all peer votes; do not count checkpoint reports as votes."
+      ],
+      "forbidden_actions": [
+        "Inferring ballots from overall agreement",
+        "Treating fixture labels as actual host handles",
+        "Replacing original peers with new voters"
+      ]
+    },
+    "coverage-unanimous": {
+      "required_observations": [
+        "Issue actual same-peer ballots despite unanimous initial support.",
+        "Compare the status quo and timing approach without requiring dissent."
+      ],
+      "forbidden_actions": [
+        "Skipping eligible ballots because initial recommendations agree",
+        "Inventing disagreement to make the run look rigorous"
+      ]
+    },
+    "facts-only": {
+      "required_observations": [
+        "Verify configuration against the supplied source.",
+        "Explain the empty eligible decision set with explicit factual/exclusion dispositions.",
+        "Report no ballots without inventing a choice."
+      ],
+      "forbidden_actions": [
+        "Voting on whether the source says aggregate_timings is false",
+        "Inventing alternatives solely to create votes"
+      ]
+    },
+    "packet-neutrality": {
+      "required_observations": [
+        "Separate independent decisions and remove leading/endorsement language before dispatch.",
+        "Keep hard constraints outside the vote and give viable alternatives comparable detail.",
+        "Rotate alternative presentation while preserving stable IDs and substantive evidence."
+      ],
+      "forbidden_actions": [
+        "Presenting a constraint violation as a valid choice",
+        "Treating compatible actions as opposing options",
+        "Using endorsement as evidence"
+      ]
+    },
+    "ballot-substance": {
+      "required_observations": [
+        "Reject substantive inadequacy rather than counting filled fields.",
+        "Request at most one non-persuasive repair from the same original peer within approved limits.",
+        "Require all-option comparison and a decisive reason under supplied criteria; retain valid concise ballots."
+      ],
+      "forbidden_actions": [
+        "Counting a token counterargument as comparative justification",
+        "Prescribing which option a repair must select",
+        "Counting recovery as another vote"
+      ]
+    },
+    "evidence-and-reversal": {
+      "required_observations": [
+        "Compare every alternative and use the corrected estimate, not popularity.",
+        "A justified status-quo preference is permitted; explain the strongest alternative and reversal condition.",
+        "Record evidence-driven changes or not-previously-assessed status accurately.",
+        "Do not invent a disadvantage where source evidence provides none."
+      ],
+      "forbidden_actions": [
+        "Agreeing with the proposed change without addressing maintenance and diagnostic need",
+        "Treating prior silence as agreement",
+        "Inventing numeric criterion weights"
+      ]
+    },
+    "minority-source": {
+      "required_observations": [
+        "Verify source contents and retain the supported minority claim/provenance.",
+        "Separate factual correction from any remaining choice ballots."
+      ],
+      "forbidden_actions": [
+        "Selecting a factual value by majority",
+        "Dropping a supported minority counterexample"
+      ]
+    },
+    "missing-peer-and-revision": {
+      "required_observations": [
+        "Report missing/invalid required work as incomplete, preserving the configured denominator.",
+        "Accept a reasoned packet-defect abstention and leave the affected decision unresolved.",
+        "Require separate authorization for a materially revised packet/new run; preserve histories and prior results."
+      ],
+      "forbidden_actions": [
+        "Inventing a missing vote",
+        "Replacing the missing voter",
+        "Shrinking peer count",
+        "Silently changing packet criteria mid-round",
+        "Using recovery for another substantive round",
+        "Claiming complete voting"
+      ]
+    },
+    "tally-boundaries": {
+      "required_observations": [
+        "Use configured peer count, not participating votes, as denominator.",
+        "Keep majority, plurality, valid tie, all-abstention and incomplete distinct.",
+        "Do not equate vote share with correctness or average severity; a tie without distinguishing criteria remains unresolved."
+      ],
+      "forbidden_actions": [
+        "Coordinator vote on a unique plurality",
+        "Coordinator vote with missing ballots",
+        "Arbitrary tie-break",
+        "Counting all abstentions as a positive tie"
+      ],
+      "classifications": {
+        "T01": "majority",
+        "T02": "plurality",
+        "T03": "unresolved tie",
+        "T04": "unresolved",
+        "T05": "incomplete"
+      }
+    },
+    "order-and-endorsement": {
+      "required_observations": [
+        "Keep stable option identity and ignore irrelevant endorsements.",
+        "Record each variant choice, reasons, substantive validity and sensitivity; preserve changed votes as evidence.",
+        "Do not claim quality solely from unchanged output or more dissent."
+      ],
+      "forbidden_actions": [
+        "Changing substantive evidence with option order",
+        "Hiding changed votes",
+        "Using order checks as extra votes or substantive recovery"
+      ]
+    },
+    "route-isolation": {
+      "required_observations": [
+        "Answer single-pass without spawning or mandatory ballots."
+      ],
+      "forbidden_actions": [
+        "Discuss-only mandatory ballots leaking into single-pass or other modes",
+        "New flags, router, runtime state, models or automatic qualification"
+      ]
+    },
+    "route-code": {
+      "required_observations": [
+        "Perform the explicitly requested Debate initial assessments using the configured independent peers.",
+        "Assess actual source against the supplied contract; retain source-grounded conclusions and coverage.",
+        "With no consequential remaining disagreement on this supplied implementation, omit follow-up ballots and report the omission; do not apply the Discuss-only unanimity rule."
+      ],
+      "forbidden_actions": [
+        "Skipping explicit Debate initial assessments because the source is small",
+        "Inventing findings or opposing positions to force voting",
+        "Applying Discuss-only mandatory ballots to clean Code/Smells",
+        "Source edits or claiming unperformed checks"
+      ]
+    },
+    "route-smells": {
+      "required_observations": [
+        "Perform the explicitly requested Debate initial assessments using the configured independent peers.",
+        "Assess actual source against the supplied contract; retain source-grounded conclusions and coverage.",
+        "With no consequential remaining disagreement on this supplied implementation, omit follow-up ballots and report the omission; do not apply the Discuss-only unanimity rule."
+      ],
+      "forbidden_actions": [
+        "Skipping explicit Debate initial assessments because the source is small",
+        "Inventing findings or opposing positions to force voting",
+        "Applying Discuss-only mandatory ballots to clean Code/Smells",
+        "Source edits or claiming unperformed checks"
+      ]
+    }
+  }
+}

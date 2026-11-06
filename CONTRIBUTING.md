@@ -10,7 +10,11 @@ scaffolding. Required project/safety checks may occur early; this does not impos
 mandatory test-first development or automatic phase gates.
 
 Debate uses one flat set of independent peers (default three, configurable with
-`--agents`), then private claim-level ballots from those same peers where needed.
+`--agents`), then private claim-level ballots from those same peers. Discuss covers
+all eligible consequential choices, including unanimity and uneven initial coverage;
+Code/Smells cover remaining disagreements. Keep ledger eligibility/exclusions and
+actual follow-ups visible. The canonical packet and comparison template lives in
+`review/debate.md`; no other document should own competing ballot instructions.
 The main agent verifies evidence, coordinates voting, and writes the report. It
 votes only to break valid ties, never on a unique plurality or majority. Preserve
 dissent, scope, and evidence checks; agreement is not verification. Use the current
@@ -32,6 +36,20 @@ Follow the development setup in the README, then run:
 ```
 
 Add focused regression coverage when fixing manifest behavior. For prompt changes, describe the realistic task used to evaluate the instructions and any limitations. A passing metadata check does not establish behavioral correctness.
+
+Do not test agent adherence through exact wording/substring assertions in Markdown.
+Use actual package/install/helper behavior where relevant. Evaluation-corpus
+integrity checks protect frozen inputs, not skill reasoning. For Discuss changes,
+use the active review ballot scenarios with independent evaluator criteria;
+observe actual follow-ups, all-option comparisons, evidence, and dispositions in
+separately approved trials. Preserve justified agreement, rejection and abstention;
+neither more disagreement nor unanimity is a quality target.
+
+Keep one active Discuss corpus under a stable path; superseded copies belong in
+Git history, not versioned directories. Change fixture inputs/criteria and their
+hashes deliberately, never merely to fit candidate output. Bind observed trials to
+their actual commit and input identities; do not rewrite prior results as though
+they evaluated the revised corpus. Schema versions describe formats, not archives.
 
 Keep feature manifests, scratch test beds, credentials, conversation handoffs, and generated review evidence out of commits. New skill resources should serve a concrete purpose; a short self-contained skill does not need extra scaffolding.
 

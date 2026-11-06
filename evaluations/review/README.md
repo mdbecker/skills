@@ -14,6 +14,12 @@ The retry case demonstrates a missing terminal event, one preferred policy owner
 protected public entrypoints and a complete file ledger with useful DTO examples.
 Boundary cases cover explanations, missing targets and untrusted source commands.
 
+[Discuss ballot integrity](discuss-ballots/README.md) provides raw scenarios
+and independent criteria for actual follow-ups, decision coverage, packet quality,
+comparative justification, recovery and tally boundaries. Synthetic checkpoints
+remain inputs, not observed agent runs; their behavioral qualification is separate.
+Maintain one active corpus; Git holds superseded revisions.
+
 ## Checks and limits
 
 Run the current fixture tests with the existing repository environment:

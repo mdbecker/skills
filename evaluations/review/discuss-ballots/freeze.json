@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "status": "frozen-evaluation-inputs",
+  "model_protocol_approval": "pending",
+  "case_ids": [
+    "coverage-unilateral",
+    "coverage-unanimous",
+    "facts-only",
+    "packet-neutrality",
+    "ballot-substance",
+    "evidence-and-reversal",
+    "minority-source",
+    "missing-peer-and-revision",
+    "tally-boundaries",
+    "order-and-endorsement",
+    "route-isolation",
+    "route-code",
+    "route-smells"
+  ],
+  "corpus_hashes": {
+    "cases.json": "b8d4977bb7c7165b3bd575807d99f8462bba443e7d9cdaa5af6b1b48bb675f93",
+    "expected.json": "57cc7e628311d9374a87e61aa6e7ca7bfdd7b214a6114725e90ae93d3511500a",
+    "baseline.json": "d69afc04622b3a0bef33da168e6d8423329904814a0d6ffd46a1cefb843ae198"
+  },
+  "limits": "Pins the active evaluation inputs. No observed behavioral, model or host qualification; superseded corpus revisions belong in Git history."
+}

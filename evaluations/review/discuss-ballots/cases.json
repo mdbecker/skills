@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "cases": [
+    {
+      "id": "coverage-unilateral",
+      "request": "/review discuss \"Choose a build timing-diagnostic approach\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Controlled continuation after locked initial assessments. Supplied reports are synthetic checkpoint inputs, not ballots or actual host handles. Criteria are compatibility, diagnostic usefulness and maintenance cost.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n",
+        "initial-reports.json": "{\n  \"synthetic_checkpoint\": true,\n  \"P1\": [\n    {\n      \"id\": \"P1-C01\",\n      \"claim\": \"Compare recording aggregate build timings with leaving diagnostics unchanged.\"\n    }\n  ],\n  \"P2\": [\n    {\n      \"id\": \"P2-C01\",\n      \"claim\": \"Keep the existing build process.\"\n    }\n  ],\n  \"P3\": [\n    {\n      \"id\": \"P3-C01\",\n      \"claim\": \"Keep the existing build process.\"\n    }\n  ]\n}\n"
+      }
+    },
+    {
+      "id": "coverage-unanimous",
+      "request": "/review discuss \"Choose a build timing-diagnostic approach\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Controlled continuation after locked initial assessments. Supplied reports are synthetic checkpoint inputs, not ballots or actual host handles. Criteria are compatibility, diagnostic usefulness and maintenance cost.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n",
+        "initial-reports.json": "{\n  \"synthetic_checkpoint\": true,\n  \"P1\": [\n    {\n      \"id\": \"P1-C01\",\n      \"claim\": \"Prefer aggregate build timings over unchanged diagnostics.\"\n    }\n  ],\n  \"P2\": [\n    {\n      \"id\": \"P2-C01\",\n      \"claim\": \"Prefer aggregate build timings over unchanged diagnostics.\"\n    }\n  ],\n  \"P3\": [\n    {\n      \"id\": \"P3-C01\",\n      \"claim\": \"Prefer aggregate build timings over unchanged diagnostics.\"\n    }\n  ]\n}\n"
+      }
+    },
+    {
+      "id": "facts-only",
+      "request": "/review discuss \"Explain the existing build configuration; do not recommend changes\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. The supplied policy is authoritative. Explain configuration only; do not propose changes.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n"
+      }
+    },
+    {
+      "id": "packet-neutrality",
+      "request": "/review discuss \"Choose an approach to build diagnostics using the supplied draft and project contract\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. The supplied draft packet is context for the requested decision. The public build command is protected by the project contract.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n",
+        "draft-packet.json": "{\n  \"id\": \"D01\",\n  \"question\": \"Should we adopt this obviously safer improvement?\",\n  \"alternatives\": [\n    {\n      \"id\": \"A\",\n      \"approach\": \"Record timings AND change the build command; endorsed by all maintainers\"\n    },\n    {\n      \"id\": \"B\",\n      \"approach\": \"Wait for a failure before doing anything\"\n    }\n  ]\n}\n"
+      }
+    },
+    {
+      "id": "ballot-substance",
+      "request": "/review discuss \"Continue validation of the timing decision\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Controlled validation checkpoint. Assess the supplied packet and synthetic ballot record. The record is an evaluation input, not an observed actor output.",
+      "artifacts": {
+        "decision-packet.json": "{\n  \"id\": \"D01\",\n  \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n  \"criteria\": [\n    \"compatibility\",\n    \"diagnostic usefulness\",\n    \"maintenance cost\"\n  ],\n  \"constraints\": [\n    \"Do not collect personal data\",\n    \"Preserve the build command\"\n  ],\n  \"alternatives\": [\n    {\n      \"id\": \"A\",\n      \"approach\": \"Keep existing diagnostics\",\n      \"benefit\": \"No additional maintenance\",\n      \"cost\": \"No aggregate timing breakdown\"\n    },\n    {\n      \"id\": \"B\",\n      \"approach\": \"Record aggregate timings in existing diagnostics\",\n      \"benefit\": \"Makes slow stages visible\",\n      \"cost\": \"Additional instrumentation maintenance\"\n    }\n  ]\n}\n",
+        "draft-ballot.json": "{\n  \"synthetic_checkpoint\": true,\n  \"decision_id\": \"D01\",\n  \"selected\": \"B\",\n  \"packet_status\": \"adequate\",\n  \"evidence\": [\n    \"policy.json\"\n  ],\n  \"comparison\": {\n    \"B\": {\n      \"benefit\": \"Better consistency\"\n    }\n  },\n  \"strongest_objection\": \"Instrumentation costs maintenance\",\n  \"decisive_criterion\": \"Consistency\",\n  \"reversal_condition\": \"If it becomes too expensive\",\n  \"prior_position\": \"unchanged\"\n}\n",
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n"
+      }
+    },
+    {
+      "id": "evidence-and-reversal",
+      "request": "/review discuss \"Should we change the timing subsystem given the corrected maintenance estimate?\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Protect compatibility and choose the lowest-maintenance approach meeting the documented diagnostic need. Maintenance measurements and their source identities are supplied.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n",
+        "diagnostic-need.json": "{\n  \"required\": false,\n  \"existing_diagnostics_sufficient\": true\n}\n",
+        "initial-estimate.json": "{\n  \"instrumentation_days\": 1\n}\n",
+        "corrected-estimate.json": "{\n  \"instrumentation_days\": 15,\n  \"source\": \"maintainer measurement\",\n  \"supersedes\": \"initial-estimate.json\"\n}\n"
+      }
+    },
+    {
+      "id": "minority-source",
+      "request": "/review discuss \"Resolve the timing-mode source discrepancy before choosing changes\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Controlled checkpoint. The supplied synthetic report records refer to the authoritative configuration in policy.json.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n",
+        "initial-reports.json": "{\n  \"synthetic_checkpoint\": true,\n  \"P1\": [\n    {\n      \"id\": \"P1-C01\",\n      \"claim\": \"Timings are enabled\"\n    }\n  ],\n  \"P2\": [\n    {\n      \"id\": \"P2-C01\",\n      \"claim\": \"Timings are enabled\"\n    }\n  ],\n  \"P3\": [\n    {\n      \"id\": \"P3-C01\",\n      \"claim\": \"Timings are disabled\",\n      \"source\": \"policy.json\",\n      \"field\": \"aggregate_timings\"\n    }\n  ]\n}\n"
+      }
+    },
+    {
+      "id": "missing-peer-and-revision",
+      "request": "/review discuss \"Finish the timing decision only if the ballot round is valid\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Controlled failure checkpoint. The supplied record contains peer availability, recovery state and an owner-policy question. It is synthetic input, not observed host telemetry.",
+      "artifacts": {
+        "decision-packet.json": "{\n  \"id\": \"D01\",\n  \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n  \"criteria\": [\n    \"compatibility\",\n    \"diagnostic usefulness\",\n    \"maintenance cost\"\n  ],\n  \"constraints\": [\n    \"Do not collect personal data\",\n    \"Preserve the build command\"\n  ],\n  \"alternatives\": [\n    {\n      \"id\": \"A\",\n      \"approach\": \"Keep existing diagnostics\",\n      \"benefit\": \"No additional maintenance\",\n      \"cost\": \"No aggregate timing breakdown\"\n    },\n    {\n      \"id\": \"B\",\n      \"approach\": \"Record aggregate timings in existing diagnostics\",\n      \"benefit\": \"Makes slow stages visible\",\n      \"cost\": \"Additional instrumentation maintenance\"\n    }\n  ]\n}\n",
+        "checkpoint.json": "{\n  \"synthetic_checkpoint\": true,\n  \"configured_peers\": 3,\n  \"missing_peer\": \"P3\",\n  \"recovery_used\": true,\n  \"new_owner_criterion\": \"Allowed persistent timing-data retention is unresolved\"\n}\n"
+      }
+    },
+    {
+      "id": "tally-boundaries",
+      "request": "/review discuss \"Classify these completed or incomplete ballot checkpoints\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Classify the supplied synthetic tally records. Submission-validation status is supplied for this checkpoint-only exercise; do not infer that live voting or prose validation ran. No distinguishing tie-break criterion is supplied.",
+      "artifacts": {
+        "ballot-checkpoints.json": "[\n  {\n    \"id\": \"T01\",\n    \"count\": 3,\n    \"votes\": {\n      \"P1\": \"A\",\n      \"P2\": \"A\",\n      \"P3\": \"B\"\n    },\n    \"validated_submissions\": [\n      \"P1\",\n      \"P2\",\n      \"P3\"\n    ],\n    \"abstention_reasons\": {}\n  },\n  {\n    \"id\": \"T02\",\n    \"count\": 5,\n    \"votes\": {\n      \"P1\": \"A\",\n      \"P2\": \"A\",\n      \"P3\": \"B\",\n      \"P4\": \"C\",\n      \"P5\": \"abstain\"\n    },\n    \"validated_submissions\": [\n      \"P1\",\n      \"P2\",\n      \"P3\",\n      \"P4\",\n      \"P5\"\n    ],\n    \"abstention_reasons\": {\n      \"P5\": \"The supplied criteria do not distinguish the alternatives.\"\n    }\n  },\n  {\n    \"id\": \"T03\",\n    \"count\": 3,\n    \"votes\": {\n      \"P1\": \"A\",\n      \"P2\": \"B\",\n      \"P3\": \"abstain\"\n    },\n    \"validated_submissions\": [\n      \"P1\",\n      \"P2\",\n      \"P3\"\n    ],\n    \"abstention_reasons\": {\n      \"P3\": \"The supplied criteria do not distinguish the alternatives.\"\n    }\n  },\n  {\n    \"id\": \"T04\",\n    \"count\": 3,\n    \"votes\": {\n      \"P1\": \"abstain\",\n      \"P2\": \"abstain\",\n      \"P3\": \"abstain\"\n    },\n    \"validated_submissions\": [\n      \"P1\",\n      \"P2\",\n      \"P3\"\n    ],\n    \"abstention_reasons\": {\n      \"P1\": \"The supplied criteria do not distinguish the alternatives.\",\n      \"P2\": \"The supplied criteria do not distinguish the alternatives.\",\n      \"P3\": \"The supplied criteria do not distinguish the alternatives.\"\n    }\n  },\n  {\n    \"id\": \"T05\",\n    \"count\": 3,\n    \"votes\": {\n      \"P1\": \"A\",\n      \"P2\": \"B\"\n    },\n    \"validated_submissions\": [\n      \"P1\",\n      \"P2\"\n    ],\n    \"abstention_reasons\": {}\n  }\n]\n"
+      }
+    },
+    {
+      "id": "order-and-endorsement",
+      "request": "/review discuss \"Choose a build timing-diagnostic approach\" --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. The diagnostic uses matched trials with identical substantive evidence and criteria. Each actor receives only the selected variant materialized as decision-packet.json, not the variant list or prior trial results.",
+      "artifacts": {
+        "decision-packet.json": "{\n  \"id\": \"D01\",\n  \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n  \"criteria\": [\n    \"compatibility\",\n    \"diagnostic usefulness\",\n    \"maintenance cost\"\n  ],\n  \"constraints\": [\n    \"Do not collect personal data\",\n    \"Preserve the build command\"\n  ],\n  \"alternatives\": [\n    {\n      \"id\": \"A\",\n      \"approach\": \"Keep existing diagnostics\",\n      \"benefit\": \"No additional maintenance\",\n      \"cost\": \"No aggregate timing breakdown\"\n    },\n    {\n      \"id\": \"B\",\n      \"approach\": \"Record aggregate timings in existing diagnostics\",\n      \"benefit\": \"Makes slow stages visible\",\n      \"cost\": \"Additional instrumentation maintenance\"\n    }\n  ]\n}\n",
+        "variants.json": "{\n  \"variants\": [\n    {\n      \"packet\": {\n        \"id\": \"D01\",\n        \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n        \"criteria\": [\n          \"compatibility\",\n          \"diagnostic usefulness\",\n          \"maintenance cost\"\n        ],\n        \"constraints\": [\n          \"Do not collect personal data\",\n          \"Preserve the build command\"\n        ],\n        \"alternatives\": [\n          {\n            \"id\": \"A\",\n            \"approach\": \"Keep existing diagnostics\",\n            \"benefit\": \"No additional maintenance\",\n            \"cost\": \"No aggregate timing breakdown\"\n          },\n          {\n            \"id\": \"B\",\n            \"approach\": \"Record aggregate timings in existing diagnostics\",\n            \"benefit\": \"Makes slow stages visible\",\n            \"cost\": \"Additional instrumentation maintenance\"\n          }\n        ]\n      }\n    },\n    {\n      \"packet\": {\n        \"id\": \"D01\",\n        \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n        \"criteria\": [\n          \"compatibility\",\n          \"diagnostic usefulness\",\n          \"maintenance cost\"\n        ],\n        \"constraints\": [\n          \"Do not collect personal data\",\n          \"Preserve the build command\"\n        ],\n        \"alternatives\": [\n          {\n            \"id\": \"B\",\n            \"approach\": \"Record aggregate timings in existing diagnostics\",\n            \"benefit\": \"Makes slow stages visible\",\n            \"cost\": \"Additional instrumentation maintenance\"\n          },\n          {\n            \"id\": \"A\",\n            \"approach\": \"Keep existing diagnostics\",\n            \"benefit\": \"No additional maintenance\",\n            \"cost\": \"No aggregate timing breakdown\"\n          }\n        ]\n      }\n    },\n    {\n      \"packet\": {\n        \"id\": \"D01\",\n        \"question\": \"Which timing-diagnostic approach best fits the existing build?\",\n        \"criteria\": [\n          \"compatibility\",\n          \"diagnostic usefulness\",\n          \"maintenance cost\"\n        ],\n        \"constraints\": [\n          \"Do not collect personal data\",\n          \"Preserve the build command\"\n        ],\n        \"alternatives\": [\n          {\n            \"id\": \"A\",\n            \"approach\": \"Keep existing diagnostics\",\n            \"benefit\": \"No additional maintenance\",\n            \"cost\": \"No aggregate timing breakdown\"\n          },\n          {\n            \"id\": \"B\",\n            \"approach\": \"Record aggregate timings in existing diagnostics\",\n            \"benefit\": \"Makes slow stages visible\",\n            \"cost\": \"Additional instrumentation maintenance\"\n          }\n        ],\n        \"coordinator_statement\": \"The coordinator strongly prefers B.\"\n      }\n    }\n  ]\n}\n"
+      }
+    },
+    {
+      "id": "route-isolation",
+      "request": "Explain the tradeoffs of timing instrumentation briefly; no debate or implementation.",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. Explain the tradeoffs using the supplied configuration. No independent review or implementation is requested.",
+      "artifacts": {
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n"
+      }
+    },
+    {
+      "id": "route-code",
+      "request": "/review code config.py --input source --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. The supplied configuration always contains a boolean aggregate_timings field. The helper must return that value unchanged without mutating the mapping. Scope is the complete supplied config.py; there are no additional callers or compatibility requirements beyond this contract.",
+      "artifacts": {
+        "config.py": "def timings_enabled(configuration):\n    return configuration['aggregate_timings']\n",
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n"
+      }
+    },
+    {
+      "id": "route-smells",
+      "request": "/review smells config.py --engine debate",
+      "context": "Synthetic project; read-only review. No installation, writes, publication or new model/provider permissions. Aggregate build timings contain no personal data. Existing build behavior must remain compatible. The supplied configuration always contains a boolean aggregate_timings field. The helper must return that value unchanged without mutating the mapping. Scope is the complete supplied config.py; there are no additional callers or compatibility requirements beyond this contract.",
+      "artifacts": {
+        "config.py": "def timings_enabled(configuration):\n    return configuration['aggregate_timings']\n",
+        "policy.json": "{\n  \"build_command\": \"existing-build\",\n  \"aggregate_timings\": false,\n  \"personal_data_collection\": false\n}\n"
+      }
+    }
+  ]
+}

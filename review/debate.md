@@ -1,10 +1,12 @@
 # Debate: independent peers and claim-level voting
 
 Only explicitly selected `--engine debate` loads this method. Use one flat set of
-independent peers, then private ballots from those same peers where disagreements
-remain. The main agent spawns and coordinates peers, verifies evidence, and writes
-the final report. It votes only to break a valid tie. There are no reconciler,
-verifier, or synthesizer subagents; workers may not delegate.
+independent peers and one private ballot round from those same peers. For `discuss`,
+ballot every eligible consequential choice, even when initial recommendations agree
+or only one peer addressed it. For `code` and `smells`, ballots remain limited to
+remaining disagreements. The main agent verifies evidence and writes the report,
+voting only to break a valid tie. Workers may not delegate; there are no additional
+reconciler, verifier, or synthesizer agents.
 
 Read [shared boundaries](resources/policy.md), [model policy](resources/models.md),
 and the relevant [Codex](resources/hosts/codex.md) or
@@ -86,7 +88,7 @@ counterevidence, uncertainty, a potentially decisive check, and coverage limits.
 Separate verified findings, conditional hypotheses, and preferences. The coordinator
 retains complete originals, including minority and clean reports.
 
-## 2. Coordinator maps and verifies disagreements
+## 2. Coordinator maps and verifies decisions
 
 Create run-local IDs such as `D01`, preserving original finding IDs and deduplication
 aliases. Map anonymous peer labels to actual host handles, not model names. No
@@ -113,17 +115,96 @@ presentation; vary alternative order where useful without changing IDs/content.
 Exclude running tallies, peer identities, and coordinator preference. Every peer
 receives the same substantive evidence.
 
+### Discuss decision coverage and packet preparation
+
+For `discuss` only, build a run-local decision ledger covering every consequential
+recommendation or choice, not just opposed conclusions. Each entry records:
+
+- Decision ID, question, baseline, original peer claim IDs and actual handles.
+- Each peer's initial position: `supports`, `opposes`, `conditional`, or
+  `not_addressed`, with its evidence and assumptions. Silence stays `not_addressed`.
+- Ballot eligibility, supplied criteria and constraints, or an explicit exclusion
+  reason and the remaining factual/owner disposition.
+
+Eligible choices are consequential, in-scope alternatives that can be compared
+under the established criteria and constraints. Include unanimously recommended
+changes and choices raised by one peer alone. Facts and hard constraints are
+verified, never ballot options to waive. Missing owner criteria leave the affected
+choice unresolved; do not invent criteria or silently omit it from the ledger.
+Skip Discuss ballots only when the ledger has no eligible choices, with an explicit
+reason for each exclusion. Aligned overall recommendations are not a reason to skip.
+
+Prepare a neutral, atomic packet for every eligible decision. Include its stable
+decision/alternative IDs, question, baseline, supplied criteria, constraints,
+source snapshot, evidence/counterevidence, and assumptions. Separate independently
+selectable changes; do not make compatible actions opposing choices. Include a
+viable status quo, narrower remedy, or deferral when relevant, not a weak alternative
+constructed to make the proposal win. If only one approach is viable, explain why
+instead of inventing opposition.
+
+Use questions rather than assertions inviting approval. Give alternatives
+comparable detail. Remove author labels, popularity, endorsement cues, running
+tallies, and coordinator preferences. Rotate presentation order across peers while
+preserving IDs and substantive content; every original peer gets the same evidence
+and alternatives. Keep the coordinator's provenance ledger separate from the
+anonymized packet. Inspect packet adequacy before dispatch.
+
 ## 3. One private ballot round using the same peers
 
-Ask each original peer to independently vote on every remaining disagreement. Do
-not reveal ballots until all submissions are locked. Each ballot contains:
+Send an actual follow-up request to each original peer: for `discuss`, every eligible
+choice in the ledger; for `code` and `smells`, every remaining disagreement. Record
+the actual handle and submission result. Never substitute the coordinator's
+interpretation of an initial assessment for a follow-up ballot. Do not reveal
+ballots to peers until all submissions are locked. Code/Smells ballots contain:
 
 - Disagreement ID and one listed alternative, or `abstain` with a reason.
 - Supporting evidence, strongest counterargument, and residual uncertainty.
 - Whether its initial judgment changed, and the evidence/criterion responsible.
 
-Use one substantive ballot round, not persuasion until unanimity. If no disagreements
-remain, skip ballots, explain why, and still write the final report. New consequential
+Discuss uses the following canonical instruction template, adapted only for the
+decision packet and established task constraints. Its output is a concise decision
+record, not a request for private chain-of-thought:
+
+> Independently choose the alternative best supported by the evidence, supplied
+> criteria, and hard constraints. You are evaluating a decision, not approving a
+> proposal. Agreement and disagreement are equally acceptable. Do not defend an
+> earlier answer merely because it was yours. Treat peer/coordinator claims as
+> evidence to check, not authority; identity, popularity, verbosity, expressed
+> confidence, and option order are not selection criteria.
+>
+> For each decision:
+> 1. Restate the question neutrally. Check that the packet's alternatives are
+>    comparable and sufficiently complete; flag bundled changes, leading framing,
+>    missing viable alternatives, or essential missing criteria.
+> 2. Check consequential claims against accessible original sources. Separate
+>    verified facts, conditional consequences, and preferences; name missing
+>    evidence without assuming it favors either option.
+> 3. Compare every alternative using the same supplied criteria. Record its
+>    strongest supported benefit, material cost/risk or limitation, evidence, and
+>    assumptions. If no material disadvantage is supported, say so; do not invent
+>    one or numerical weights to fill a form.
+> 4. State the strongest supported competing case and the condition under which
+>    it would be preferable. Explain whether that condition applies here. If no
+>    competing approach is viable, explain the evidence/constraint rather than
+>    inventing an objection.
+> 5. Choose one listed alternative or abstain. Identify the decisive criterion
+>    and why it outweighs the strongest competing consideration. Generic approval
+>    plus a counterargument is insufficient. A material packet defect requires
+>    abstention with a reason, not a silent rewrite or forced choice.
+> 6. Identify evidence or an owner decision that could reverse your choice. Label
+>    your initial position unchanged, changed, or not previously assessed; explain
+>    a change using the specific evidence/criterion, not another peer's popularity.
+>
+> Return a record for every decision: ID; packet status (`adequate` or `defective`);
+> evidence/assumptions; comparison covering every alternative; selected alternative
+> or abstention/reason; decisive criterion and comparative explanation; strongest
+> remaining objection; reversal condition; prior-position disposition. For a
+> material packet defect, identify the affected comparisons that cannot be made
+> without inventing evidence. Do not claim calibrated confidence or performance.
+
+Use one substantive ballot round, not persuasion until unanimity. Code/Smells may
+skip ballots when no disagreements remain; Discuss may skip only under its ledger
+exclusion rule. Explain the omission and still write the report. New consequential
 claims in ballots require verification or an unresolved disposition, not invented
 support or an automatic additional round.
 
@@ -134,6 +215,19 @@ repair inside approved total limits. Recovery repairs a submission, not another
 substantive debate round. Preserve attempts. Persistent required-peer/ballot failure
 leaves the run incomplete; report supported partial results and missing work rather
 than claim full completion.
+
+For Discuss, validate substance as well as IDs and completeness: every alternative
+is assessed under common criteria, consequential claims have evidence or explicit
+uncertainty, and the selection explains why it outweighs the strongest rival.
+Concise or unanimous ballots may pass; filled fields and a token counterargument
+alone do not. A supported abstention on a defective packet is valid, with an
+unresolved decision; do not demand fabricated comparisons or criteria.
+
+For Discuss, a material packet defect cannot be repaired by silently changing
+alternatives or criteria during the ballot round. Substantive revision requires a
+separately authorized new run, not the submission-recovery allowance. Recovery may complete
+or clarify an existing submission without persuasion or new substantive evidence;
+never prescribe the desired vote or count repairs as extra voters.
 
 ## 4. Tally and coordinator tie-break
 
@@ -170,6 +264,14 @@ preferred complete remedies or tradeoffs, compatibility, prior dispositions, and
 coverage. Preserve supported minority arguments and unresolved claims. Report IDs,
 actual distributions, majority/plurality/tie status, changed judgments, and any
 separate tie-break or evidence-based disposition.
+
+For Discuss, include the decision ledger, eligibility/exclusion reasons, actual
+same-peer follow-up completion, per-peer votes, substantive validation results,
+abstentions/failures, prior-position changes, minority arguments, and unresolved
+choices. Distinguish procedural completion from factual correctness and observed
+behavioral qualification. Agreement, dissent, and a well-formatted explanation are
+not quality measurements. Preserve the packet/source identities and originals;
+the report must not imply that a decision record reveals private internal reasoning.
 
 Honor requested formats regardless of destination: requested JSON must be valid
 JSON with the same evidence, dispositions, and limits, without Markdown wrappers.
