@@ -15,6 +15,8 @@ import stat
 import sys
 import tempfile
 import unicodedata
+from html import unescape
+from urllib.parse import unquote, urlsplit
 import zipfile
 
 
@@ -132,6 +134,11 @@ def _metadata_block(lines, index, indicator):
     return result, index
 
 
+def valid_skill_name(name):
+    return (isinstance(name, str) and re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?', name) is not None
+            and '--' not in name)
+
+
 def parse_skill_metadata(document, expected_name):
     try:
         text = document.decode('utf-8') if isinstance(document, bytes) else document
@@ -162,11 +169,148 @@ def parse_skill_metadata(document, expected_name):
             else:
                 values[key] = _metadata_scalar(scalar)
         if (set(values) != {'name', 'description'} or values['name'] != expected_name
-                or not values['description'].strip()):
+                or not valid_skill_name(expected_name) or not values['description'].strip()
+                or len(values['description']) > 1024):
             raise ValueError("Required metadata identity or description is invalid")
         return values
     except (ValueError, UnicodeError) as error:
         raise ValueError(f"Invalid skill name/description metadata: {expected_name}: {error}") from error
+
+
+def resolve_link_target(source, target):
+    if re.search(r'%(?![0-9a-fA-F]{2})', target):
+        raise ValueError('Malformed URL escape')
+    parsed = urlsplit(target)
+    if parsed.scheme in {'http', 'https', 'mailto'} or parsed.netloc and not parsed.scheme:
+        return None, ''
+    if parsed.scheme or parsed.path.startswith(('/', '\\')):
+        raise ValueError('Disallowed absolute path or URI scheme')
+    path = unquote(parsed.path, errors='strict')
+    fragment = unquote(parsed.fragment, errors='strict')
+    if '\\' in path or any(ord(character) < 32 or ord(character) == 127 for character in path + fragment):
+        raise ValueError('Invalid path characters')
+    resolved = posixpath.normpath(posixpath.join(posixpath.dirname(source), path)) if path else source
+    if resolved == '..' or resolved.startswith('../') or resolved.startswith('/'):
+        raise ValueError('Target escapes its permitted root')
+    return resolved, fragment
+
+
+
+def inline_destinations(text):
+    masked = list(text)
+
+    def hide(start, end):
+        for position in range(start, end):
+            if masked[position] not in '\r\n':
+                masked[position] = ' '
+
+    front = re.match(r'\A---\r?\n.*?\r?\n---(?:\r?\n|$)', text, re.S)
+    if front:
+        hide(0, front.end())
+    for match in re.finditer(r'<!--.*?-->', text, re.S):
+        hide(match.start(), match.end())
+    fence = None
+    position = 0
+    for line in text.splitlines(keepends=True):
+        match = re.match(r'^ {0,3}(`{3,}|~{3,})', line)
+        if match:
+            if fence is None:
+                fence = (match.group(1)[0], len(match.group(1)))
+            elif match.group(1)[0] == fence[0] and len(match.group(1)) >= fence[1]:
+                fence = None
+            hide(position, position + len(line))
+        elif fence or line.startswith(('    ', '\t')):
+            hide(position, position + len(line))
+        position += len(line)
+    clean = ''.join(masked)
+    position = 0
+    while position < len(clean):
+        if clean[position] == '`':
+            end = position
+            while end < len(clean) and clean[end] == '`':
+                end += 1
+            close = clean.find(clean[position:end], end)
+            if close >= 0:
+                hide(position, close + end - position)
+                position = close + end - position
+                continue
+        position += 1
+    clean = ''.join(masked)
+    position = 0
+    while position < len(clean):
+        if clean[position] == '\\':
+            position += 2
+            continue
+        if clean[position] != '[':
+            position += 1
+            continue
+        depth = 1
+        end = position + 1
+        while end < len(clean) and depth:
+            if clean[end] == '\\':
+                end += 2
+                continue
+            if clean[end] == '[':
+                depth += 1
+            elif clean[end] == ']':
+                depth -= 1
+            end += 1
+        if depth or end >= len(clean) or clean[end] != '(':
+            position += 1
+            continue
+        end += 1
+        while end < len(clean) and clean[end].isspace():
+            end += 1
+        start = end
+        angle = clean[end:end + 1] == '<'
+        if angle:
+            start += 1
+            end = start
+            while end < len(clean) and clean[end] != '>':
+                if clean[end] == '\\':
+                    end += 1
+                end += 1
+            if end >= len(clean):
+                position += 1
+                continue
+            destination_end = end
+            end += 1
+        else:
+            depth = 0
+            while end < len(clean):
+                character = clean[end]
+                if character == '\\':
+                    end += 2
+                    continue
+                if character == '(':
+                    depth += 1
+                elif character == ')':
+                    if not depth:
+                        break
+                    depth -= 1
+                elif character.isspace() and not depth:
+                    break
+                end += 1
+            destination_end = end
+        separated = end < len(clean) and clean[end].isspace()
+        while end < len(clean) and clean[end].isspace():
+            end += 1
+        if separated and clean[end:end + 1] in {'\"', "'", '('}:
+            delimiter = ')' if clean[end] == '(' else clean[end]
+            end += 1
+            while end < len(clean) and clean[end] != delimiter:
+                if clean[end] == '\\':
+                    end += 1
+                end += 1
+            end += 1
+            while end < len(clean) and clean[end].isspace():
+                end += 1
+        if end < len(clean) and clean[end] == ')':
+            raw = text[start:destination_end]
+            yield unescape(re.sub(r'\\([!"#$%&\x27()*+,\-./:;<=>?@\[\]\\^_`{|}~])', r'\1', raw))
+            position = end + 1
+        else:
+            position += 1
 
 
 def read_archive(archive, expected_sha256=None):
@@ -218,7 +362,7 @@ def read_archive(archive, expected_sha256=None):
     names = set()
     for skill in skills:
         name = skill.get("name") if isinstance(skill, dict) else None
-        if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name):
+        if not valid_skill_name(name):
             raise ValueError("Invalid skill name")
         if name.casefold() in names or skill.get("path") != f"skills/{name}":
             raise ValueError("Duplicate skill name or unexpected skill path")
@@ -233,11 +377,11 @@ def read_archive(archive, expected_sha256=None):
         for relative in required:
             safe_relative(relative)
             path = f"skills/{name}/{relative}"
-            if relative.endswith(".md"):
-                for target in re.findall(r"\]\(([^)]+)\)", contents[path].decode("utf-8")):
-                    if "://" in target or target.startswith("#"):
+            if PurePosixPath(relative).suffix.lower() in {'.md', '.markdown'}:
+                for target in inline_destinations(contents[path].decode('utf-8')):
+                    resolved, unused_fragment = resolve_link_target(path, target)
+                    if resolved is None:
                         continue
-                    resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), target.split("#", 1)[0]))
                     if not resolved.startswith(f"skills/{name}/") or resolved not in contents:
                         raise ValueError(f"Missing or escaping bundled reference: {path}: {target}")
     roots = {"README.md", "install.py", "LICENSE", "NOTICE"}
@@ -274,6 +418,94 @@ def tree_hashes(directory):
     return result
 
 
+def _identity(path):
+    metadata = path.lstat()
+    return (metadata.st_dev, metadata.st_ino, metadata.st_mode, metadata.st_size,
+            metadata.st_mtime_ns, metadata.st_ctime_ns)
+
+
+def _tree_state(path):
+    files = tree_hashes(path)
+    if not path.exists():
+        return None
+    metadata = path.stat()
+    entries = {}
+    for entry in path.rglob('*'):
+        if entry.is_symlink():
+            raise ValueError('Recovery path contains a symlink')
+        identity = _identity(entry)
+        entries[entry.relative_to(path).as_posix()] = identity if entry.is_file() else identity[:3]
+    if files != tree_hashes(path):
+        raise ValueError('Recovery tree changed during inspection')
+    return {'identity': (metadata.st_dev, metadata.st_ino, metadata.st_mode),
+            'files': files, 'entries': entries}
+
+
+class _StagingOwnership:
+    def __init__(self, root):
+        self.root = root
+        self.expected = {'': (_identity(root)[:3], None)}
+
+    def parents(self, path):
+        relative = path.relative_to(self.root)
+        current = self.root
+        for part in relative.parts:
+            current = current / part
+            name = current.relative_to(self.root).as_posix()
+            if name not in self.expected:
+                current.mkdir()
+                self.expected[name] = (_identity(current)[:3], None)
+            elif current.is_symlink() or _identity(current)[:3] != self.expected[name][0]:
+                raise ValueError('Staging directory ownership changed')
+
+    def write(self, path, content):
+        self.parents(path.parent)
+        with path.open('xb') as stream:
+            stream.write(content)
+        path.chmod(0o644)
+        self.expected[path.relative_to(self.root).as_posix()] = (_identity(path), digest(content))
+
+    def tree(self, name, state):
+        if state is None:
+            return
+        self.parents((self.root / name).parent)
+        self.expected[name] = (state['identity'], None)
+        for relative, identity in state['entries'].items():
+            self.expected[name + '/' + relative] = (identity, state['files'].get(relative))
+
+    def forget(self, name):
+        for path in list(self.expected):
+            if path == name or path.startswith(name + '/'):
+                del self.expected[path]
+
+    def verify(self):
+        actual = {path.relative_to(self.root).as_posix(): path for path in self.root.rglob('*')}
+        if set(actual) != set(self.expected) - {''} or self.root.is_symlink() or _identity(self.root)[:3] != self.expected[''][0]:
+            raise ValueError('Unknown or replaced staging entries; preserve remnants')
+        for name, path in actual.items():
+            identity, checksum = self.expected[name]
+            if path.is_symlink() or (_identity(path) if checksum is not None else _identity(path)[:3]) != identity:
+                raise ValueError('Changed staging entries; preserve remnants')
+            if checksum is not None and digest(path.read_bytes()) != checksum:
+                raise ValueError('Changed staging content; preserve remnants')
+
+
+class _InstallJournal:
+    def __init__(self, project, destination, expected, staging):
+        self.project = project
+        self.destination = destination
+        self.expected = dict(expected)
+        self.moves = []
+        self.phase = 'applying'
+        self.ownership = _StagingOwnership(staging)
+
+    def verify_selected(self):
+        check_components(self.project, self.destination)
+        for name, expected in self.expected.items():
+            if _tree_state(self.destination / name) != expected:
+                raise ValueError(f'Selected destination changed before commit: {name}')
+
+
 def install(archive, project, host="codex", selected=None, dry_run=False, upgrade=False, expected_sha256=None):
     if host not in HOST_DIRS:
         raise ValueError(f"Unsupported host: {host}")
@@ -294,11 +526,12 @@ def install(archive, project, host="codex", selected=None, dry_run=False, upgrad
     if receipt_path.is_symlink():
         raise ValueError("Installation receipt must not be a symlink")
     receipt_content = receipt_path.read_bytes() if receipt_path.exists() else None
+    receipt_identity = _identity(receipt_path) if receipt_path.exists() else None
     receipt = parse_json(receipt_content) if receipt_content is not None else {}
     if not isinstance(receipt, dict) or (receipt_content is not None and (receipt.get("schema_version") != 1 or receipt.get("package") != PACKAGE or not isinstance(receipt.get("skills"), dict))):
         raise ValueError("Invalid existing installation receipt")
     for name, record in receipt.get("skills", {}).items():
-        if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name) or not isinstance(record, dict) or not isinstance(record.get("files"), dict):
+        if not valid_skill_name(name) or not isinstance(record, dict) or not isinstance(record.get("files"), dict):
             raise ValueError("Invalid managed-skill receipt")
         for relative, checksum in record["files"].items():
             safe_relative(relative)
@@ -306,11 +539,13 @@ def install(archive, project, host="codex", selected=None, dry_run=False, upgrad
                 raise ValueError("Invalid managed-file checksum")
     proposed = {}
     before = {}
+    before_states = {}
     changed = []
     for name in selected:
         prefix = f"skills/{name}/"
         proposed[name] = {path[len(prefix):]: content for path, content in contents.items() if path.startswith(prefix)}
-        before[name] = tree_hashes(destination / name)
+        before_states[name] = _tree_state(destination / name)
+        before[name] = before_states[name]['files'] if before_states[name] is not None else {}
         checksums = {path: digest(content) for path, content in proposed[name].items()}
         if (destination / name).exists() and before[name] != checksums:
             previous = receipt.get("skills", {}).get(name)
@@ -329,50 +564,132 @@ def install(archive, project, host="codex", selected=None, dry_run=False, upgrad
     lock = destination / ".mdbecker-skills.lock"
     lock_descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
     os.close(lock_descriptor)
+    lock_identity = _identity(lock)
+    staging = None
+    staging_identity = None
+    moved = []
+    committed = False
+    preserve = False
+    result['committed'] = False
+    prepared_identity = None
+    prepared_content = None
+    journal = None
     try:
-        if receipt_path.is_symlink() or (receipt_path.read_bytes() if receipt_path.exists() else None) != receipt_content:
+        if (receipt_path.is_symlink() or (receipt_path.read_bytes() if receipt_path.exists() else None) != receipt_content
+                or (_identity(receipt_path) if receipt_path.exists() else None) != receipt_identity):
             raise ValueError("Installation receipt changed; rerun preflight")
-        with tempfile.TemporaryDirectory(prefix=".skills-install-", dir=destination) as temporary:
-            staging = Path(temporary)
-            moved = []
+        staging = Path(tempfile.mkdtemp(prefix='.skills-install-', dir=destination))
+        staging_identity = _identity(staging)[:3]
+        journal = _InstallJournal(project, destination, before_states, staging)
+        moved = journal.moves
+        ownership = journal.ownership
+        incoming_states = {}
+        for name in changed:
+            incoming = staging / 'new' / name
+            for relative, content in proposed[name].items():
+                target = incoming / relative
+                ownership.write(target, content)
+            incoming_states[name] = _tree_state(incoming)
+            journal.expected[name] = incoming_states[name]
+        for name in changed:
+            check_components(project, destination)
+            if _tree_state(destination / name) != before_states[name]:
+                raise ValueError(f'Skill changed during installation: {name}')
+            backup = staging / 'backup' / name
+            ownership.parents(backup.parent)
+            record = {'name': name, 'replacement': None, 'backup': before_states[name], 'placed': False}
+            moved.append(record)
+            if (destination / name).exists():
+                ownership.tree('backup/' + name, before_states[name])
+                os.replace(destination / name, backup)
+            record['replacement'] = incoming_states[name]
+            os.replace(staging / 'new' / name, destination / name)
+            ownership.forget('new/' + name)
+            record['placed'] = True
+        updated = dict(receipt.get('skills', {}))
+        for name in selected:
+            updated[name] = {'version': manifest.get('version'), 'files': {path: digest(content) for path, content in proposed[name].items()}}
+        prepared_receipt = staging / 'receipt.json'
+        ownership.write(prepared_receipt, (json.dumps({'schema_version': 1, 'package': PACKAGE, 'skills': updated}, indent=2) + '\n').encode())
+        prepared_identity = _identity(prepared_receipt)[:4]
+        prepared_content = prepared_receipt.read_bytes()
+        if (receipt_path.is_symlink() or (receipt_path.read_bytes() if receipt_path.exists() else None) != receipt_content
+                or (_identity(receipt_path) if receipt_path.exists() else None) != receipt_identity):
+            raise ValueError('Installation receipt changed before commit; preserve competing edits')
+        journal.verify_selected()
+        os.replace(prepared_receipt, receipt_path)
+        ownership.forget('receipt.json')
+        committed = True
+        journal.phase = 'committed'
+        result['committed'] = True
+    except BaseException as error:
+        if prepared_identity is not None:
             try:
-                for name in changed:
-                    incoming = staging / "new" / name
-                    for relative, content in proposed[name].items():
-                        target = incoming / relative
-                        target.parent.mkdir(parents=True, exist_ok=True)
-                        target.write_bytes(content)
-                        target.chmod(0o644)
-                for name in changed:
-                    check_components(project, destination)
-                    if tree_hashes(destination / name) != before[name]:
-                        raise ValueError(f"Skill changed during installation: {name}")
-                    backup = staging / "backup" / name
-                    backup.parent.mkdir(parents=True, exist_ok=True)
-                    if (destination / name).exists():
-                        os.replace(destination / name, backup)
-                    moved.append(name)
-                    os.replace(staging / "new" / name, destination / name)
-                updated = dict(receipt.get("skills", {}))
-                for name in selected:
-                    updated[name] = {"version": manifest.get("version"), "files": {path: digest(content) for path, content in proposed[name].items()}}
-                new_receipt = {"schema_version": 1, "package": PACKAGE, "skills": updated}
-                prepared_receipt = staging / "receipt.json"
-                prepared_receipt.write_text(json.dumps(new_receipt, indent=2) + "\n")
-                if receipt_path.is_symlink():
-                    raise ValueError("Receipt changed into a symlink during installation")
-                os.replace(prepared_receipt, receipt_path)
-            except BaseException:
-                for name in reversed(moved):
-                    installed = destination / name
-                    if installed.exists():
-                        shutil.rmtree(installed)
-                    backup = staging / "backup" / name
-                    if backup.exists():
-                        os.replace(backup, installed)
-                raise
+                committed = (not receipt_path.is_symlink() and _identity(receipt_path)[:4] == prepared_identity
+                             and receipt_path.read_bytes() == prepared_content)
+            except OSError:
+                committed = False
+        if committed:
+            journal.phase = 'committed'
+            journal.ownership.forget('receipt.json')
+            result['committed'] = True
+            result['commit_acknowledgement_error'] = str(error)
+            if isinstance(error, OSError):
+                return result
+            raise
+        recovery_errors = []
+        if journal is not None:
+            journal.phase = 'recovering'
+        for record in reversed(moved):
+            name = record['name']
+            installed = destination / name
+            backup = staging / 'backup' / name
+            try:
+                check_components(project, destination)
+                actual = _tree_state(installed)
+                if not backup.exists() and actual == record['backup'] and record['replacement'] is None:
+                    continue
+                if actual is None and record['placed']:
+                    raise ValueError('Completed replacement disappeared; preserve original backup')
+                if actual is not None:
+                    if actual != record['replacement']:
+                        raise ValueError('Destination ownership changed; preserve competing edits')
+                    retained = staging / 'rollback' / name
+                    journal.ownership.parents(retained.parent)
+                    os.replace(installed, retained)
+                    journal.ownership.forget('new/' + name)
+                    journal.ownership.tree('rollback/' + name, record['replacement'])
+                if record['backup'] is not None:
+                    if _tree_state(backup) != record['backup']:
+                        raise ValueError('Original backup changed; preserve recovery material')
+                    os.replace(backup, installed)
+                    journal.ownership.forget('backup/' + name)
+            except (OSError, ValueError) as recovery_error:
+                recovery_errors.append(f'{name}: {recovery_error}')
+        if recovery_errors:
+            preserve = True
+            raise OSError(f'{error}; incomplete recovery: {"; ".join(recovery_errors)}; recovery location: {staging}') from error
+        raise
     finally:
-        lock.unlink()
+        active_error = sys.exc_info()[1]
+        cleanup_failure = None
+        if staging is not None and not preserve:
+            try:
+                if staging.is_symlink() or _identity(staging)[:3] != staging_identity:
+                    raise ValueError('Staging ownership changed')
+                journal.ownership.verify()
+                shutil.rmtree(staging)
+            except (OSError, ValueError) as cleanup_error:
+                result['recovery_location'] = str(staging)
+                result['cleanup_error'] = str(cleanup_error)
+                cleanup_failure = cleanup_error
+        try:
+            if not lock.is_symlink() and _identity(lock) == lock_identity:
+                lock.unlink()
+        except OSError:
+            result['lock_preserved'] = True
+        if cleanup_failure is not None and not committed:
+            raise OSError(f'{active_error or "Cleanup failed"}; recovery location: {staging}; {cleanup_failure}') from active_error
     return result
 
 

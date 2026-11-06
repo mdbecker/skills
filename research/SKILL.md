@@ -5,20 +5,20 @@ description: Assemble or maintain research reports from approved saved evidence 
 
 # Research reports
 
-Use the [shared usage and effects reference](resources/usage.md) when explaining
+Use the [shared usage and effects reference](../resources/usage.md) when explaining
 arguments or resolving one clear contextual report target. A subject label does
 not identify saved evidence or an output path. Missing targets require clarification,
 not new research, state initialization, services, or automatic installation.
 
 When a disputed interpretation needs another method, read only the relevant
-[optional recipe](resources/combinations.md); it cannot supply missing evidence or a build graph.
+[optional recipe](../resources/combinations.md); it cannot supply missing evidence or a build graph.
 
 Accept `/research report create <target>` or `/research report update <target>`.
 Reject unknown operations; do not interpret `create` as permission to conduct
-research. Load [shared boundaries](resources/policy.md), [report method](report.md)
-and the existing project's mapping. Use the [generic project mapping](resources/project-profile.md)
-or [synthetic reliability profile](resources/profiles/reliability-study.md) where
-applicable; otherwise establish the mapping using [adaptation](resources/adaptation.md).
+research. Load [shared boundaries](../resources/policy.md), [report method](report.md)
+and the existing project's mapping. Use the [generic project mapping](../resources/project-profile.md)
+or [synthetic reliability profile](../resources/profiles/reliability-study.md) where
+applicable; otherwise establish the mapping using [adaptation](../resources/adaptation.md).
 
 Creation means initial assembly from approved saved evidence through an existing
 build graph. Missing evidence, permissions or build configuration blocks it.
@@ -37,12 +37,16 @@ uncertainty and privacy. Edit authoritative sources, not generated HTML; preserv
 prior deliverables or initial source inputs when assembly fails. Existing pipeline
 processing does not authorize changing scientific derivation semantics.
 
-Use the relevant [worked report cases](resources/examples.md) if needed. Report
+Use the relevant [worked report cases](../resources/examples.md) if needed. Report
 actual evidence comparisons and automated/visual/offline checks with completed,
 failed, blocked and not-run status. No claimed domain validation, independent
 score, publication, sending or deployment follows from report work.
 
 ## Load the relevant maintenance methods
+
+Required and conditional reads below apply only to the selected operation. Optional
+[worked report cases](report-worked.md) and [profile fields](report-profile.md) help
+resolve relevant uncertainty; do not load unrelated methods simply for completeness.
 
 - For every report task, load [evidence accounting](evidence.md) and
   [transactional rebuilding](rebuilding.md). Compare protected values
@@ -50,8 +54,12 @@ score, publication, sending or deployment follows from report work.
 - For chart reconstruction, use the quantitative rules in
   [evidence accounting](evidence.md); never estimate bar heights,
   recover suppressed cells by subtraction, or derive missing intersections.
-- For grouped/spatial output, load [disclosure-safe aggregation](disclosure.md).
-  Both observation and distinct-subject thresholds come from the approved profile.
+- For restricted or subject-sensitive grouped/spatial output, or when the mapped
+  recipient policy requires disclosure controls, load [disclosure-safe aggregation](disclosure.md).
+  Use the actual approved policy; the dual-threshold adapter applies only when
+  both observation and distinct-subject limits are required. Grouping alone does
+  not impose suppression on public nonsubject data. Record an authority-backed
+  not-applicable determination when justified; unresolved restrictions block release.
 - For historical prompts/configuration, load [archive reconstruction](archives.md).
   Complete originals, full-hash reconstructions, partial excerpts and unavailable
   material remain distinct; saved code is read, never executed.

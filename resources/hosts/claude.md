@@ -1,5 +1,10 @@
 # Claude Code host mapping
 
+Official reference: https://code.claude.com/docs/en/skills
+Keep host settings separate from portable instructions. Do not add fork,
+tool-preapproval, or explicit-only invocation settings without the corresponding
+requirement. Manual use supplies observations; metadata alone does not.
+
 Project-local skills reside in `.claude/skills/<name>/SKILL.md`. Keep the portable
 method separate from host metadata and install complete ordinary folders. Do not
 assert that analogous slash syntax or readable Markdown verifies invocation.

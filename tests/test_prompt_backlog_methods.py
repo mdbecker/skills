@@ -534,7 +534,7 @@ class PromptBacklogCorpusTests(unittest.TestCase):
         for filename in ["develop/prompt.md", "develop/backlog.md"]:
             frozen = baseline["sources"][filename]
             self.assertEqual(hashlib.sha256(frozen["content"].encode()).hexdigest(), frozen["sha256"])
-            current = ROOT / filename.replace("/references/", "/")
+            current = ROOT / filename
             self.assertNotEqual(current.read_text(), frozen["content"])
 
 

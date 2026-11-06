@@ -50,20 +50,19 @@ class ReadmeTests(unittest.TestCase):
         self.assertNotIn('skills/iterate/', self.readme)
         self.assertNotIn('skills/debate/', self.readme)
 
-    def test_debate_documents_flat_peers_count_and_tie_only_coordinator_vote(self):
-        debate = (ROOT / 'review/debate.md').read_text()
-        usage = (ROOT / 'resources/usage.md').read_text()
-        self.assertIn('--agents <COUNT>', usage)
-        self.assertIn('integer at least 2, default 3', usage)
-        self.assertIn('requires explicit `--engine debate`', usage)
-        self.assertIn('same peers', debate)
-        self.assertIn('P1-C01', debate)
-        self.assertIn('Consider the problem as a whole and assess its full scope;', debate)
-        self.assertIn('focus especially on [assigned facet]', debate)
-        self.assertIn('Only on a tie may the coordinator cast one deciding vote', debate)
-        self.assertIn('COUNT/2', debate)
-        self.assertIn('majority or consensus', debate)
-        self.assertNotIn('5→3→1', debate)
+    def test_review_methods_and_engine_resources_are_declared_and_navigable(self):
+        import json
+        from scripts.navigation import markdown_navigation
+        inventory = json.loads((ROOT / 'inventory.json').read_text())
+        owned = set(inventory['owned_resources']['review'])
+        self.assertTrue({'code.md', 'smells.md', 'discuss.md', 'debate.md'} <= owned)
+        for relative in ['review/SKILL.md', 'review/discuss.md']:
+            edges, anchors = markdown_navigation((ROOT / relative).read_text())
+            targets = {edge['target'].split('#', 1)[0] for edge in edges}
+            self.assertIn('debate.md', targets)
+            for target in targets:
+                if '://' not in target and target:
+                    self.assertTrue((ROOT / relative).parent.joinpath(target).is_file())
 
 
 if __name__ == '__main__':

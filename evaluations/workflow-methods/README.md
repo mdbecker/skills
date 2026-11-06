@@ -1,7 +1,10 @@
 # Six-method verification
 
 The cases exercise develop BDD, PRD, prompt and backlog, plus review code and smells.
-Traceability maps each current contract to its worked example and executable check.
+The frozen [traceability ledger](traceability.json) retains historical file coordinates.
+The explicit [current locator map](current-locators.json) maps all 42 retired locator
+occurrences to 12 checked-in canonical destinations. Consumers validate the map's
+literal current paths; they must not silently remove `/references/` from old paths.
 
 ## Inputs and observations
 

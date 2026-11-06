@@ -1,5 +1,8 @@
 # This repository
 
+Use this profile only when the selected target is the skills authoring repository.
+Its README, CONTRIBUTING, and commands do not belong to an unrelated target project.
+
 Authority: README, CONTRIBUTING, current skill methods and `inventory.json`.
 Protected contracts: Iterate phases/manual checkpoints, CLI-owned local state,
 feature arguments/fast paths, canonical helper, source-grounded flat Debate voting
@@ -11,10 +14,17 @@ for metadata checks. Do not install dependencies without applicable authorizatio
 Canonical local checks, from repository root:
 
 ```sh
+.venv/bin/python scripts/validate_skills.py --source --snapshot HEAD
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
 ```
+
+HEAD checks committed source without preparation; use `--snapshot index` to validate
+an explicitly staged candidate. Working-tree/package checks are separate evidence.
+All Markdown source links must reach tracked, nonignored ordinary files, without
+symlink traversal. Never publish excluded material to repair a link or disable
+local privacy exclusions. Review public bytes and provenance, not only filenames.
 
 The distribution tests/check are applicable after those resources exist; a missing
 command is a blocker, not a fabricated pass. Exporter prepares generated local

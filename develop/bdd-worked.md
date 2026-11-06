@@ -1,5 +1,17 @@
 # Worked BDD: identity before writes
 
+## Contents
+
+- [Fictional inventory-event submission](#fictional-inventory-event-submission)
+- [1. Unchanged baseline](#1-unchanged-baseline)
+- [2. Tests before production](#2-tests-before-production)
+- [3. Minimal complete production change](#3-minimal-complete-production-change)
+- [Transfer: warehouse shipment release](#transfer-warehouse-shipment-release)
+- [1. Baseline](#1-baseline)
+- [2. Tests before production](#2-tests-before-production-1)
+- [3. Production after red](#3-production-after-red)
+- [Evidence and limits](#evidence-and-limits)
+
 These self-contained fictional implementations exercise two submission contracts.
 Select the example relevant to the target. Both use
 Python 3.11+ standard-library `unittest`, a real public submission boundary and a

@@ -1,5 +1,16 @@
 # Debate: independent peers and claim-level voting
 
+## Contents
+
+- [Selection and preflight](#selection-and-preflight)
+- [Source and evidence boundaries](#source-and-evidence-boundaries)
+- [1. Independent assessments](#1-independent-assessments)
+- [2. Coordinator maps and verifies decisions](#2-coordinator-maps-and-verifies-decisions)
+- [Discuss decision coverage and packet preparation](#discuss-decision-coverage-and-packet-preparation)
+- [3. One private ballot round using the same peers](#3-one-private-ballot-round-using-the-same-peers)
+- [4. Tally and coordinator tie-break](#4-tally-and-coordinator-tie-break)
+- [5. Coordinator's final report](#5-coordinators-final-report)
+
 Only explicitly selected `--engine debate` loads this method. Use one flat set of
 independent peers and one private ballot round from those same peers. For `discuss`,
 ballot every eligible consequential choice, even when initial recommendations agree
@@ -8,15 +19,15 @@ remaining disagreements. The main agent verifies evidence and writes the report,
 voting only to break a valid tie. Workers may not delegate; there are no additional
 reconciler, verifier, or synthesizer agents.
 
-Read [shared boundaries](resources/policy.md), [model policy](resources/models.md),
-and the relevant [Codex](resources/hosts/codex.md) or
-[Claude](resources/hosts/claude.md) mapping. Load an
-[optional recipe](resources/combinations.md) only for a requested cross-method
+Read [shared boundaries](../resources/policy.md), [model policy](../resources/models.md),
+and the relevant [Codex](../resources/hosts/codex.md) or
+[Claude](../resources/hosts/claude.md) mapping. Load an
+[optional recipe](../resources/combinations.md) only for a requested cross-method
 handoff. Missing resources are reported, not borrowed from sibling installations.
 
 ## Selection and preflight
 
-Use [shared usage](resources/usage.md#review) to resolve the subject and controls.
+Use [shared usage](../resources/usage.md#review) to resolve the subject and controls.
 `--agents <COUNT>` selects an integer of at least 2 peer subagents, default 3, and
 requires explicit `--engine debate`. It applies to `code`, `smells`, and `discuss`.
 COUNT excludes the coordinator. Three is a practical default, not a research-

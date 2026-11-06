@@ -1,5 +1,19 @@
 # Skill usage and effects
 
+## Contents
+
+- [Requests, values, and context](#requests-values-and-context)
+- [Choose the outcome](#choose-the-outcome)
+- [Help and omission defaults](#help-and-omission-defaults)
+- [Iterate: work, status, and defer](#iterate-work-status-and-defer)
+- [Compatibility and ambiguous names](#compatibility-and-ambiguous-names)
+- [Descriptions are not catalog IDs](#descriptions-are-not-catalog-ids)
+- [Review: outcome, boundary, input, and engine](#review-outcome-boundary-input-and-engine)
+- [Checkpoints, not more skills](#checkpoints-not-more-skills)
+- [Manual demonstrations and safety](#manual-demonstrations-and-safety)
+- [Separate terminal helper syntax](#separate-terminal-helper-syntax)
+- [Changed defaults and evidence limits](#changed-defaults-and-evidence-limits)
+
 This is the shared argument and effects reference for Develop, Review, and Research.
 Use only methods available in the installed package. Missing methods do not justify
 copying a sibling skill, installing tools, or expanding the requested scope.

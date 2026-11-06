@@ -591,13 +591,16 @@ class TransactionalTests(FixtureCase):
             self.build(lambda staged: staged.write_text("candidate"), [check])
         self.assertEqual((self.root / "report.html").read_bytes(), previous)
 
-    def test_destructive_writer_is_rejected_and_prior_report_restored(self):
+    def test_destructive_writer_is_rejected_and_baseline_remains_recoverable(self):
         previous = (self.root / "report.html").read_bytes()
         def destructive(staged):
             (self.root / "report.html").write_text("destructive live output")
             staged.write_text("candidate")
         self.rejected("destructive-rebuild", lambda: self.build(destructive))
-        self.assertEqual((self.root / "report.html").read_bytes(), previous)
+        recovery = list(self.root.glob('.report-restore-*'))
+        self.assertTrue(recovery)
+        self.assertEqual(recovery[-1].read_bytes(), previous)
+        self.assertEqual((self.root / 'report.html').read_text(), 'destructive live output')
 
     def test_concurrent_source_edit_is_preserved_while_prior_report_remains_intact(self):
         previous = (self.root / "report.html").read_bytes()
@@ -635,7 +638,7 @@ class TransactionalTests(FixtureCase):
             self.assertEqual((self.root / "report.html").read_bytes(), previous)
             self.assertEqual(external.read_text(), "external bytes")
 
-    def test_builder_live_output_symlink_then_failure_restores_prior_without_external_write(self):
+    def test_builder_live_output_symlink_failure_preserves_both_baseline_and_external_data(self):
         previous = (self.root / "report.html").read_bytes()
         external = Path(self.temporary.name) / "outside.html"
         external.write_text("external bytes")
@@ -645,8 +648,10 @@ class TransactionalTests(FixtureCase):
             raise RuntimeError("destructive writer failure")
         with self.assertRaises((RuntimeError, CHECKS.ReportCheckError)):
             self.build(destructive)
-        self.assertFalse((self.root / "report.html").is_symlink())
-        self.assertEqual((self.root / "report.html").read_bytes(), previous)
+        self.assertTrue((self.root / "report.html").is_symlink())
+        recovery = list(self.root.glob('.report-restore-*'))
+        self.assertTrue(recovery)
+        self.assertEqual(recovery[-1].read_bytes(), previous)
         self.assertEqual(external.read_text(), "external bytes")
 
     def test_initial_creation_failure_keeps_sources_and_creates_no_report(self):

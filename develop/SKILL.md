@@ -5,8 +5,8 @@ description: Implement behavior with feedback-driven iteration or requested test
 
 # Develop
 
-Choose the outcome, not every available method. Read [shared boundaries](resources/policy.md)
-and the [usage and effects reference](resources/usage.md) when resolving arguments,
+Choose the outcome, not every available method. Read [shared boundaries](../resources/policy.md)
+and the [usage and effects reference](../resources/usage.md) when resolving arguments,
 help, defaults, or compatibility. The prepared `resources/` directory travels with
 this package; do not copy a sibling installation when required resources are missing.
 
@@ -20,6 +20,11 @@ this package; do not copy a sibling installation when required resources are mis
 | `prompt` | Specialized prompt/contract editing inside the permitted executor. | [Prompt contracts](prompt.md) |
 | `backlog` | Requirement coverage, delivery owners, gaps and unknowns, not the deferred feature queue. | [Coverage](backlog.md) |
 | `validate-repo` | Required project checks, preservation, failure attribution and local readiness. | [Repository checks](validate-repo.md) |
+
+Required before consequential work: read shared boundaries and the complete selected
+owning method. Other methods are not automatically required. Optional worked cases
+for the selected task: [BDD](bdd-worked.md), [PRD](prd-worked.md),
+[prompt contracts](prompt-worked.md), and [coverage](backlog-worked.md).
 
 Explicit intent and current project policy win. Ordinary feature implementation
 uses feedback-driven iteration unless test-first is requested/required. Bounded
@@ -76,9 +81,9 @@ installation, Git changes, live model calls, or deployment. Record before/after
 source and staging, full versus focused checks, failures and omissions. Findings do
 not grant implementation permission; focused green never replaces canonical gates.
 
-Read only a useful [optional combination](resources/combinations.md), not a mandatory
-chain. Apply [adaptation](resources/adaptation.md) and only the relevant profile:
-[this repository](resources/profiles/skills.md) or the
-[generic project mapping](resources/project-profile.md) completed from the target's current instructions.
-Selected methods link complete [worked cases](resources/examples.md). Return actual
+Read only a useful [optional combination](../resources/combinations.md), not a mandatory
+chain. Apply [adaptation](../resources/adaptation.md) and only the relevant profile:
+[this repository](../resources/profiles/skills.md) or the
+[generic project mapping](../resources/project-profile.md) completed from the target's current instructions.
+Selected methods link complete [worked cases](../resources/examples.md). Return actual
 work, checks, evidence and limits; do not claim acceptance or live verification.

@@ -27,7 +27,10 @@ protected claims/cohorts/denominators/comparisons, permitted aggregate/suppressi
 rules, expected outputs, automated and visual/offline checks. A new pipeline or
 new evidence acquisition is outside report assembly/maintenance.
 
-Test both a reference case and a substantive separate-project case, including
-failure and non-trigger requests. Static/installation checks do not prove host
-invocation or quality. Record actual public artifact identities and disclose unavailable
-engines, guides, data and historical artifacts. Distribute only authorized inputs.
+When qualifying a substantive method transfer, use proportionate manual reference
+and separate-project cases, including relevant failure and non-trigger requests.
+This is not a mandatory per-change host run or a formal/model-evaluation trial
+plan. Routine maintenance uses applicable deterministic checks and manual feedback
+when useful. Static/installation checks do not prove host invocation or quality;
+retain honest not-tested/unavailable limits and actual artifact identities.
+Distribute only authorized inputs.

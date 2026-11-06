@@ -1,5 +1,21 @@
 # Worked PRDs: decisive, bounded handoffs
 
+## Contents
+
+- [Fictional PRD: select a catalog event by name](#fictional-prd-select-a-catalog-event-by-name)
+- [Prerequisites and blocking decisions](#prerequisites-and-blocking-decisions)
+- [Outcome, baseline and increment](#outcome-baseline-and-increment)
+- [Preferred design and interfaces](#preferred-design-and-interfaces)
+- [Executable reference design](#executable-reference-design)
+- [Observable acceptance, tests and documentation](#observable-acceptance-tests-and-documentation)
+- [Fictional PRD: atomic warehouse CSV import](#fictional-prd-atomic-warehouse-csv-import)
+- [Prerequisites and blocking decisions](#prerequisites-and-blocking-decisions-1)
+- [Outcome, baseline and bounded increment](#outcome-baseline-and-bounded-increment)
+- [Exact contract and preferred design](#exact-contract-and-preferred-design)
+- [Executable reference design](#executable-reference-design-1)
+- [Acceptance, tests and documentation](#acceptance-tests-and-documentation)
+- [Verification boundary](#verification-boundary)
+
 These complete synthetic handoffs need no earlier conversation or inaccessible
 source repository. The Python blocks are executable design illustrations for
 checking the specified contracts, not deployed implementations. Drafting these

@@ -1,5 +1,10 @@
 # Concrete report-maintenance profile template
 
+## Contents
+
+- [Map helpers after the pipeline](#map-helpers-after-the-pipeline)
+- [Explicitly requested independent scoring](#explicitly-requested-independent-scoring)
+
 Fill this mapping from the target project's saved authority and **existing**
 build/check pipeline before editing or invoking helpers. Paths are relative to
 the mapped project root unless explicitly resolved. Angle-bracket fields and
@@ -240,6 +245,13 @@ integer thresholds and supported rounding. Populate those fields only when the
 approved policy matches; do not make this adapter's limitations a universal
 disclosure policy. For other formats/methods retain the existing approved checker
 or mark the operation blocked.
+
+Select disclosure controls only when required by the actual data/audience policy.
+For public nonsubject output, an authority-backed not-applicable determination
+may be appropriate; record its source and reason rather than inventing subject
+thresholds. Unknown restrictions remain blocked. Reference aggregate-only limits
+do not override separately authorized target-local output contracts, and those
+contracts never grant permission to publish private material in reusable skills.
 
 For `verify_diagram`, map each node as `{id, label}` and each directed edge as
 `{from, to, label, kind}`; kinds are `decision`, `loop`, `optional`, `proposed` or

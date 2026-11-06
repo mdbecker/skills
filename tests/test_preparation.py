@@ -7,7 +7,32 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from scripts.build_skills import ROOT, payload, prepare
+from scripts.build_skills import ROOT, payload, prepare_captured, assemble_payload, source_paths
+from scripts.source_access import repository_root
+
+
+def fixture_payload(root):
+    root = Path(root)
+    if repository_root(root) is not None:
+        raise ValueError('Synthetic fixture capture cannot bypass real repository eligibility')
+    inventory = json.loads((root / 'inventory.json').read_text())
+    contents = {}
+    for relative in source_paths(inventory):
+        source = root / relative
+        if (not source.resolve().is_relative_to(root.resolve()) or source.is_symlink()
+                or any(parent.is_symlink() for parent in source.parents if parent.is_relative_to(root))
+                or not source.is_file()):
+            raise ValueError(f'Missing or non-regular canonical source: {relative}')
+        contents[relative] = source.read_bytes()
+    result = assemble_payload(contents)
+    for relative, checksum in result[2].items():
+        if (root / relative).is_symlink() or hashlib.sha256((root / relative).read_bytes()).hexdigest() != checksum:
+            raise ValueError('Canonical source changed during export')
+    return result
+
+
+def prepare(root):
+    return prepare_captured(root, *fixture_payload(root))
 
 
 class PreparationTests(unittest.TestCase):

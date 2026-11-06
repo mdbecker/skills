@@ -1,5 +1,14 @@
 # Worked report-maintenance artifacts
 
+## Contents
+
+- [Saved evidence specification](#saved-evidence-specification)
+- [Complete baseline ledger](#complete-baseline-ledger)
+- [Explicitly supported correction](#explicitly-supported-correction)
+- [Suppression, blanks, missing intersections and conflicts](#suppression-blanks-missing-intersections-and-conflicts)
+- [Private aggregation and partial archive](#private-aggregation-and-partial-archive)
+- [Editable decision diagram and failed build](#editable-decision-diagram-and-failed-build)
+
 This is a self-contained, fictional example of the methods, not a
 new reporting platform, runnable dependency bundle, or claim of agent execution.
 The existing target pipeline must first be mapped using

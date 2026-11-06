@@ -12,74 +12,84 @@ import stat
 import subprocess
 import sys
 import tempfile
+from types import MappingProxyType
 import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from distribution.install import parse_json, parse_skill_metadata, read_archive, safe_relative
+from distribution.install import parse_json, parse_skill_metadata, read_archive, safe_relative, valid_skill_name
+from scripts.navigation import relocate_markdown, validate_documents
+from scripts.source_access import SourceSnapshot, validate_inputs, repository_root
 
 
 def digest(content):
     return hashlib.sha256(content).hexdigest()
 
 
-def payload(root=ROOT):
-    inventory_content = (root / "inventory.json").read_bytes()
-    inventory = json.loads(inventory_content)
-    names = inventory["parents"]
-    if inventory.get("schema_version") != 1 or len(set(names)) != len(names):
-        raise ValueError("Invalid or duplicate export inventory")
-    if any(not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name) for name in names):
-        raise ValueError("Invalid exported skill name")
-    relative_sources = inventory["common_resources"] + [relative for name in names for relative in inventory["owned_resources"][name]]
-    for relative in relative_sources:
-        if not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts or "\\" in relative or ":" in relative:
-            raise ValueError("Inventory resources must use bounded relative paths")
+from scripts.inventory import source_paths
+
+def assemble_payload(contents):
+    inventory = parse_json(contents['inventory.json'])
+    paths = source_paths(inventory)
+    if any(path not in contents or not isinstance(contents[path], bytes) for path in paths):
+        raise ValueError('Missing captured canonical bytes')
+    inputs = {path: digest(contents[path]) for path in paths}
     result = {}
-    inputs = {"inventory.json": digest(inventory_content),
-              "scripts/build_skills.py": digest((root / "scripts/build_skills.py").read_bytes())}
-    captured = {"inventory.json": inventory_content}
-
-    def add(source, destination):
-        if not source.resolve().is_relative_to(root.resolve()) or source.is_symlink() or any(parent.is_symlink() for parent in source.parents if parent.is_relative_to(root)) or not source.is_file():
-            raise ValueError(f"Missing or non-regular canonical source: {source}")
-        identity = source.relative_to(root).as_posix()
-        if identity not in captured:
-            captured[identity] = source.read_bytes()
-        content = captured[identity]
-        inputs[identity] = digest(content)
-        if destination is None:
-            return
-        if destination.endswith('/SKILL.md'):
-            parse_skill_metadata(content, source.parent.name)
-        if destination in result:
-            raise ValueError(f"Duplicate export destination: {destination}")
-        result[destination] = content
-
-    add(root / 'distribution/__init__.py', None)
-    shared = [root / relative for relative in inventory["common_resources"]]
-    for name in names:
-        prefix = f"skills/{name}/"
-        add(root / name / "SKILL.md", prefix + "SKILL.md")
+    for name in inventory['parents']:
+        prefix = f'skills/{name}/'
+        mapping = {f'{name}/SKILL.md': prefix + 'SKILL.md'}
         for relative in inventory["owned_resources"][name]:
-            source = root / name / relative
-            add(source, prefix + source.relative_to(root / name).as_posix())
-        for source in shared:
-            add(source, prefix + "resources/" + source.relative_to(root / "resources").as_posix())
+            mapping[f'{name}/{relative}'] = prefix + relative
+        for source in inventory['common_resources']:
+            mapping[source] = prefix + source
+        for source, destination in mapping.items():
+            content = contents[source]
+            if source.endswith('/SKILL.md'):
+                parse_skill_metadata(content, name)
+            if Path(source).suffix.lower() in {'.md', '.markdown'}:
+                content = relocate_markdown(content.decode(), source, destination, mapping).encode()
+            if destination in result:
+                raise ValueError('Duplicate export destination')
+            result[destination] = content
     for source, target in [("distribution/README.md", "README.md"), ("distribution/install.py", "install.py"),
                            ("LICENSE", "LICENSE"), ("NOTICE", "NOTICE")]:
-        add(root / source, target)
+        result[target] = contents[source]
+    errors = validate_documents(result)
+    if errors:
+        raise ValueError('\n'.join(errors))
+    return inventory, result, inputs
+
+
+def payload(root=ROOT):
+    root = Path(root).absolute()
+    snapshot = SourceSnapshot(root, 'worktree')
+    inventory_content = snapshot.read('inventory.json')
+    inventory = parse_json(inventory_content)
+    paths = source_paths(inventory)
+    validate_inputs(root, paths)
+    contents = {'inventory.json': inventory_content}
+    for relative in paths:
+        source = root / relative
+        if (not source.resolve().is_relative_to(root.resolve()) or source.is_symlink()
+                or any(parent.is_symlink() for parent in source.parents if parent.is_relative_to(root))
+                or not source.is_file()):
+            raise ValueError(f'Missing or non-regular canonical source: {relative}')
+        if relative not in contents:
+            contents[relative] = snapshot.read(relative)
+    inventory, result, inputs = assemble_payload(contents)
     for identity, checksum in inputs.items():
         source = root / identity
-        if not source.resolve().is_relative_to(root.resolve()) or source.is_symlink() or digest(source.read_bytes()) != checksum:
+        if (not source.resolve().is_relative_to(root.resolve()) or source.is_symlink()
+                or any(parent.is_symlink() for parent in source.parents if parent.is_relative_to(root))
+                or not source.is_file() or digest(snapshot.fresh(identity)) != checksum):
             raise ValueError(f"Canonical source changed during export: {identity}")
     return inventory, result, inputs
 
 
 def qualification(root=ROOT):
-    status = json.loads((root / "evaluations/status.json").read_text())
+    status = parse_json(SourceSnapshot(root, 'worktree').read('evaluations/status.json'))
     if not isinstance(status, dict) or type(status.get("schema_version")) is not int or status.get("schema_version") != 1 or not isinstance(status.get("hosts"), dict):
         raise ValueError("Invalid qualification record")
     return status
@@ -141,7 +151,7 @@ def _validate_preparation_receipt(receipt, package):
             or not isinstance(receipt.get("skills"), dict)):
         raise ValueError("Invalid preparation ownership receipt")
     for name, record in receipt["skills"].items():
-        if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name) or not isinstance(record, dict) or not isinstance(record.get("files"), dict):
+        if not valid_skill_name(name) or not isinstance(record, dict) or not isinstance(record.get("files"), dict):
             raise ValueError("Invalid preparation skill record")
         for relative, metadata in record["files"].items():
             parts = safe_relative(relative).parts
@@ -197,18 +207,19 @@ def _preparation_plan(root, inventory, files, receipt):
                 expected[f"{name}/{relative}"] = before
                 if before is None or before["sha256"] != checksum:
                     operations.append({"relative": f"{name}/{relative}", "before": before,
-                                       "content": desired[relative], "record": records[relative]})
+                                       "content": desired[relative]})
             elif before:
                 operations.append({"relative": f"{name}/{relative}", "before": before,
                                    "content": None, "record": None})
         updated["skills"][name] = dict(receipt["skills"].get(name, {}), files=records)
-    return updated, operations, expected
+    return updated, tuple(MappingProxyType(operation) for operation in operations), expected
 
 
 def _verify_preparation_sources(root, inputs):
+    reader = SourceSnapshot(root, 'worktree') if repository_root(root) is not None else None
     for relative, checksum in inputs.items():
         path = _checked_preparation_path(root, relative)
-        if not path.is_file() or digest(path.read_bytes()) != checksum:
+        if not path.is_file() or digest(reader.fresh(relative) if reader else path.read_bytes()) != checksum:
             raise ValueError(f"Canonical source changed during preparation: {relative}")
 
 
@@ -239,6 +250,7 @@ def _rollback_preparation(root, applied, staging):
                     unsafe = True
                     continue
                 discarded = staging / 'discarded' / operation["relative"]
+                operation['discarded'] = discarded
                 discarded.parent.mkdir(parents=True, exist_ok=True)
                 os.replace(target, discarded)
                 if _file_state(discarded) != operation["replacement"]:
@@ -254,11 +266,54 @@ def _rollback_preparation(root, applied, staging):
     return unsafe
 
 
+class _PreparationJournal:
+    def __init__(self, operations):
+        self.operations = [dict(operation) for operation in operations]
+        self.applied = []
+        self.created = []
+        self.phase = 'staging'
+        self.receipt_state = None
+        self.staged_receipt = None
+
+    def published(self, receipt_path):
+        return self.receipt_state is not None and _file_state(receipt_path) == self.receipt_state
+
+    def verify_staging(self, staging):
+        expected = {}
+        owned_paths = set()
+        for operation in self.operations:
+            for field, state_field in [('incoming', 'replacement'), ('backup', 'backup_state'),
+                                       ('removed', 'before'), ('discarded', 'replacement')]:
+                path = operation.get(field)
+                if path is not None:
+                    owned_paths.add(path.relative_to(staging).as_posix())
+                if path is not None and path.exists():
+                    expected[path.relative_to(staging).as_posix()] = operation[state_field]
+        if self.staged_receipt is not None and self.staged_receipt.exists():
+            expected[self.staged_receipt.relative_to(staging).as_posix()] = self.receipt_state
+        directories = set()
+        for name in owned_paths | set(expected):
+            parent = Path(name).parent
+            while parent != Path('.'):
+                directories.add(parent.as_posix())
+                parent = parent.parent
+        actual = {path.relative_to(staging).as_posix(): path for path in staging.rglob('*')}
+        if set(actual) - set(expected) - directories:
+            raise ValueError('Unknown preparation staging entries; preserve remnants')
+        for name, state in expected.items():
+            if _file_state(actual[name]) != state:
+                raise ValueError('Changed preparation staging entries; preserve remnants')
+
+
 def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, updated, operations, expected):
     staging = Path(tempfile.mkdtemp(prefix='.prepared-resources-', dir=receipt_path.parent))
     staging_identity = (staging.stat().st_dev, staging.stat().st_ino)
-    created = []
-    applied = []
+    journal = _PreparationJournal(operations)
+    operations = journal.operations
+    created = journal.created
+    applied = journal.applied
+    updated = json.loads(json.dumps(updated))
+    expected = dict(expected)
     preserve_recovery = False
     try:
         for operation in operations:
@@ -273,6 +328,8 @@ def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, up
                 backup.chmod(operation["before"]["mode"])
                 if digest(backup.read_bytes()) != operation["before"]["sha256"]:
                     raise ValueError(f"Generated file changed during backup: {target}")
+                operation['backup'] = backup
+                operation['backup_state'] = _file_state(backup)
             if operation["content"] is not None:
                 incoming = staging / 'new' / relative
                 incoming.parent.mkdir(parents=True, exist_ok=True)
@@ -281,7 +338,8 @@ def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, up
                     incoming.chmod(operation["before"]["mode"])
                 operation["incoming"] = incoming
                 operation["replacement"] = _file_state(incoming)
-                operation["record"]["mode"] = operation["replacement"]["mode"]
+                name, resource_relative = operation['relative'].split('/', 1)
+                updated['skills'][name]['files'][resource_relative]['mode'] = operation['replacement']['mode']
                 expected[relative] = operation["replacement"]
         _verify_preparation_sources(root, inputs)
         if _file_state(receipt_path) != receipt_before:
@@ -296,6 +354,7 @@ def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, up
                 os.replace(target, operation["removed"])
             if operation["content"] is not None:
                 os.link(operation["incoming"], target)
+        journal.phase = 'validating'
         _verify_preparation_sources(root, inputs)
         for operation in applied:
             if operation["before"] and _file_state(operation["removed"]) != operation["before"]:
@@ -313,12 +372,21 @@ def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, up
         if receipt_before is None or digest(content) != receipt_before["sha256"]:
             staged_receipt = staging / 'receipt.json'
             staged_receipt.write_bytes(content)
+            journal.staged_receipt = staged_receipt
             if receipt_before:
                 staged_receipt.chmod(receipt_before["mode"])
             with staged_receipt.open('rb') as stream:
                 os.fsync(stream.fileno())
+            journal.receipt_state = _file_state(staged_receipt)
             os.replace(staged_receipt, receipt_path)
+        journal.phase = 'committed'
     except BaseException as error:
+        if journal.published(receipt_path):
+            journal.phase = 'committed'
+            if isinstance(error, OSError):
+                return
+            raise
+        journal.phase = 'recovering'
         preserve_recovery = _rollback_preparation(root, applied, staging)
         for directory, identity in reversed(created):
             try:
@@ -339,16 +407,21 @@ def _apply_preparation(root, inventory, inputs, receipt_path, receipt_before, up
                 _checked_preparation_path(root, staging.relative_to(root).as_posix(), directory=True)
                 metadata = staging.stat()
                 if (metadata.st_dev, metadata.st_ino) == staging_identity:
+                    journal.verify_staging(staging)
                     shutil.rmtree(staging)
-            except (OSError, ValueError):
-                pass
+            except (OSError, ValueError) as error:
+                print(f'Preparation {journal.phase}; remnants retained at {staging}: {error}', file=sys.stderr)
 
 
-def prepare(root=ROOT):
+def prepare_captured(root, inventory, files, inputs):
     root = Path(root).absolute()
     if root.is_symlink() or not root.is_dir():
         raise ValueError("Preparation requires an ordinary repository directory")
-    inventory, files, inputs = payload(root)
+    repository = repository_root(root)
+    if repository is not None:
+        if repository != root.resolve():
+            raise ValueError('Preparation requires the repository top level, not a descendant')
+        validate_inputs(root, list(inputs))
     bookkeeping = _checked_preparation_path(root, 'dist', directory=True)
     bookkeeping.mkdir(exist_ok=True)
     lock = _checked_preparation_path(root, 'dist/.prepared-resources.lock')
@@ -372,10 +445,15 @@ def prepare(root=ROOT):
             pass
 
 
+def prepare(root=ROOT):
+    return prepare_captured(root, *payload(root))
+
+
 def build(output, version="dev", root=ROOT, release=False, prerelease=False):
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", version):
         raise ValueError("Version must be a safe release label")
     inventory, files, inputs = payload(root)
+    validate_inputs(root, ['evaluations/status.json'])
     status = qualification(root)
     commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
     dirty = bool(subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True, check=True).stdout)

@@ -1,5 +1,15 @@
 # Combining existing methods
 
+## Contents
+
+- [Choose the smallest useful combination](#choose-the-smallest-useful-combination)
+- [Enter, hand off and stop](#enter-hand-off-and-stop)
+- [C01 — Ghost Feature Hunt](#c01--ghost-feature-hunt)
+- [C02 — Disagreement to Experiment](#c02--disagreement-to-experiment)
+- [C03 — Contract Shield](#c03--contract-shield)
+- [C04 — Refactor with Proof](#c04--refactor-with-proof)
+- [C05 — Claim Firewall](#c05--claim-firewall)
+
 This is an optional cookbook, not new commands or an executable pipeline. Read
 only the relevant recipe when another method would resolve a specific uncertainty
 or protect a contract. If the owning mode is sufficient, use it alone. These

@@ -1,7 +1,7 @@
 # Explicit BDD
 
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Use for requests to implement specified behavior with failing tests first, or to
 review Given/When/Then scenarios. Natural-language intent counts; an explicit
@@ -45,5 +45,5 @@ Return scenarios, focused authorized edits/docs, actual red/green results and
 unperformed checks. Given/When/Then vocabulary inside Iterate does not constitute
 test-first fidelity. For a complete canonical-identity/no-write implementation,
 including an executable warehouse transfer and actual red/green procedure, read
-[worked BDD](bdd-worked.md). The [public design ledger](resources/provenance.json) distinguishes
+[worked BDD](bdd-worked.md). The [public design ledger](../resources/provenance.json) distinguishes
 fictional examples from observed behavior. Map actual project fields locally.

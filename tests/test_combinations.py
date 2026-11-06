@@ -31,6 +31,8 @@ class CombinationDocumentationTests(unittest.TestCase):
                         self.assertEqual(entries, {name})
                         anchors = set(re.findall(r'<a id="([^"]+)"', guide.decode()))
                         self.assertEqual(anchors, {'c01', 'c02', 'c03', 'c04', 'c05'})
+                        headings = re.findall(r'^#{1,6} (.+)$', guide.decode(), re.M)
+                        anchors.update(re.sub(r'[^\w -]', '', heading.lower()).replace(' ', '-') for heading in headings)
                         for target in re.findall(r'\]\(([^)]+)\)', guide.decode()):
                             reference, separator, fragment = target.partition('#')
                             resolved = (installed_guide.parent / reference).resolve() if reference else installed_guide.resolve()

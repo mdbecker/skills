@@ -1,5 +1,13 @@
 # Complete code review and revised review
 
+## Contents
+
+- [Supplied contract and snapshots](#supplied-contract-and-snapshots)
+- [First review — complete output](#first-review--complete-output)
+- [Ranked findings](#ranked-findings)
+- [Supplied revision and prior-report correction](#supplied-revision-and-prior-report-correction)
+- [Consolidated revised review — complete output](#consolidated-revised-review--complete-output)
+
 Synthetic fictional order-import example. This is an illustrative deliverable,
 not an instruction to edit the example or a previously executed agent review.
 Line locations count from the first line of each code block. The independent

@@ -1,7 +1,7 @@
 # Targeted prompt and contract editing
 
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Use this mode for requests such as “change how the model expresses uncertainty”
 or “update this prompt and its JSON/replay contract.” Review-only requests remain
@@ -42,7 +42,7 @@ authorized empty result; do not add retrieval or a coverage manifest by default.
 
 ## Map authoritative metadata, not universal field names
 
-Use the [project mapping](resources/project-profile.md) to identify canonical
+Use the [project mapping](../resources/project-profile.md) to identify canonical
 source IDs, issuance, receipt, processing and occurrence times. They are different
 contracts; never substitute a convenient timestamp or generated identity. Missing
 required metadata is a controlled failure under the actual contract, not permission

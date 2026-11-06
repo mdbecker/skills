@@ -1,5 +1,14 @@
 # Worked coordinated prompt edit
 
+## Contents
+
+- [Scope and baseline](#scope-and-baseline)
+- [Coordinated edits](#coordinated-edits)
+- [Independently fictional application-owned mappings](#independently-fictional-application-owned-mappings)
+- [Executable fictional fixture](#executable-fictional-fixture)
+- [Complete observations and failure paths](#complete-observations-and-failure-paths)
+- [Verification boundary](#verification-boundary)
+
 ## Scope and baseline
 
 This synthetic application already has generation instructions, a wire hint, a

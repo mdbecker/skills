@@ -1,5 +1,10 @@
 # Evaluation protocol
 
+Historical, unperformed model-evaluation proposals are retained here for provenance.
+They are not mandatory current maintenance work, CI model calls, or formal trials
+to implement. Host behavior is checked manually as appropriate. Existing stable
+release gates remain separate and are not waived by deterministic source checks.
+
 Status: **pending maintainer approval for model-mediated runs**. This file is not
 an authorization to call models or acquire private data. Deterministic packaging,
 installer and manifest tests run locally in temporary projects with no live services.
@@ -51,6 +56,11 @@ averages; missing required evidence blocks full release. Candidate CLI fixture
 tests are deterministic evidence only, not simulated model quality results.
 
 ## Composition guidance pilot
+
+This pilot and its pinned five/three/one expectations concern the former engine.
+They are historical evidence, not acceptance criteria for the current flat Debate
+method. Preserve their frozen bytes and identities; do not rerun or rewrite them
+merely to make the current package pass.
 
 The 14 `combo-` cases and evaluator-only route/fact/action/stop criteria were
 frozen in `combinations-freeze.json` before changing composition instructions.

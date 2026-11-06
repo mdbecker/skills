@@ -1,5 +1,21 @@
 # Shared boundaries
 
+Broken links do not authorize publishing excluded material. Never force-add,
+unignore, rename, copy, summarize, or embed private originals or work-specific
+content into reusable skills to satisfy checks. Use approved public references,
+remove obsolete dependencies, or independently author generic synthetic material.
+Report unavailable information rather than reconstructing missing originals.
+Ignore status is a handling signal; tracked filenames and passing tests do not
+establish publication clearance. Review proposed public content and provenance.
+These distribution boundaries do not prohibit separately authorized private work.
+
+Local logs, recovery paths, execution reports and retained artifacts can identify
+the target project or contain private work details. Keep them in permitted
+target-local context; review and sanitize any explicitly authorized public sharing.
+Do not copy them into reusable examples or qualification records to demonstrate
+success. Preserve actionable owner recovery locations without treating those
+diagnostics as publication inputs.
+
 Current project instructions and authoritative contracts override historical
 examples. Establish the user's target, requested action, lifecycle and permitted
 effects before work; a parent handoff or model choice grants no additional consent.

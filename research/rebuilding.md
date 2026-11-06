@@ -1,5 +1,24 @@
 # Transactional rebuilding and honest verification
 
+The bounded helper accepts checks returning `None`, `True`, or a completed/pass
+result dictionary. Other return shapes fail; a string such as `failed` is not a
+successful check. A changed live output is not proof of builder ownership. On
+destructive or competing changes, preserve the live path and retain/report the
+baseline recovery artifact rather than automatically restoring over unknown work.
+Receipt/output publication is the commit boundary; lost acknowledgements are
+reconciled against the expected published identity before any recovery decision.
+
+Recovery artifacts and full paths belong to the target's permitted local context
+and may expose project details if shared. Preserve them for the owner, but review
+and sanitize any separately authorized public sharing; they are not reusable-skill
+or public qualification inputs.
+
+## Contents
+
+- [Snapshot, stage, check, commit](#snapshot-stage-check-commit)
+- [Check matrix](#check-matrix)
+- [Outcomes and limits](#outcomes-and-limits)
+
 Load whenever assembling/rebuilding a report or claiming verification. Map the
 existing editable sources, saved evidence, derived assets, generated outputs,
 dependencies, allowed commands and check targets with

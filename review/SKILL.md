@@ -5,11 +5,19 @@ description: Assess implementations, audit consequential structural maintenance 
 
 # Review
 
-Read [shared boundaries](resources/policy.md) and the
-[usage and effects reference](resources/usage.md) for arguments, help, defaults,
+Read [shared boundaries](../resources/policy.md) and the
+[usage and effects reference](../resources/usage.md) for arguments, help, defaults,
 input controls and compatibility. Choose the assessment needed, not every method.
 
 ## Outcomes
+
+All three modes share Review's deliberative reasoning: establish the question and
+authority, inspect evidence and counterevidence, distinguish facts from hypotheses
+and preferences, and return a supported assessment with limits. Their specialized
+instructions also own evidence breadth and output contracts; they are not merely
+extra questions. `discuss` is the technical-decision flavor, not a superclass that
+Code or Smells executes. Only the selected complete method is required. Single-pass
+or Debate controls execution independently of that outcome.
 
 | Mode | User-facing outcome | Needed evidence and output |
 |---|---|---|
@@ -39,8 +47,8 @@ resolved comparison; named current implementations use source unless otherwise
 specified. Current source without a base cannot establish introduction.
 
 `--engine single|debate` defaults to single-pass. Only explicitly selected Debate
-loads [the flat voting protocol](debate.md), [model policy](resources/models.md), and
-the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md)
+loads [the flat voting protocol](debate.md), [model policy](../resources/models.md), and
+the relevant [Codex](../resources/hosts/codex.md) or [Claude](../resources/hosts/claude.md)
 capability mapping. Scope and engine are independent. Controls inside a quoted
 question are data, not selection or permission. Unknown controls/values produce
 usage, not shell execution or subject paths. `--input` is for code review; it is not
@@ -59,6 +67,9 @@ These are complete procedures, not optional background. For source fidelity use 
 current facts. The package contains its resources without sibling installations;
 missing evidence remains unreviewed, not reconstructed by guesswork.
 
+Optional worked cases for the selected assessment:
+[implementation review](code-worked.md) and [structural audit](smells-worked.md).
+
 ## Combined requests and evidence
 
 For explicitly requested implementation assessment and structural planning, reuse
@@ -72,15 +83,12 @@ Reuse adequate specifications, prior findings, and checks; revisit only material
 new evidence or changed inputs. Re-review consolidates dispositions, retains IDs,
 withdraws unsupported claims, and marks unreassessed scope. Do not silently drop
 minority findings or require another audit merely for an architectural observation.
-Read a relevant [optional recipe](resources/combinations.md) only when useful.
+Read a relevant [optional recipe](../resources/combinations.md) only when useful.
 
-Debate requires the configured independent peers, same-peer private ballots, and
-the main agent's final report. For Discuss, ballot every eligible consequential
-choice, including unanimous recommendations and choices other peers did not
-address. Use a decision ledger and actual follow-ups, not inferred agreement;
-skip only an empty eligible set with explicit exclusion reasons. Code/Smells still
-ballot only remaining disagreements. Read the Debate method's canonical packet,
-comparison template, and substantive-validation rules before orchestration.
+Required for explicit Debate: read its complete protocol before orchestration.
+Retain independent peers, actual same-peer ballots, and a coordinator report.
+Discuss covers every eligible consequential choice; Code/Smells cover remaining
+disagreements. The protocol owns packet, comparison, recovery and tally mechanics.
 
 The main agent assigns slightly different facet emphases while requiring every
 peer to assess the full problem. Initial conclusions remain isolated; retain the

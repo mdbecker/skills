@@ -1,7 +1,16 @@
 # Code review
 
+## Contents
+
+- [Establish the review contract](#establish-the-review-contract)
+- [Review in this order](#review-in-this-order)
+- [Coverage checklist](#coverage-checklist)
+- [Choose a decisive, complete remedy](#choose-a-decisive-complete-remedy)
+- [Finding contract](#finding-contract)
+- [Re-review and delivery](#re-review-and-delivery)
+
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Review whether the declared change or current implementation is desirable,
 well-placed, correct and maintainable. This is a source-grounded review, not an

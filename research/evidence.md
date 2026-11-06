@@ -1,5 +1,12 @@
 # Evidence ledger and quantitative reconstruction
 
+## Contents
+
+- [Structured ledger](#structured-ledger)
+- [Protect values and meanings](#protect-values-and-meanings)
+- [Reconstruction decision rules](#reconstruction-decision-rules)
+- [Deterministic assistance](#deterministic-assistance)
+
 Load for claims, charts, appendices, provenance, or a supported numerical
 correction. First map the project's authority and build graph using
 [the profile template](report-profile.md). A saved artifact is evidence, not an

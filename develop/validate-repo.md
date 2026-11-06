@@ -1,7 +1,15 @@
 # Repository validation
 
+## Contents
+
+- [Establish the state and authority](#establish-the-state-and-authority)
+- [Map affected contracts to observations](#map-affected-contracts-to-observations)
+- [Resolve command effects before execution](#resolve-command-effects-before-execution)
+- [Compare and classify](#compare-and-classify)
+- [Report local readiness](#report-local-readiness)
+
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Execute the target project's required checks, inspect affected contracts, preserve
 unrelated work, and report local readiness. Select this mode for “Validate these
@@ -45,9 +53,9 @@ implementation structure or noncontractual event ordering. A label such as
 or an unperformed check remains a disclosed gap, not a pass. Unaffected areas may
 be marked out of scope with a reason.
 
-Use the [generic project mapping](resources/project-profile.md) to record the
+Use the [generic project mapping](../resources/project-profile.md) to record the
 target's obligations, language, existing runtime, checks and allowed effects.
-The [skills profile](resources/profiles/skills.md) maps this repository only.
+The [skills profile](../resources/profiles/skills.md) maps this repository only.
 
 ## Resolve command effects before execution
 

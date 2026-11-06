@@ -1,7 +1,7 @@
 # Current method coverage and public design boundaries
 
 This map describes the maintained methods, diagnostic mechanisms and verification
-scope. The [public design ledger](resources/provenance.json) records current
+scope. The [public design ledger](../resources/provenance.json) records current
 contracts and qualified public attribution. Actual findings require the selected
 target's source and authority; inventory and semantic inspection are separate.
 

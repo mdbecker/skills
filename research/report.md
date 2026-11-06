@@ -49,7 +49,11 @@ itself. Adapt other source formats explicitly, retaining their precise locators.
 Cohort labels/counts do not prove matched samples, pooling legitimacy or improvement.
 Keep source/cohort identity and denominator limits explicit. Reference output is
 aggregate-only: no records, identifiers, sensitive quotes, credentials or private
-artifacts. Existing pipeline processing does not authorize altered derivation.
+artifacts. These are restricted reference-example and reusable-package limits,
+not a universal ban on separately authorized target-local report formats. Follow
+the actual recipient/data policy; internal or private labeling alone does not
+authorize identifiers or restricted content. Existing pipeline processing does
+not authorize altered derivation.
 No notebook/query/model execution, sending, publication or deployment follows.
 
 Deliver source/output changes when authorized, protected-evidence comparison,

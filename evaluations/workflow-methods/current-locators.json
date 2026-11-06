@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "path_base": "repository_root",
+  "historical_ledger": {
+    "path": "traceability.json",
+    "sha256": "ecec6fcc84f02e7de71075fc0b7a3f460fcc5bc363f02fa84329acd6b16c91bc"
+  },
+  "aliases": {
+    "develop/references/bdd.md": "develop/bdd.md",
+    "develop/references/prd.md": "develop/prd.md",
+    "develop/references/prompt.md": "develop/prompt.md",
+    "develop/references/backlog.md": "develop/backlog.md",
+    "review/references/code.md": "review/code.md",
+    "review/references/smells.md": "review/smells.md",
+    "develop/references/bdd-worked.md": "develop/bdd-worked.md",
+    "develop/references/prd-worked.md": "develop/prd-worked.md",
+    "develop/references/prompt-worked.md": "develop/prompt-worked.md",
+    "develop/references/backlog-worked.md": "develop/backlog-worked.md",
+    "review/references/code-worked.md": "review/code-worked.md",
+    "review/references/smells-worked.md": "review/smells-worked.md"
+  }
+}

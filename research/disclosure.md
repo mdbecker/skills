@@ -5,6 +5,13 @@ centroids, legends, tooltips or embedded data can disclose small groups. Use the
 project's authorized disclosure policy, not a threshold borrowed from a domain
 example. Missing policy blocks the affected aggregate release.
 
+Establish applicability from the actual data, recipient/audience and governing
+authority before selecting controls. Grouping or plotting coordinates alone does
+not make public nonsubject data require suppression. Record the source and reason
+for an approved not-applicable determination; missing authority or uncertain
+disclosure potential is not an exemption. Use an existing approved checker when
+the target's policy differs from this method's dual-threshold adapter.
+
 ## Required policy mapping
 
 Record the authority, unit, minimum observations **and** minimum distinct
@@ -45,9 +52,12 @@ formal de-identification.
    order-dependent boundary or suppress different groups after a shuffle.
 6. Project output through the explicit allowlist. A typical approved shape is
    a group label, approved count and rounded group centroid; use it only if the
-   profile authorizes each field. No individual coordinates, record identifiers,
-   subject keys, record text or private membership arrays survive into HTML,
-   SVG, JSON, downloads, captions or accessibility metadata.
+   profile authorizes each field. For this restricted aggregate-release method,
+   individual coordinates, record identifiers, subject keys, record text and
+   private membership arrays must not survive into HTML, SVG, JSON, downloads,
+   captions or accessibility metadata. This example allowlist does not redefine
+   separately authorized target-local report contracts; changing the audience or
+   including identifiers still requires explicit governing permission.
 
 Retention as a parent is not permission to publish every marginal/category count
 within that parent. Group counts, subject counts and centroid precision each

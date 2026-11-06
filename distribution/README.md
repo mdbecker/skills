@@ -11,6 +11,11 @@ Select your target project and tell its agent:
 > Install the skills in this zip file into this project. Read its README, verify
 > the manifest, preserve existing skills and use project-local installation only.
 
+Install complete exported folders, not only `SKILL.md` or unprepared source folders.
+Ignored/private originals are not missing runtime assets to acquire or publish.
+Source eligibility and emitted navigation are checked separately; a valid archive
+does not establish that arbitrary private material is safe for publication.
+
 ## Agent installation procedure
 
 1. Establish the selected project root and active host. Ask only if either is
@@ -50,6 +55,13 @@ each selected skill folder contains its full resources without sibling installs.
    Preserve the receipt beside skill folders; installation is transactional and
    persistent required-write failures roll back replaced skills. Existing lock
    files block concurrent installation; do not delete a stale lock automatically.
+   Incomplete rollback preserves competing edits and original backups, reports an
+   absolute recovery location, and fails. Do not delete retained material or retry
+   destructively. After receipt commit, cleanup failures report committed results
+   and remnants rather than rolling back successful installations.
+   Full recovery paths are owner-local diagnostics and may identify the target
+   project. Keep logs and retained artifacts in permitted local context; do not
+   publish them or copy them into skills without separate review and clearance.
 7. Verify actual discovery/picker invocation where the host permits it; restart or
    reload if needed. Report installation, invocation, engine availability and model
    quality separately. Included qualification metadata may say not-run/blocked:

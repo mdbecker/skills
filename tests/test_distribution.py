@@ -14,6 +14,7 @@ import zipfile
 
 from distribution.install import HOST_DIRS, install, read_archive, RECEIPT
 from scripts.build_skills import build, payload, release_ready, ROOT
+from tests.test_preparation import fixture_payload
 
 
 class DistributionTests(unittest.TestCase):
@@ -79,8 +80,9 @@ class DistributionTests(unittest.TestCase):
             marker.parent.mkdir()
             marker.write_text('Separately installed; preserve this content.\n')
             markers[marker] = marker.read_bytes()
-        changed = self.rewrite({'skills/develop/prd.md':
-                                (ROOT / 'develop/prd.md').read_bytes() + b'\nUpdated fixture.\n'})
+        with zipfile.ZipFile(self.archive) as bundle:
+            original = bundle.read('skills/develop/prd.md')
+        changed = self.rewrite({'skills/develop/prd.md': original + b'\nUpdated fixture.\n'})
         result = install(changed, self.project, upgrade=True)
         self.assertEqual(result['installed'], ['develop'])
         for marker, content in markers.items():
@@ -128,7 +130,7 @@ class DistributionTests(unittest.TestCase):
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes((ROOT / relative).read_bytes())
         self.assertFalse(any(source_root.rglob("references")))
-        actual_inventory, actual, actual_inputs = payload(source_root)
+        actual_inventory, actual, actual_inputs = fixture_payload(source_root)
         self.assertEqual(actual_inventory, inventory)
         self.assertEqual(actual, expected)
         self.assertEqual(actual_inputs, inputs)
@@ -137,7 +139,7 @@ class DistributionTests(unittest.TestCase):
             directory.mkdir()
             for relative in inventory["owned_resources"][name]:
                 (directory / Path(relative).name).write_text("Local-only source; do not export.\n")
-        ignored_inventory, ignored, ignored_inputs = payload(source_root)
+        ignored_inventory, ignored, ignored_inputs = fixture_payload(source_root)
         self.assertEqual(ignored_inventory, inventory)
         self.assertEqual(ignored, expected)
         self.assertEqual(ignored_inputs, inputs)
@@ -163,7 +165,8 @@ class DistributionTests(unittest.TestCase):
                 for relative in references:
                     source = ROOT / "review" / relative
                     target = directory / relative
-                    self.assertEqual(target.read_bytes(), source.read_bytes())
+                    with zipfile.ZipFile(self.archive) as bundle:
+                        self.assertEqual(target.read_bytes(), bundle.read('skills/review/' + relative))
                     self.assertEqual(self.manifest["source_inputs"]["review/" + relative],
                                      hashlib.sha256(source.read_bytes()).hexdigest())
                 for document in directory.rglob("*.md"):
@@ -249,7 +252,9 @@ class DistributionTests(unittest.TestCase):
     def test_upgrade_only_unchanged_managed_skill(self):
         install(self.archive, self.project, selected=["develop"])
         entry = "skills/develop/prd.md"
-        changed = self.rewrite({entry: (ROOT / "develop/prd.md").read_bytes() + b"\nUpdated fixture.\n"})
+        with zipfile.ZipFile(self.archive) as bundle:
+            original = bundle.read(entry)
+        changed = self.rewrite({entry: original + b"\nUpdated fixture.\n"})
         with self.assertRaises(ValueError):
             install(changed, self.project, selected=["develop"])
         result = install(changed, self.project, selected=["develop"], upgrade=True)
@@ -347,7 +352,14 @@ class DistributionTests(unittest.TestCase):
 
     def test_stable_build_blocked_but_explicit_preview_can_build(self):
         output = self.workspace / "release.zip"
-        clean_source = [SimpleNamespace(stdout="a" * 40), SimpleNamespace(stdout="")]
+        original_run = subprocess.run
+
+        def clean_source(command, *arguments, **kwargs):
+            if command == ['git', 'rev-parse', 'HEAD']:
+                return SimpleNamespace(stdout='a' * 40)
+            if command == ['git', 'status', '--porcelain']:
+                return SimpleNamespace(stdout='')
+            return original_run(command, *arguments, **kwargs)
         with patch("scripts.build_skills.subprocess.run", side_effect=clean_source):
             with self.assertRaisesRegex(ValueError, "release blocked"):
                 build(output, "v0.1.0", release=True)
@@ -388,7 +400,7 @@ class DistributionTests(unittest.TestCase):
         root = self.copied_sources()
         (root / "resources/credentials.env").write_text("synthetic secret")
         (root / "resources/restricted-data.json").write_text("synthetic restricted payload")
-        unused_inventory, files, inputs = payload(root)
+        unused_inventory, files, inputs = fixture_payload(root)
         self.assertFalse(any("credentials.env" in name or "restricted-data.json" in name for name in files))
         self.assertNotIn("resources/credentials.env", inputs)
         self.assertNotIn("resources/restricted-data.json", inputs)
@@ -409,7 +421,7 @@ class DistributionTests(unittest.TestCase):
 
         with patch.object(Path, "read_bytes", mutate_after_capture):
             with self.assertRaisesRegex(ValueError, "changed during export"):
-                payload(root)
+                fixture_payload(root)
 
     def test_checksum_symlink_does_not_modify_outside_target(self):
         output = self.workspace / "target.zip"

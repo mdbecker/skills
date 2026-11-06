@@ -1,7 +1,7 @@
 # Implementation specification
 
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Use for requests to write or revise a concise, decisive implementation handoff,
 including natural-language requests without a mode command. Drafting does not
@@ -47,4 +47,4 @@ Iterate's real-options architecture/user-approval checkpoint. Read
 CSV-import specification would clarify the contract. They include executable
 reference algorithms and acceptance data, not deployed implementations or model
 evaluation results. Sources are mapped in
-[provenance](resources/provenance.json).
+[provenance](../resources/provenance.json).

@@ -1,5 +1,16 @@
 # Complete consequence-grounded structural audit
 
+## Contents
+
+- [Scope, contracts and raw evidence](#scope-contracts-and-raw-evidence)
+- [Complete audit output](#complete-audit-output)
+- [S01 — Divergent retry policies omit a terminal event](#s01--divergent-retry-policies-omit-a-terminal-event)
+- [S02 — Repeated event fields have inconsistent owners](#s02--repeated-event-fields-have-inconsistent-owners)
+- [S03 — One configuration option requires scattered coordinated edits](#s03--one-configuration-option-requires-scattered-coordinated-edits)
+- [Reviewed counterexamples — no findings](#reviewed-counterexamples--no-findings)
+- [File-level coverage](#file-level-coverage)
+- [Dependency-aware remedy plan](#dependency-aware-remedy-plan)
+
 Synthetic reference-style workflow runner and fictional deployment configuration.
 This is a complete illustrative report over the raw sources below, not a claim that
 findings exist in a target project. Locations count from the first

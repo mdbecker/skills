@@ -215,6 +215,10 @@ class WorkflowMethodTests(unittest.TestCase):
 
     def test_focused_traceability_has_real_instruction_case_and_check_paths(self):
         traceability = load_json("traceability.json")
+        mapping = load_json('current-locators.json')
+        self.assertEqual(mapping['path_base'], 'repository_root')
+        self.assertEqual(mapping['historical_ledger']['sha256'], hashlib.sha256((DIRECTORY / 'traceability.json').read_bytes()).hexdigest())
+        used = set()
         self.assertEqual(set(traceability["scope"]), {
             "develop bdd", "develop prd", "develop prompt", "develop backlog",
             "review code", "review smells",
@@ -224,12 +228,16 @@ class WorkflowMethodTests(unittest.TestCase):
                 self.assertTrue(requirement["supplied_requirements"])
                 self.assertIn(requirement["disposition"], {"retained", "generalized", "excluded"})
                 for relative in requirement["instruction_or_reference"] + requirement["worked_case"]:
-                    current = ROOT / relative.replace("/references/", "/")
+                    if '/references/' in relative:
+                        self.assertIn(relative, mapping['aliases'])
+                        used.add(relative)
+                    current = ROOT / mapping['aliases'].get(relative, relative)
                     self.assertTrue(current.is_file(), relative)
                 for module in requirement["verification_modules"]:
                     self.assertTrue((ROOT / (module.replace(".", "/") + ".py")).is_file(), module)
         for relative in traceability["case_sets"]:
             self.assertTrue((DIRECTORY / relative).is_file(), relative)
+        self.assertEqual(used, set(mapping['aliases']))
 
     def test_frozen_inputs_and_criteria_are_unchanged_and_separately_scoped(self):
         freeze = load_json("freeze.json")

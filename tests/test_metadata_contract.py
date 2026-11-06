@@ -15,6 +15,7 @@ import yaml
 
 from distribution import install as installer
 from scripts.build_skills import ROOT, build, payload, prepare
+from tests.test_preparation import prepare as prepare_fixture
 
 
 class MetadataContractTests(unittest.TestCase):
@@ -36,7 +37,9 @@ class MetadataContractTests(unittest.TestCase):
         discovery.mkdir(parents=True)
         for name in inventory['parents']:
             (discovery / name).symlink_to(self.source / name, target_is_directory=True)
-        prepare(self.source)
+        prepare_fixture(self.source)
+        subprocess.run(['git', 'init', '-q'], cwd=self.source, check=True)
+        subprocess.run(['git', 'add', '.'], cwd=self.source, check=True)
         self.archive = self.workspace / 'skills.zip'
         spec = importlib.util.spec_from_file_location('metadata_authoring_validator', ROOT / 'scripts/validate_skills.py')
         self.validator = importlib.util.module_from_spec(spec)
@@ -52,16 +55,21 @@ class MetadataContractTests(unittest.TestCase):
         return content
 
     def source_identity(self, command, **kwargs):
-        output = '1' * 40 + '\n' if command == ['git', 'rev-parse', 'HEAD'] else ' M develop/SKILL.md\n'
-        return subprocess.CompletedProcess(command, 0, stdout=output)
+        if command == ['git', 'rev-parse', 'HEAD']:
+            return subprocess.CompletedProcess(command, 0, stdout='1' * 40 + '\n')
+        if command == ['git', 'status', '--porcelain']:
+            return subprocess.CompletedProcess(command, 0, stdout=' M develop/SKILL.md\n')
+        return self.actual_subprocess(command, **kwargs)
 
     def build_archive(self):
+        self.actual_subprocess = subprocess.run
         with patch('scripts.build_skills.subprocess.run', side_effect=self.source_identity):
             return build(self.archive, 'metadata-test', root=self.source)
 
     def validate_authoring(self):
         errors = io.StringIO()
-        with patch.object(self.validator, 'ROOT', self.source), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(errors):
+        with patch.object(self.validator, 'ROOT', self.source), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(errors):
             result = self.validator.main()
         return result, errors.getvalue()
 
@@ -189,13 +197,43 @@ class MetadataContractTests(unittest.TestCase):
         self.assertEqual(json.loads(result.stdout)['planned'], ['develop', 'review', 'research'])
 
     def test_known_legacy_archive_still_verifies(self):
-        archive = ROOT / 'dist/skills-df4469e.zip'
-        if not archive.is_file():
-            self.skipTest('Recorded legacy archive is unavailable')
+        names = ['develop', 'review', 'research', 'iterate', 'debate']
+        files = {name: b'Synthetic format fixture, not historical source.'
+                 for name in ['README.md', 'install.py', 'LICENSE', 'NOTICE']}
+        for name in names:
+            files[f'skills/{name}/SKILL.md'] = self.document(f'name: {name}\ndescription: Independently fictional format fixture')
+        record = {'schema_version': 1, 'package': 'mdbecker-skills', 'version': 'synthetic-legacy',
+                  'commit': '0' * 40, 'host_profiles': installer.HOST_DIRS, 'qualification': {},
+                  'skills': [{'name': name, 'path': f'skills/{name}', 'required_files': ['SKILL.md']} for name in names],
+                  'files': {name: hashlib.sha256(content).hexdigest() for name, content in files.items()}}
+        files['manifest.json'] = json.dumps(record).encode()
+        archive = self.workspace / 'synthetic-legacy.zip'
+        with zipfile.ZipFile(archive, 'w') as output:
+            for name, content in files.items():
+                output.writestr(name, content)
         manifest, unused_files = installer.read_archive(archive)
         self.assertEqual(manifest['schema_version'], 1)
         self.assertEqual([entry['name'] for entry in manifest['skills']],
                          ['develop', 'review', 'research', 'iterate', 'debate'])
+
+    def test_authoring_rejects_linked_views_before_reading_contents(self):
+        target = self.source / 'develop/resources/policy.md'
+        target.unlink()
+        private = self.workspace / 'synthetic-private.md'
+        private.write_text('Synthetic nonpublic fixture')
+        target.symlink_to(private)
+        original = Path.read_bytes
+        reads = []
+
+        def observe(path):
+            if path == target:
+                reads.append(path)
+            return original(path)
+
+        with patch.object(Path, 'read_bytes', observe):
+            result, errors = self.validate_authoring()
+        self.assertEqual(result, 1)
+        self.assertEqual(reads, [], 'Rejected generated symlinks must not be opened')
 
     def test_portable_json_rejects_nonfinite_numbers(self):
         for number in ['NaN', 'Infinity', '-Infinity', '1e999']:

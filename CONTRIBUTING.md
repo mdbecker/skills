@@ -2,6 +2,31 @@
 
 Keep changes focused on an observable improvement. Describe the problem, the resulting behavior, and how it was checked.
 
+## Public source and privacy
+
+Follow [repository agent instructions](AGENTS.md) and the portable
+[privacy boundary](resources/policy.md). Never force-add, unignore, rename, copy,
+summarize, or embed excluded/private originals to repair links. Review proposed
+public bytes and provenance, including changes to ignore rules and export inputs;
+tracked names and passing tests are not disclosure clearance.
+
+Before publication, review the exact candidate repository surface and emitted
+archive/manifest metadata, not only filenames or keyword results. Qualification
+records must remain public evidence, not mixed-use work logs. Local recovery paths,
+diagnostics, execution reports and retained artifacts stay private unless explicitly
+cleared and sanitized for the intended audience. Use independently fictional
+examples; do not add real employer/project identifiers as privacy-test markers.
+
+Source navigation must reach tracked, nonignored ordinary files. Validate committed
+or staged bytes before preparation; generated existence is not source validity.
+Export relocates canonical source links into each complete package. Do not edit
+generated views or use ignored historical archives as required fixtures.
+
+Review trigger/exclusions, inputs/prerequisites, effects/stopping, selected method,
+required/conditional/optional reading, outputs, and actual verification. Keep useful
+task-specific headings; no identical template or new scaffolding is required.
+Update canonical rules and affected summaries together.
+
 ## Preserve the skills' intent
 
 Iterate is deliberately driven by hands-on feedback: architecture, minimal happy path, manual test bed, tweaking, meaningful tests, then finalization. Changes should support that sequence while preserving required contracts from
@@ -30,6 +55,7 @@ rewritten or promoted by an instruction change or static checks.
 Follow the development setup in the README, then run:
 
 ```sh
+.venv/bin/python scripts/validate_skills.py --source --snapshot HEAD
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
@@ -39,11 +65,17 @@ Add focused regression coverage when fixing manifest behavior. For prompt change
 
 Do not test agent adherence through exact wording/substring assertions in Markdown.
 Use actual package/install/helper behavior where relevant. Evaluation-corpus
-integrity checks protect frozen inputs, not skill reasoning. For Discuss changes,
-use the active review ballot scenarios with independent evaluator criteria;
-observe actual follow-ups, all-option comparisons, evidence, and dispositions in
-separately approved trials. Preserve justified agreement, rejection and abstention;
-neither more disagreement nor unanimity is a quality target.
+integrity checks protect frozen inputs, not skill reasoning. Use proportionate
+manual host testing and maintainer feedback when useful; no formal trial plan,
+automated model evaluation, or per-change host run is required. Existing frozen
+scenarios remain reference evidence. Deterministic green does not promote qualification.
+
+CI checks HEAD. For staged preflight use `--source --snapshot index`; do not stage
+this checkout merely to make checks green. Source validation parses real Markdown
+and HTML navigation, excludes code/comments, checks anchors, and evaluates versioned
+ignore rules independently of tracking. Local privacy exclusions remain access
+stops. Real exports reject ineligible inputs before reads; captured-byte assembly
+is an inert fixture boundary, not a publication bypass.
 
 Keep one active Discuss corpus under a stable path; superseded copies belong in
 Git history, not versioned directories. Change fixture inputs/criteria and their

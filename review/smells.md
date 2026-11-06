@@ -1,7 +1,16 @@
 # Consequence-grounded structural audit
 
+## Contents
+
+- [Scope and inventory](#scope-and-inventory)
+- [Evidence threshold and counterexamples](#evidence-threshold-and-counterexamples)
+- [Diagnostic families and concrete probes](#diagnostic-families-and-concrete-probes)
+- [Remedy design and preserved behavior](#remedy-design-and-preserved-behavior)
+- [Findings and severity](#findings-and-severity)
+- [Report and remediation order](#report-and-remediation-order)
+
 For inputs, context/defaults, named controls and effects, use
-[the shared usage reference](resources/usage.md).
+[the shared usage reference](../resources/usage.md).
 
 Audit the declared source for structures that make change, testing, security or
 operations materially harder. Inspect actual contracts and consequences; size

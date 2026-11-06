@@ -30,6 +30,11 @@ reference profiles are examples, not universal requirements.
 
 ### Complete bundle
 
+Install every file in a selected exported skill folder, not just `SKILL.md`.
+Raw checkout skill folders require preparation and are not portable standalone
+installs. Source links use checked-in canonical files; export relocates them to
+ordinary package-local resources. Never publish excluded originals to repair links.
+
 Download the versioned `skills-<tag>.zip` and companion checksum from a trusted
 release, open the target project, and ask its agent to install the skills in the
 zip. Use the exported asset, not the automatic GitHub source-code archive.
@@ -166,14 +171,9 @@ python3 /absolute/path/to/skills/develop/scripts/manifest.py --help
 python3 /absolute/path/to/skills/develop/scripts/manifest.py status -v
 ```
 
-State stays in that project's `.ai-state/`. Scratch test beds use `testbed/scratch/`;
-reusable tools use `testbed/tools/`. State and registry storage reject symlinks and
-escaping paths. Registering an external tool does not execute it. Preserve damaged
-state and restore a known-good local copy under user direction; do not hand-edit
-or reset it. All feature state changes use the helper.
-Nested section types, list entries, and booleans are checked before timestamps or
-files change. Duplicate JSON keys and non-JSON values are rejected. Compatible
-extra fields and existing optional omissions survive; reads do not backfill files.
+State belongs to the target project's `.ai-state/`; all operations use the installed
+helper. Preserve damaged or user-edited state and never reset it to pass checks.
+The [complete method](develop/iterate.md) owns tools, storage, phases and recovery.
 
 BDD import/setup errors do not count as behavioral red. Reviewing acceptance
 scenarios is read-only. A PRD does not implement its design or bypass architecture
@@ -246,16 +246,10 @@ inspection per reviewer and return one deduplicated report plus requested covera
 a structural observation alone does not automatically launch another full audit.
 
 Only explicit `--engine debate` selects the [flat voting method](review/debate.md):
-three independent peers by default, then private ballots from those same peers on
-eligible decisions. Discuss ballots cover every consequential choice that can be
-compared under the established criteria, including unanimous recommendations and
-choices raised by only one peer. A decision ledger retains `not_addressed` positions;
-the coordinator sends actual follow-ups rather than inferring votes. Only an empty
-eligible set skips Discuss ballots, with explicit exclusion reasons. Code/Smells
-still ballot only remaining disagreements. The main agent gives each peer a
-different facet to focus especially on, while explicitly requiring every peer to
-assess the whole problem and its full scope. `--agents <COUNT>` selects any integer of at least two,
-excluding the coordinator, and requires explicit Debate. For example:
+three independent peers by default, with private follow-up ballots from those same
+peers. Discuss covers every eligible consequential choice; Code/Smells cover
+remaining disagreements. `--agents <COUNT>` requires Debate and selects at least
+two peers, excluding the coordinator. For example:
 `/review discuss "Synchronous import or queue?" --engine debate --agents 5`.
 The main agent maps disagreements, verifies evidence, and writes the final report;
 it casts a deciding vote only on valid ties. A unique plurality is not a majority,
@@ -263,15 +257,9 @@ and abstentions or multiple alternatives can yield ties even with three peers.
 Preserve dissent; evidence outranks votes. Three is a practical default, not a
 research-established optimum. Scope and single-pass defaults remain unchanged.
 
-Discuss uses neutral, atomic decision packets and requires each peer to compare
-all alternatives under the same criteria, explain the decisive tradeoff, and state
-the strongest competing case and reversal condition. Ballots receive substantive
-validation before tallying; filled fields alone do not establish deliberation.
-Defective packets require abstention/unresolved disposition, not silent rewrites.
-Substantive revisions need a separately authorized new run. The report includes
-actual follow-up completion, votes, validation failures, changes, dissent, and
-exclusions. Complete voting is procedural evidence, not proof of factual correctness
-or model quality. The [Debate protocol](review/debate.md) owns the full procedure.
+The [canonical Debate protocol](review/debate.md) owns packet preparation,
+all-option comparisons, validation, recovery and tally rules; read it when selected.
+Completed voting is not proof of factual correctness or model quality.
 
 [Model policy](resources/models.md) uses the current model unless an override is
 explicitly authorized; there is no model-tier ladder or downstream worker layer.
@@ -382,6 +370,7 @@ views before testing or validating links:
 ```sh
 python3.11 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python scripts/validate_skills.py --source --snapshot HEAD
 .venv/bin/python scripts/build_skills.py --prepare
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/python scripts/validate_skills.py
@@ -392,6 +381,14 @@ installation/upgrades, corruption/conflict handling, rollback, release contracts
 composition links, and focused workflow/report fixtures. All skill methods and
 helpers are tested from their canonical locations. The metadata validator checks
 entrypoints, discovery, and complete local/exported resource closure.
+
+Source validation covers every snapshot Markdown file, not only README. It fails
+for missing/untracked/ignored targets, including force-added excluded files, before
+reading rejected contents. CI uses HEAD; staged preflight uses `--source --snapshot
+index`. Working-tree/package observations remain separately labeled. Links/images,
+reference forms and HTML navigation are parsed; code/comments are excluded and
+external URLs are not fetched. Review public bytes and provenance manually; never
+disable privacy exclusions or copy private contents into allowed filenames.
 
 Preparation records generated ownership in `dist/.prepared-resources.json` and
 uses an exclusive lock. It adopts already matching views, updates unchanged owned
@@ -405,6 +402,11 @@ Staging and no-clobber publication require a filesystem that supports the operat
 there is no fallback to destructive overwriting.
 
 ## Evaluation and provenance
+
+Host behavior continues to use manual testing when useful. No automated model
+evaluation, formal trial plan, or mandatory per-change host run is required.
+Historical model proposals remain reference context; existing release gates are
+separate and are not waived or fabricated as passed by deterministic checks.
 
 [Recorded qualification](evaluations/status.json) and the
 [evaluation protocol](evaluations/protocol.md) distinguish deterministic results

@@ -1,5 +1,13 @@
 # Fictional equipment coverage reconciliation
 
+## Contents
+
+- [Equipment stock monitoring](#equipment-stock-monitoring)
+- [Sources and observed execution](#sources-and-observed-execution)
+- [Complete fictional register](#complete-fictional-register)
+- [Executable reconciliation boundary](#executable-reconciliation-boundary)
+- [Verification and limits](#verification-and-limits)
+
 This fictional equipment case defines a complete selected inventory, requirements,
 source priorities, ownership roles and inspection limits.
 

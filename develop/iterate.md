@@ -1,13 +1,28 @@
 
 # Iterate
 
-For a justified specialization/handoff, read only the relevant [optional recipe](resources/combinations.md).
+## Contents
+
+- [State Manifest & CLI](#state-manifest--cli)
+- [Resolve the requested action](#resolve-the-requested-action)
+- [Universal Rules (all phases)](#universal-rules-all-phases)
+- [Comments, Docs & Commits](#comments-docs--commits)
+- [Phases](#phases)
+- [1. ARCHITECTURE](#1-architecture)
+- [2. HAPPY_PATH](#2-happy_path)
+- [3. TEST_BED](#3-test_bed)
+- [4. TWEAKING](#4-tweaking)
+- [5. TESTING](#5-testing)
+- [6. FINALIZATION](#6-finalization)
+- [Red Flags — you are drifting](#red-flags--you-are-drifting)
+
+For a justified specialization/handoff, read only the relevant [optional recipe](../resources/combinations.md).
 It does not restart this lifecycle, require sibling installs or replace user checkpoints.
 
 This is the canonical feature lifecycle selected by `/develop iterate`.
 Its helper is `scripts/manifest.py` in this skill directory. Parse the parent
 mode before resolving work/status/defer/list, contextual targets, or legacy forms
-with [shared usage](resources/usage.md#iterate). Read shared policy without silently
+with [shared usage](../resources/usage.md#iterate). Read shared policy without silently
 changing the lifecycle or state ownership.
 
 Feedback-driven implementation uses persistent project state. Agree direction,
@@ -57,7 +72,7 @@ registration grants no permission to execute them or write an external registry.
 
 ## Resolve the requested action
 
-[Shared usage](resources/usage.md#iterate) is the grammar/default authority. These
+[Shared usage](../resources/usage.md#iterate) is the grammar/default authority. These
 are assistant instructions, not new helper subcommands.
 
 - Help, bare Iterate, status, and list are read-only. Explain/view the selected
@@ -76,7 +91,7 @@ are assistant instructions, not new helper subcommands.
   a phase record is not proof that earlier exit criteria passed.
 
 Only authorized work adopts the phase constraints. Show its status dashboard and
-[readable stage label](resources/usage.md#phases), with real limits and prior
+[readable stage label](../resources/usage.md#phases), with real limits and prior
 acceptance. Record meaningful work decisions and transitions immediately via the
 CLI. Do not write state merely to answer help/status or an argument question.
 

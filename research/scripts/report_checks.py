@@ -533,6 +533,70 @@ def transactional_build(root, sources, output, build, checks=()):
         lock.rmdir()
 
 
+def _check_outcome(result, check):
+    if result is None:
+        return {'status': 'completed', 'evidence': f'Mapped check {check.__name__} returned without errors'}
+    if result is True:
+        return True
+    if not isinstance(result, dict) or result.get('status') != 'completed' or result.get('result', 'pass') != 'pass':
+        raise ReportCheckError('Staged report verification failed, blocked or returned an unsupported shape')
+    return dict(result)
+
+
+class _ReportOutput:
+    def __init__(self, root, output):
+        self.root = root
+        self.output = output
+        self.target = bounded_path(root, output)
+        self.previous = self.target.read_bytes() if self.target.exists() else None
+        self.baseline = self.state()
+        self.changed_state = None
+        self.phase = 'preparing'
+        self.acknowledgement_error = None
+
+    def state(self):
+        if self.target.is_symlink():
+            metadata = self.target.lstat()
+            return ('link', metadata.st_dev, metadata.st_ino, os.readlink(self.target))
+        if not self.target.exists():
+            return None
+        if not self.target.is_file():
+            metadata = self.target.lstat()
+            return ('unknown', metadata.st_dev, metadata.st_ino, metadata.st_mode)
+        bounded_path(self.root, self.output)
+        metadata = self.target.stat()
+        return ('file', metadata.st_dev, metadata.st_ino, sha256(self.target.read_bytes()))
+
+    def unchanged(self):
+        return self.state() == self.baseline
+
+    def failed_builder(self):
+        if not self.unchanged():
+            self.changed_state = self.state()
+            self.phase = 'blocked'
+
+    def commit(self, staged, identity):
+        try:
+            os.replace(staged, self.target)
+        except OSError as error:
+            if self.state() != ('file', *identity):
+                raise
+            self.acknowledgement_error = str(error)
+        self.phase = 'committed'
+
+    def recover(self):
+        if self.changed_state is None:
+            return
+        if self.previous is None:
+            raise ReportCheckError('Unexpected live output preserved; ownership is unproven')
+        with tempfile.NamedTemporaryFile(dir=self.target.parent, prefix='.report-restore-', delete=False) as stream:
+            recovery = Path(stream.name)
+            stream.write(self.previous)
+            stream.flush()
+            os.fsync(stream.fileno())
+        raise ReportCheckError(f'Live output ownership is unproven; output preserved and baseline recovery retained at {recovery}')
+
+
 def _transactional_build(root, sources, output, build, checks):
     root = Path(root)
     target = bounded_path(root, output)
@@ -542,20 +606,11 @@ def _transactional_build(root, sources, output, build, checks):
     if any(not path.is_file() for path in paths):
         raise ReportCheckError('Missing build dependency blocks the affected operation')
     snapshot = {path: sha256(path.read_bytes()) for path in paths}
-    previous = target.read_bytes() if target.exists() else None
+    ownership = _ReportOutput(root, output)
     parent_identity = (target.parent.stat().st_dev, target.parent.stat().st_ino)
     with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.report-stage-', suffix=target.suffix,
                                      delete=False) as temporary:
         staged = Path(temporary.name)
-    committed = False
-    destructive = False
-
-    def output_unchanged():
-        try:
-            bounded_path(root, output)
-        except ReportCheckError:
-            return False
-        return (target.read_bytes() if target.exists() else None) == previous
 
     def staged_identity():
         if staged.is_symlink() or not staged.is_file() or not staged.stat().st_size:
@@ -567,52 +622,43 @@ def _transactional_build(root, sources, output, build, checks):
         try:
             build(staged)
         except BaseException:
-            destructive = not output_unchanged()
+            ownership.failed_builder()
             raise
-        if not output_unchanged():
-            destructive = True
+        if not ownership.unchanged():
+            ownership.failed_builder()
             raise ReportCheckError('Destructive build changed the live report instead of staged output')
         generated_identity = staged_identity()
+        ownership.phase = 'validating'
         results = []
         for check in checks:
-            result = check(staged)
-            if result is False or isinstance(result, dict) and (
-                    result.get('status') != 'completed' or result.get('result', 'pass') != 'pass'):
-                raise ReportCheckError('Staged report verification failed or was blocked')
+            result = _check_outcome(check(staged), check)
             if staged_identity() != generated_identity:
                 raise ReportCheckError('A verification check changed the staged artifact')
-            results.append(result if result is not None else {
-                'status': 'completed', 'evidence': f'Mapped check {check.__name__} returned without errors'})
+            results.append(result)
         changed = [str(path.relative_to(root)) for path, digest in snapshot.items()
                    if not bounded_path(root, path.relative_to(root)).is_file() or sha256(path.read_bytes()) != digest]
         if changed:
             raise ReportCheckError('Concurrent source changes detected: ' + ', '.join(changed))
-        if not output_unchanged():
+        if not ownership.unchanged():
             raise ReportCheckError('Concurrent/destructive live output change detected')
         if staged_identity() != generated_identity:
             raise ReportCheckError('Staged artifact changed before replacement')
         with staged.open('rb') as stream:
             os.fsync(stream.fileno())
-        os.replace(staged, target)
-        committed = True
-        return {'status': 'completed', 'output_sha256': sha256(target.read_bytes()),
+        ownership.commit(staged, generated_identity)
+        result = {'status': 'completed', 'output_sha256': sha256(target.read_bytes()),
                 'source_hashes': {str(path.relative_to(root)): digest for path, digest in snapshot.items()},
                 'checks': results}
+        if ownership.acknowledgement_error:
+            result['commit_acknowledgement_error'] = ownership.acknowledgement_error
+        return result
     finally:
         safe_parent = (target.parent.is_dir() and not target.parent.is_symlink() and
                        target.parent.resolve().is_relative_to(root.resolve()) and
                        all(not ancestor.is_symlink() for ancestor in target.parent.parents if ancestor.is_relative_to(root)) and
                        (target.parent.stat().st_dev, target.parent.stat().st_ino) == parent_identity)
-        if destructive and not committed and safe_parent:
-            if not output_unchanged():
-                if previous is None:
-                    target.unlink(missing_ok=True)
-                else:
-                    with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.report-restore-',
-                                                     delete=False) as recovery:
-                        recovery.write(previous)
-                        recovery.flush()
-                        os.fsync(recovery.fileno())
-                        recovery_path = Path(recovery.name)
-                    os.replace(recovery_path, target)
-        staged.unlink(missing_ok=True)
+        try:
+            if ownership.phase != 'committed' and safe_parent:
+                ownership.recover()
+        finally:
+            staged.unlink(missing_ok=True)

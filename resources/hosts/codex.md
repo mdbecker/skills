@@ -1,5 +1,11 @@
 # Codex host mapping
 
+Official reference: https://learn.chatgpt.com/docs/build-skills
+Native plugins are recommended for reusable Codex distribution; this package keeps
+its cross-host ZIP. Optional metadata is not a reason to add tool preapprovals or
+change implicit invocation. Verify current guidance before new compatibility claims;
+normal manual use supplies observations.
+
 Project-local skills reside in `.agents/skills/<name>/SKILL.md`. Published packages
 contain their complete resources. Symlinked local authoring folders may be used,
 but portable installs copy ordinary folders and do not depend on the checkout.
