@@ -33,6 +33,13 @@ and replay summaries on compact validated results. Edit only the affected surfac
 and synchronize their consumers. Preserve authority, uncertainty, redaction,
 application-owned fields and accepted-output-only replay where applicable.
 
+For affected acquisition/completeness contracts, map target-defined not-requested,
+unavailable, unauthorized, no-match, partial/truncated and execution-failure states,
+including source selection, time window and filtering/budget limits. Missing
+supplied context is not proof of absent facts. A truncated build log cannot prove
+an unseen validation step never ran. Distinguish infrastructure failure from an
+authorized empty result; do not add retrieval or a coverage manifest by default.
+
 ## Map authoritative metadata, not universal field names
 
 Use the [project mapping](resources/project-profile.md) to identify canonical

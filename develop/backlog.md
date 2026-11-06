@@ -38,6 +38,11 @@ unknown state. A broad use-case reference or related code is not completion.
 Refine an appropriate existing owner before proposing duplicate work. Preserve
 portfolio priorities without inventing tracker mappings.
 
+Assess primary responsibility per acceptance criterion, not by counting tickets.
+Disjoint delivery owners can provide distributed coverage; shared responsibility
+for the same criterion may be a conflict. Retain uncovered criteria and inspection
+limits rather than imposing one ticket per requirement.
+
 ## Build the register
 
 Use one row per distinct requirement, with linked work-item roles and explicit
@@ -60,6 +65,10 @@ An In Progress item can lack inspected implementation evidence; a To Do validati
 item can have session evidence without an approved completion decision. Record
 both rather than silently changing state.
 
+Only when an independently actionable proposal is requested, include its baseline,
+increment, in/out scope, observable positive/failure acceptance, owner, dependencies
+and evidence limits. Ordinary coverage does not require a full ticket or PRD.
+
 Retain source priority values exactly, including fractional ranks such as `0.5`
 and `1.5`, with their source meaning. Tracker `High`, `Unassigned`, roadmap labels,
 effort and execution state are different fields. Never map a source rank into an
@@ -75,6 +84,12 @@ or construct research cohorts as a side effect. Historical proposals, even a lat
 note saying they were filed, grant no mutation authority and do not identify new
 live keys without their verified mapping. Ask for an unavailable approved source
 only if it blocks the requested conclusion; otherwise report the limitation.
+
+For authorized writes, field availability is not editability or inheritance.
+When multi-value writes replace the full list, merge and preserve unrelated entries
+and verify effective saved values. Check existing links, direction and cycles;
+distinguish a prerequisite from a merely related item. Use actual connector and
+target policies, not universal field names or board rules.
 
 Read [the complete reference and fictional register](backlog-worked.md) for a
 concrete multi-source example and deterministic coverage boundary. Source `backlog`

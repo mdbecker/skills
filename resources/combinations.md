@@ -26,8 +26,8 @@ bounded feedback revisits only decisions affected by new evidence.
 Resolve inputs, effects and context with [shared usage](usage.md); preflight
 available methods/tools and authority using [shared policy](policy.md).
 Use `/develop iterate` for the feature lifecycle and `--engine debate` on a
-`/review` mode for the explicitly selected hierarchy. An ordinary discussion
-does not authorize nine agents. Mode names below are labels to discover
+`/review` mode for the explicitly selected flat voting protocol. An ordinary discussion
+does not authorize peer delegation. Mode names below are labels to discover
 in the actual host, not links into sibling installations.
 
 A package may be installed alone. If a named method is missing, choose an equivalent

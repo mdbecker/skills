@@ -9,7 +9,17 @@ the start. Choose an agreed usable demonstration, not mandatory web/Python
 scaffolding. Required project/safety checks may occur early; this does not impose
 mandatory test-first development or automatic phase gates.
 
-Debate retains five independent reviews, three independent whole-set reconciliations, and one final synthesis. Model names are reference profiles, not whitelists; prefer economical capable reviewers, stronger middle-stage models and strongest final synthesis within available host/data/budget limits. Preserve dissent, evidence checking and distinct-agent stages independently of model-tier preference. Codex/Claude invocation and quality claims require actual host evidence.
+Debate uses one flat set of independent peers (default three, configurable with
+`--agents`), then private claim-level ballots from those same peers where needed.
+The main agent verifies evidence, coordinates voting, and writes the report. It
+votes only to break valid ties, never on a unique plurality or majority. Preserve
+dissent, scope, and evidence checks; agreement is not verification. Use the current
+model unless an override is explicitly authorized. Codex/Claude invocation and
+quality claims require actual host evidence.
+
+The qualification record's `hosts.*.debate` gate requires actual execution of the
+current flat voting protocol. Historical records and frozen corpora are not
+rewritten or promoted by an instruction change or static checks.
 
 ## Validate changes
 
@@ -26,7 +36,7 @@ Add focused regression coverage when fixing manifest behavior. For prompt change
 Keep feature manifests, scratch test beds, credentials, conversation handoffs, and generated review evidence out of commits. New skill resources should serve a concrete purpose; a short self-contained skill does not need extra scaffolding.
 
 Maintain shared resources in `resources/`, the feature lifecycle in
-`develop/iterate.md` with `develop/scripts/manifest.py`, the review hierarchy
+`develop/iterate.md` with `develop/scripts/manifest.py`, the flat voting protocol
 in `review/debate.md`, and the export inventory in `inventory.json`. Prepared per-skill
 resource folders and `dist/` are generated, ignored copies, not separate sources.
 Do not edit those copies. Exported skill folders must stand alone without

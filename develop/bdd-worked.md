@@ -5,6 +5,11 @@ Select the example relevant to the target. Both use
 Python 3.11+ standard-library `unittest`, a real public submission boundary and a
 mock of the external write contract, not internal helper-call assertions.
 
+For a job-duration example, inputs of 10 and 30 milliseconds have a mean of
+20 milliseconds. Assert that independently known result, not an expected value
+computed by copying the production averaging loop. Keep a separate scenario for
+missing durations; combining unrelated promises makes failures harder to interpret.
+
 ## Fictional inventory-event submission
 
 **Outcome:** an intake submission with no canonical event ID returns

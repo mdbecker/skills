@@ -59,7 +59,7 @@ expiry export, onboarding or delivery acknowledgment. No writes are performed.
 | STOCK-A threshold alert / 0.5 | Engine normalizes stock; selector returns low-stock records; notification dispatch absent. | 31; 20; 52. | Partial increment, existing owner. Finish dispatch under 31, preserve 20 Done and High tracker priority; access approval required. |
 | STOCK-E expiry report / 1.5 | Same engine baseline; no expiry export in C1. | 44; 20; 52. | Partial foundation, requested increment unevidenced locally. Refine 44's export contract, not a new engine/ticket. Validation outstanding. |
 | STOCK-V vendor onboarding / 3 | Engine reads supplier IDs; no vendor-writing contract demonstrated. | Primary unresolved outside tool; 20 enables data only; validation unknown. | Scope conflict/gap in inspected inventory; platform product owner must resolve boundary. Do not implement the draft or infer absence in the platform repository. |
-| STOCK-R acknowledgment / 2 | Engine records purchase references; no routing or acknowledgment evidence. | No adequate owner in complete J1 query; support 20; validation unknown. | Ownership gap **in this inventory**; supplier gateway implementation unknown. Propose scope/owner clarification, not automatic adapter implementation. |
+| STOCK-R acknowledgment / 2 | Engine preserves supplier IDs; no routing or acknowledgment evidence. | No adequate owner in complete J1 query; support 20; validation unknown. | Ownership gap **in this inventory**; supplier gateway implementation unknown. Propose scope/owner clarification, not automatic adapter implementation. |
 
 If page 2 is unavailable, STOCK-E's owner and STOCK-R's lack of owner become
 **unknown**, not confirmed gaps. STOCK-A's inspected existing owner remains known;
@@ -75,6 +75,16 @@ inputs. It distinguishes roles and owner completeness without any write boundary
 The caller obtains `verified` capabilities by executing the supplied inert local
 modules, not by trusting an issue's Done label. All evidence claims are bounded to
 those modules; this is not an automated proof of real-world feature completion.
+
+Map inspected primary owners per increment criterion. Two separate owners of
+selection and dispatch are `distributed`, not conflicting; two owners of dispatch
+are `overlap`. An uncovered criterion is a `gap` only when the selected inventory
+is complete, otherwise `unknown`. These aggregate states prioritize overlap,
+then uncovered criteria, then one existing owner or distributed coverage.
+`criterion_owners` retains sorted keys, including empty lists. Known coverage is
+bounded to inspected rows; incomplete pagination cannot certify exclusivity.
+An empty increment is invalid. Supporting/validation/cancelled items do not
+supply primary ownership.
 
 ```python
 def inspect_pages(pages):
@@ -104,12 +114,22 @@ def reconcile(requirements, pages, evidence):
         identity = requirement["id"]
         baseline = set(requirement["baseline"])
         increment = set(requirement["increment"])
-        primary = [item for item in items
+        if not increment:
+            raise ValueError("increment criteria required")
+        primary = sorted([item for item in items
                    if item["roles"].get(identity) in {"primary", "semantic_primary"}
-                   and item["status"] != "Cancelled" and increment.intersection(item["scope"])]
+                   and item["status"] != "Cancelled" and increment.intersection(item["scope"])],
+                   key=lambda item: item["key"])
         supporting = [item["key"] for item in items if item["roles"].get(identity) == "supporting"]
         validation = [item["key"] for item in items if item["roles"].get(identity) == "validation"]
-        ownership = "existing" if len(primary) == 1 else "overlap" if primary else "gap" if complete else "unknown"
+        criterion_owners = {criterion: [item["key"] for item in primary if criterion in item["scope"]]
+                            for criterion in sorted(increment)}
+        if any(len(owners) > 1 for owners in criterion_owners.values()):
+            ownership = "overlap"
+        elif any(not owners for owners in criterion_owners.values()):
+            ownership = "gap" if complete else "unknown"
+        else:
+            ownership = "existing" if len(primary) == 1 else "distributed"
         missing = increment - verified
         coverage = "implemented" if not missing else "partial" if verified.intersection(baseline | increment) else "not_evidenced"
         if missing and (not evidence["local_complete"] or evidence["uninspected"]):
@@ -122,7 +142,8 @@ def reconcile(requirements, pages, evidence):
             "baseline_implemented": sorted(baseline & verified),
             "increment_implemented": sorted(increment & verified),
             "increment_not_evidenced_here": sorted(missing), "implementation_elsewhere": elsewhere,
-            "coverage": coverage, "ownership": ownership, "primary": [item["key"] for item in primary],
+            "coverage": coverage, "ownership": ownership, "criterion_owners": criterion_owners,
+            "primary": [item["key"] for item in primary],
             "supporting": supporting, "validation": validation,
             "validation_state": "approved" if identity in evidence["approved_validation"] else "unknown" if not validation else "outstanding",
             "tracker_priority": {item["key"]: item["priority"] for item in primary},

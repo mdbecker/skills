@@ -11,6 +11,14 @@ When test-first is requested or required by current project policy, honor that
 sequence rather than routing through Iterate's ordinary code-before-tests stage;
 resolve any consequential conflict with an active lifecycle before editing.
 
+Before authoring scenarios, check their quality:
+- Cover one observable behavior per scenario with concrete examples.
+- Derive expected results independently; do not copy production logic into the oracle.
+- Keep scenarios understandable to product owners, testers and engineering
+  stakeholders, and valid after behavior-preserving refactoring.
+- Avoid tautologies and noncontractual call-count, ordering, formatting or
+  internal-collaborator assertions. Contractual safety and side-effect checks remain valid.
+
 1. Define observable acceptance outcomes, preserved behavior and relevant negative
    or security cases as concrete Given/When/Then scenarios in domain language.
 2. Keep characterization tests. Define and run the complete agreed behavioral scenario set

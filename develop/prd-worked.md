@@ -26,6 +26,10 @@ choices, not questions to leave to the developer.
 
 ### Outcome, baseline and increment
 
+Implementation approach: BDD. Define and run the complete agreed behavioral
+scenario set against unchanged production and confirm intended assertion failures
+before implementation; then observe green and check the preserved ID path.
+
 Users can enter an event's human-readable name without losing its canonical
 identity or accidentally selecting another identically named event. Baseline:
 ID-based selection/submission works; names are display-only. Increment: add one
@@ -161,6 +165,10 @@ writes. Unknown tenant access or quantity rules remain owner blockers, not guess
 technical defaults. No such blocker remains in this worked handoff.
 
 ### Outcome, baseline and bounded increment
+
+Implementation approach: BDD. Run the complete agreed behavioral scenario set
+against unchanged production and confirm intended red before implementing the
+validator; then observe green and check preserved authorization/rollback behavior.
 
 Operators import a small stock-delivery CSV once, receiving either one receipt for
 all records or a precise failure with no committed rows. Baseline: authenticated

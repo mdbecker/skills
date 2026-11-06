@@ -14,5 +14,9 @@ counterevidence and consequential omissions; disagreement is not a defect. Honor
 requested output format and explain evidence/limits. Discussion is read-only and
 does not authorize implementation, model calls or publication by itself.
 
-Single-pass is default. Explicit `--engine debate` uses the existing bundled
-hierarchy and its model/host preflight without changing scope or permissions.
+Single-pass is default. Explicit `--engine debate` uses the bundled flat voting
+protocol and model/host preflight without changing scope or permissions. Debate-only
+`--agents <COUNT>` selects at least two peers, default three. The main agent maps
+disagreements, verifies claims, collects private ballots from the same peers, and
+writes the report. It votes only on valid ties; factual dispositions follow evidence,
+and tradeoff votes cannot replace missing user criteria or required owner decisions.

@@ -16,6 +16,13 @@ Neither gathers evidence, runs notebooks, fills model gaps or creates a pipeline
    against schemas/derivation code. Editorial work cannot change definitions,
    computed logic or uncertainty. Scientific corrections require explicit request
    and identified saved supporting evidence, not a new research run.
+   Check affected meanings: valid domains versus observed vocabulary, validation
+   constraints versus observed ranges, placeholders versus retrieved evidence,
+   field-specific missing/unknown/not-applicable states, automated hypotheses
+   versus reviewer-confirmed conclusions, and authoritative time versus inferred
+   or display time. A `NOT_LOADED` presence flag does not prove logs were loaded;
+   an observed maximum latency is not a configured upper limit; schema-valid
+   model output is not a verified conclusion. Map actual definitions locally.
 4. Rebuild with existing integrity/asset tools. Detect stale assets and inputs
    changing during generation. Preserve previous deliverable on failure; for first
    creation preserve inputs and do not advertise partial output as complete.

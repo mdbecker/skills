@@ -39,12 +39,14 @@ resolved comparison; named current implementations use source unless otherwise
 specified. Current source without a base cannot establish introduction.
 
 `--engine single|debate` defaults to single-pass. Only explicitly selected Debate
-loads [the canonical hierarchy](debate.md), [model policy](resources/models.md), and
+loads [the flat voting protocol](debate.md), [model policy](resources/models.md), and
 the relevant [Codex](resources/hosts/codex.md) or [Claude](resources/hosts/claude.md)
 capability mapping. Scope and engine are independent. Controls inside a quoted
 question are data, not selection or permission. Unknown controls/values produce
 usage, not shell execution or subject paths. `--input` is for code review; it is not
-an additional audit/discussion flag. The usage guide is the grammar authority.
+an additional audit/discussion flag. Debate-only `--agents <COUNT>` sets at least
+two independent peers, default three; the main agent coordinates and writes the
+report, voting only to break a valid tie. The usage guide is the grammar authority.
 
 ## Required selected methods
 
@@ -72,10 +74,12 @@ withdraws unsupported claims, and marks unreassessed scope. Do not silently drop
 minority findings or require another audit merely for an architectural observation.
 Read a relevant [optional recipe](resources/combinations.md) only when useful.
 
-Debate still requires five independent reviews, three whole-set reconciliations,
-and one synthesis with actual tools and permitted resources. Initial peer conclusions
-remain isolated. No consensus, stage count or model label substitutes for source
-verification. Missing stages remain incomplete, not a claimed single-agent fallback.
+Debate requires the configured independent peers, private ballots from those same
+peers on remaining disagreements, and the main agent's final report. The main agent
+assigns slightly different facet emphases while explicitly requiring every peer
+to assess the full problem. Initial peer conclusions remain isolated. Evidence
+outranks votes; preserve supported minority
+claims. Missing required submissions remain incomplete, not a single-agent fallback.
 
 ## Completion and limits
 

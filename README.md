@@ -15,7 +15,7 @@ installation is required.
 Natural-language requests select the same modes as the command examples below.
 Explicit intent and current project instructions govern selection. Use the smallest
 applicable method: a simple answer or document edit does not need a feature lifecycle
-or a hierarchical review. [Usage and effects](resources/usage.md) defines arguments,
+or a flat multi-agent review. [Usage and effects](resources/usage.md) defines arguments,
 context/defaults, state actions, and helper syntax. Slash examples are assistant
 requests, not commands to paste into Bash. `/develop help` and `/review help` are
 read-only overviews when you need to choose a method.
@@ -245,17 +245,24 @@ Explicit combined implementation/structural requests can reuse snapshot-matched
 inspection per reviewer and return one deduplicated report plus requested coverage;
 a structural observation alone does not automatically launch another full audit.
 
-Only explicit `--engine debate` selects the [hierarchical method](review/debate.md):
-five independent reviews, three whole-set reconciliations, and one final synthesis.
-Preserve dissent and inspect evidence; agreement is not verification. The engine
-does not widen the selected source scope and is not a mandatory development gate.
+Only explicit `--engine debate` selects the [flat voting method](review/debate.md):
+three independent peers by default, then private ballots from those same peers on
+remaining disagreements. The main agent gives each peer a different facet to focus
+especially on, while explicitly requiring every peer to assess the whole problem
+and its full scope. `--agents <COUNT>` selects any integer of at least two,
+excluding the coordinator, and requires explicit Debate. For example:
+`/review discuss "Synchronous import or queue?" --engine debate --agents 5`.
+The main agent maps disagreements, verifies evidence, and writes the final report;
+it casts a deciding vote only on valid ties. A unique plurality is not a majority,
+and abstentions or multiple alternatives can yield ties even with three peers.
+Preserve dissent; evidence outranks votes. Three is a practical default, not a
+research-established optimum. Scope and single-pass defaults remain unchanged.
 
-[Model policy](resources/models.md) prefers economical capable reviewers, stronger
-reconcilers, and the strongest synthesis within actual host/data/tool/budget limits.
-Model identifiers are references, not a whitelist. Same-model distinct agents may
-be used when preferred tiers are unavailable, with limits disclosed. Stages still
-run in order under observed concurrency. Missing delegation, evidence, or stages
-are blockers, not a completed hierarchy; no separate provider CLI, token setup,
+[Model policy](resources/models.md) uses the current model unless an override is
+explicitly authorized; there is no model-tier ladder or downstream worker layer.
+Batch within actual host/data/tool/budget limits without reducing the selected
+count. Missing delegation, evidence, or required submissions remains unavailable
+or incomplete, not a simulated complete run. No separate provider CLI, token setup,
 or runtime is required. Report available cost honestly, labeling estimates.
 
 The [source-coverage map](review/source-coverage.md) describes the current diagnostic
@@ -345,7 +352,7 @@ and completion condition. One authorized mode owns the next action; reviewers
 recommend and development/report work edits.
 
 Keep one development lifecycle. Do not combine conflicting BDD/iterative test
-sequences, automatically escalate ordinary review to nine agents, or add a PRD,
+sequences, automatically escalate ordinary review to peer delegation, or add a PRD,
 discussion, and audit to every small fix. Another method does not install missing
 skills, synchronize state/trackers, acquire evidence, or grant external permissions.
 Repository readiness, report acceptance, scientific validity, and live/deployed
@@ -434,7 +441,7 @@ creating/pushing a tag or publishing still needs authorization.
 
 ```text
 develop/             Development instructions, method documents, and state helper
-review/              Review instructions, assessment methods, and hierarchy
+review/              Review instructions, assessment methods, and flat voting
 research/            Saved-evidence report methods, templates, and checks
 resources/           Shared policies, host mappings, profiles, examples, provenance
 distribution/        Bundle installation contract and scoped installer

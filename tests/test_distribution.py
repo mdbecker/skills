@@ -313,10 +313,13 @@ class DistributionTests(unittest.TestCase):
     def test_unverified_quality_blocks_stable_release_readiness(self):
         self.assertFalse(release_ready(self.manifest["qualification"], self.manifest["source_inputs"]))
         status = {key: "passed" for key in ("release_approval", "model_protocol_approval", "manual_acceptance", "deterministic", "model_quality", "reference_fidelity", "transfer")}
-        status["hosts"] = {host: {key: "passed" for key in ("installation", "invocation", "hierarchy")} for host in ("codex", "claude")}
+        status["hosts"] = {host: {key: "passed" for key in ("installation", "invocation", "debate")} for host in ("codex", "claude")}
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
         status["source_inputs_sha256"] = hashlib.sha256(json.dumps(self.manifest["source_inputs"], sort_keys=True).encode()).hexdigest()
         self.assertTrue(release_ready(status, self.manifest["source_inputs"]))
+        status["hosts"]["claude"]["debate"] = "not_run"
+        self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
+        status["hosts"]["claude"]["debate"] = "passed"
         status["hosts"]["claude"]["invocation"] = "not_run"
         self.assertFalse(release_ready(status, self.manifest["source_inputs"]))
 

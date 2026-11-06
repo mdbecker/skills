@@ -16,6 +16,10 @@ project:
   request: <authorized presentation/explanation/correction scope>
   no_new_research_or_publication: true
   coordination_file: <project coordination convention or reason not applicable>
+  delivery:
+    required_files: [<actual recipient files or reason not applicable>]
+    opening_instructions: <target-supported viewer/instructions or not applicable>
+    offline_resource_policy: <permitted embedded/external resources>
 
 authority:
   precedence: [<handoff>, <saved manifest/results>, <schema/derivation>, <narrative>]
@@ -50,6 +54,8 @@ build:
     - final: <generated report path>
       kind: <single file | mapped bundle>
       stage_target_binding: <existing output argument/config binding>
+      stage_target_sha256: <observed staged artifact hash after generation>
+      final_target_sha256: <observed committed artifact hash or not yet committed>
       prior_output_sha256: <full hash or explicit absent for first creation>
   watched_sources: [<complete relevant evidence/source/config/asset/dependency set>]
   watched_path_sets: [<directories/globs whose membership matters>]
@@ -58,6 +64,10 @@ build:
     pre_edit_sources: <snapshot record path>
     intended_post_edit_inputs: <snapshot captured before build>
   commands:
+    staged_acceptance:
+      builder_and_required_checkers_target_same_stage: <verified yes | blocked>
+      isolation: <existing permitted arrangement or not applicable>
+      adaptation_prerequisite: <separately authorized change if binding unsupported>
     assemble:
       argv: [<actual existing executable>, <actual existing arguments>]
       stage_binding: <where unique stage path is supplied>
@@ -83,6 +93,14 @@ evidence:
   additional_protected_fields:
     - <overlap, denominator source/population, uncertainty, comparison caveats>
     - <percentage displays, chart encodings and accessible equivalents>
+  semantic_distinctions:
+    applicability: <affected explanation/schema/prompt/report fields or not applicable>
+    valid_domains_and_observed_vocabulary: <source-defined distinction>
+    constraints_and_observed_ranges: <source-defined distinction>
+    placeholders_and_retrieved_evidence: <source-defined distinction>
+    missing_unknown_and_not_applicable: <field-specific meanings>
+    automated_hypotheses_and_reviewed_conclusions: <acceptance authority and limits>
+    authoritative_and_display_times: <source-defined meanings, no inferred substitutions>
   extraction_mapping:
     - claim_id: <stable ledger ID>
       source: {artifact: <saved JSON>, version: <version>, sha256: <full hash>, locator: <JSON pointer>}

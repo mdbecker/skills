@@ -53,6 +53,15 @@ Post-commit checks, when needed, refer to the committed hash and remain separate
 from pre-commit gates. If a later check fails, report it honestly; use only an
 authorized mapped recovery strategy, never an automatic destructive rollback.
 
+Map whether the builder and every required checker can target the same staged
+artifact before replacement. Record staged and final paths/hashes separately.
+A builder that stages internally then replaces `build-report.html`, followed by
+a checker hard-coded to that final file, does not satisfy staged acceptance.
+Block replacement unless an existing permitted isolated build/check arrangement
+supports it; otherwise name separately authorized builder/checker adaptation as
+the prerequisite. Do not invent isolation, change outside projects, weaken checks
+or create a reporting platform to bypass this boundary.
+
 ## Check matrix
 
 Adapt the applicability and required-for-commit column to the target; do not

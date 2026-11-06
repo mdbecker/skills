@@ -2,8 +2,9 @@
 
 Authority: README, CONTRIBUTING, current skill methods and `inventory.json`.
 Protected contracts: Iterate phases/manual checkpoints, CLI-owned local state,
-feature arguments/fast paths, canonical helper, source-grounded 5→3→1 review,
-reference-only model selection, three parent entrypoints and complete bundles.
+feature arguments/fast paths, canonical helper, source-grounded flat Debate voting
+with configurable peers (default 3) and coordinator tie-breaks only on ties,
+permitted model selection, three parent entrypoints and complete bundles.
 
 Prerequisite: Python 3.11+; existing suitable `.venv` with development requirements
 for metadata checks. Do not install dependencies without applicable authorization.

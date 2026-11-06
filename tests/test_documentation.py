@@ -50,6 +50,21 @@ class ReadmeTests(unittest.TestCase):
         self.assertNotIn('skills/iterate/', self.readme)
         self.assertNotIn('skills/debate/', self.readme)
 
+    def test_debate_documents_flat_peers_count_and_tie_only_coordinator_vote(self):
+        debate = (ROOT / 'review/debate.md').read_text()
+        usage = (ROOT / 'resources/usage.md').read_text()
+        self.assertIn('--agents <COUNT>', usage)
+        self.assertIn('integer at least 2, default 3', usage)
+        self.assertIn('requires explicit `--engine debate`', usage)
+        self.assertIn('same peers', debate)
+        self.assertIn('P1-C01', debate)
+        self.assertIn('Consider the problem as a whole and assess its full scope;', debate)
+        self.assertIn('focus especially on [assigned facet]', debate)
+        self.assertIn('Only on a tie may the coordinator cast one deciding vote', debate)
+        self.assertIn('COUNT/2', debate)
+        self.assertIn('majority or consensus', debate)
+        self.assertNotIn('5→3→1', debate)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,10 +5,13 @@ method separate from host metadata and install complete ordinary folders. Do not
 assert that analogous slash syntax or readable Markdown verifies invocation.
 
 Inspect available subagent/model/context/waiting tools before selecting Debate.
-Do not assume Codex tool names, OpenAI provider IDs or nine-agent delegation are
-available. Map permitted host models by role/capability, preserve distinct agents
-and all evidence stages, or report the engine unavailable. Reference-name absence
-alone does not disqualify an otherwise usable host model.
+Do not assume Codex tool names, OpenAI provider IDs, or follow-up capabilities are
+available. Map actual peer handles, isolated contexts, follow-up messages/results,
+concurrency accounting, and resume/cleanup capabilities to the selected Debate
+method's lifecycle. Verify whether history survives closing or resuming a peer;
+an initial spawn alone does not establish follow-up support. Workflow, ballot, and
+recovery rules belong to that method; selection permissions belong to
+[model policy](../models.md). Report unsupported required capabilities explicitly.
 
 Test discovery, explicit/indirect invocation, parsing, helper resolution, permissions,
 tooling and observed results in the actual host. A copied package or successful

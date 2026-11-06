@@ -11,14 +11,14 @@
     "codex": {
       "installation": "not_run",
       "invocation": "not_run",
-      "hierarchy": "not_run",
+      "debate": "not_run",
       "layout_installation": "passed",
       "installation_evidence": "Current full local suite exercised temporary project installs only; actual host invocation remains not_run."
     },
     "claude": {
       "installation": "not_run",
       "invocation": "not_run",
-      "hierarchy": "not_run",
+      "debate": "not_run",
       "layout_installation": "passed",
       "installation_evidence": "Current full local suite exercised temporary project installs only; actual host invocation remains not_run."
     }

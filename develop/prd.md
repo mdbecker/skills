@@ -25,6 +25,15 @@ lookup, and make duplicate names an explicit ambiguity rather than selecting the
 first match. Define limits, transaction/side-effect boundaries and recovery where
 they affect observable behavior. A handoff must stand alone for a new developer.
 
+State the selected or project-required implementation approach in the handoff.
+For BDD, require the complete agreed behavioral scenario set and intended red on
+unchanged production before implementation, then green and preserved-behavior
+checks. For Iterate, carry architecture agreement, manual exercise/feedback,
+testing and finalization checkpoints. A bounded edit may need neither full
+lifecycle; an ordinary testing request is not automatically BDD.
+Carry supplied reference paths/authority, availability and reference-only,
+noncommittable or nonredistributable restrictions into prerequisites.
+
 Resolve technical choices from supplied evidence. Separately label genuine owner
 decisions (for example access scope or allowed data loss), the decision owner and
 the affected blocked work; never fabricate approval or bury a blocker in a later

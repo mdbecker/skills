@@ -93,7 +93,7 @@ def release_ready(status, inputs):
         record = status.get("hosts", {}).get(host, {})
         if not isinstance(record, dict):
             return False
-        gates.extend(record.get(key) for key in ("installation", "invocation", "hierarchy"))
+        gates.extend(record.get(key) for key in ("installation", "invocation", "debate"))
     return all(gate == "passed" for gate in gates)
 
 

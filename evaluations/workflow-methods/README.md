@@ -11,6 +11,11 @@ expected.json contains evaluator-only criteria. Baseline instruction snapshots a
 constructed evaluator context with explicit hashes. freeze.json binds the inputs.
 Results record actual local observations and separately unperformed checks.
 
+Frozen instruction contexts retain their pinned source bytes, not a promise to
+match later edits. Current-source capture and package consistency use the existing
+exporter and bundle checks, not another manually maintained hash register. These
+checks are not a corpus freeze or observed model run.
+
 ```sh
 .venv/bin/python -m unittest tests.test_bdd_prd_methods tests.test_prompt_backlog_methods tests.test_workflow_methods -v
 .venv/bin/python scripts/build_skills.py --prepare

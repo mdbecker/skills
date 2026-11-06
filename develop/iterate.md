@@ -209,7 +209,8 @@ oversized files are rejected upstream by the ALB body limit.
 
 ### 1. ARCHITECTURE
 Decide direction before code. For each major decision (data storage, access pattern, new service vs. module, sync vs. async, etc.):
-- Compare genuine options for unsettled material choices. Reuse an adequate
+- Compare at least two viable options with concrete pros/cons for unsettled
+  material choices, or explain why only one is viable. Reuse an adequate
   approved specification/discussion and verify current assumptions instead of
   manufacturing another options exercise; actual user direction agreement remains.
 - Record the outcome in `architecture_decisions` (context, options, decision, rationale).

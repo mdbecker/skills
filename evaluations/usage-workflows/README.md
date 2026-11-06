@@ -12,6 +12,10 @@ Baseline instruction context is constructed and hash-bound.
 Do not rewrite its hashes to make a candidate pass. `traceability.json` maps every
 requirement to maintained source and cases; mappings alone do not verify behavior.
 
+The frozen baseline retains its original bytes. Current-source capture and package
+consistency use the existing exporter and bundle checks; they do not rewrite
+evaluation inputs, expected outcomes or prior observations.
+
 ## Local checks and their limits
 
 ```sh

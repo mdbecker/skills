@@ -6,24 +6,24 @@
     "repository": "bdenglish/skills",
     "evidence": "NOTICE records adaptation from a supplied snapshot; unmodified upstream bytes are not authenticated",
     "iterate": "Recorded ben-iterate/helper lineage and human-feedback-first six-phase philosophy",
-    "debate": "Earliest adapted local process retains five reviewers, three reconcilers and one synthesizer; individual upstream authorship is unverified"
+    "debate": "The earliest adapted process used five reviewers, three reconcilers and one synthesizer; individual upstream authorship is unverified. On 2026-11-06, the maintainer requested replacement with flat independent peers, configurable count defaulting to three, claim-level private ballots, coordinator tie-breaks only on ties, and a coordinator-written report. Three is an operational default, not a research-established optimum."
   },
   "methods": [
     {
       "id": "bdd",
-      "contract": "Complete agreed behavioral scenarios, intended red before production, observable outcomes"
+      "contract": "Complete agreed behavioral scenarios, intended red before production, focused observable outcomes and independent refactor-resilient test oracles"
     },
     {
       "id": "prd",
-      "contract": "One supported complete design, standalone handoff and explicit owner blockers"
+      "contract": "One supported complete design, standalone handoff carrying the governing lifecycle and reference restrictions, explicit owner blockers"
     },
     {
       "id": "prompt",
-      "contract": "Generation/wire/validation/enrichment/replay/version ownership from actual project contracts"
+      "contract": "Generation/wire/validation/enrichment/replay/version ownership and source-availability meaning from actual project contracts"
     },
     {
       "id": "backlog",
-      "contract": "Authority and delivery/support/validation distinct from tracker state and completion"
+      "contract": "Authority and criterion-level delivery/support/validation ownership distinct from tracker state and completion"
     },
     {
       "id": "validation",
@@ -39,7 +39,7 @@
     },
     {
       "id": "report",
-      "contract": "Existing saved-evidence graph, protected meanings, disclosure and honest acceptance"
+      "contract": "Existing saved-evidence graph, protected definitions and uncertainty, disclosure, exact reviewed-version provenance and staged acceptance"
     }
   ],
   "intentional_design": [

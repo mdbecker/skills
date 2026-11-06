@@ -122,6 +122,20 @@ evidence and the stated acceptance contract. Not a repository audit.
   because no documentation base was supplied.
 - Compatibility: no API change; the recommendation is independent of cleanroom.
 
+**R08 — Catalog labels are not normalized at the comparison boundary**
+- Location: `importer.py:6`; the supplied contract requires trimming full labels.
+- Evidence: `{id: "order-7", label: " Restock "}` queried with `Restock` returns
+  `not_found` because only the requested label is stripped.
+- Consequence: a valid normalized match is missed; catalog whitespace can also
+  hide a distinct-ID ambiguity.
+- Preferred complete fix: strip and case-fold both compared labels, retaining
+  canonical-ID deduplication and ambiguity/no-write behavior.
+- Rationale: honor the declared normalization at both input boundaries, without
+  assuming a pretrimmed catalog or adding fuzzy matching.
+- Urgency/type: **Should fix now / Follow-up**. **Fix now**: the name-selection
+  contract is incomplete. Introduced by the supplied new path.
+- Compatibility: preserve the direct-ID facade, result shapes and queue failures.
+
 Coverage: both finding-scope files fully inspected; caller fully inspected as
 supporting evidence; acceptance scenarios inspected, production-client runtime
 blocked; other repository files outside scope. Source and inert queue traces can
@@ -138,7 +152,7 @@ def submit_order(order_id, queue):
 
 
 def submit_by_label(label, orders, queue):
-    identities = {order["id"] for order in orders if order["label"].casefold() == label.strip().casefold()}
+    identities = {order["id"] for order in orders if order["label"].strip().casefold() == label.strip().casefold()}
     if not identities:
         return {"status": "not_found"}
     if len(identities) > 1:
@@ -158,7 +172,8 @@ Scope/snapshot: revised importer and unchanged import docs, compared with the
 first submitted sources above; same compatibility and permissions. Revisit intent,
 architecture, implementation and material polish in that order. Intent and seam
 placement remain appropriate. The canonical-ID and ambiguity corrections resolve
-the two blockers; documentation still needs its supported correction.
+the two blockers; two-sided normalization also resolves R08. Documentation still
+needs its supported correction.
 
 | Prior ID | Disposition | Current evidence |
 |---|---|---|
@@ -169,11 +184,12 @@ the two blockers; documentation still needs its supported correction.
 | R05 | Withdrawn | `client.py:1,5` imports and invokes the required public API. |
 | R06 | Merged into R02 as alias, now resolved | Same distinct-ID ambiguity consequence, not a second finding. |
 | R07 | Not reassessed | Exporter is outside the declared revised scope; no claim of a fix. |
+| R08 | Resolved | `importer.py:6` strips and case-folds both catalog and requested labels; padded catalog matches preserve canonical identity and distinct-ID ambiguity. |
 
 Only open actionable finding: **R03**, at `IMPORT.md:2`, **Should fix now /
 Nit**, fix now for the operational consequence above. Preferred complete
 fix/rationale/compatibility remain exactly as stated in the first review; no new
-findings are supported. A revised report consolidates rather than appends.
+open findings are supported. A revised report consolidates rather than appends.
 
 Verification reproduced by repository tests using an inert queue: first sources
 queue a label and choose an arbitrary duplicate; revised sources queue `order-7`

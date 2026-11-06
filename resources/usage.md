@@ -134,9 +134,9 @@ executes notebooks nor acquires evidence.
 ## Review: outcome, boundary, input, and engine
 
 ```text
-/review code [<TARGET>] [--input diff|source] [--engine single|debate]
-/review smells [<BOUNDARY>] [--engine single|debate]
-/review discuss ["<DECISION_QUESTION>"] [--engine single|debate]
+/review code [<TARGET>] [--input diff|source] [--engine single|debate] [--agents <COUNT>]
+/review smells [<BOUNDARY>] [--engine single|debate] [--agents <COUNT>]
+/review discuss ["<DECISION_QUESTION>"] [--engine single|debate] [--agents <COUNT>]
 ```
 
 | Concept | Meaning |
@@ -144,7 +144,21 @@ executes notebooks nor acquires evidence.
 | Outcome | Implementation acceptability, systematic structural diagnosis, or a technical decision. |
 | Target/boundary | What files, subsystem, changes, or question are in scope; establish it explicitly or from unambiguous context. |
 | Input | Code review's `diff` comparison versus current `source`. This does not widen finding scope. |
-| Engine | Single-pass by default; explicitly selected Debate uses its actual 5→3→1 process and permitted resources. |
+| Engine | Single-pass by default; explicitly selected Debate uses independent peers, private disagreement ballots, and the main agent's report. |
+| Agents | Debate-only peer count: integer at least 2, default 3; excludes the main coordinator. |
+
+`--agents` requires explicit `--engine debate`; it never selects Debate implicitly.
+Reject missing, non-integer, or less-than-two values and conflicting repeated counts
+with usage before spawning. Equal repeated counts may normalize. Quoted controls
+remain subject data. A requested count exceeding actual concurrency may be batched;
+unsupported capabilities or budget limits are reported, not silently reduced.
+
+For example: `/review discuss "Queue or synchronous import?" --engine debate --agents 5`.
+Use the same peers for one private ballot round on remaining disagreements. The
+main agent facilitates, verifies evidence, and writes the report; it votes only on
+a valid tie, never on a unique plurality or majority. Abstentions and multiple
+alternatives can produce ties even with three peers. The selected Debate method
+defines tally, tie-break, and incomplete-run rules; agreement is not verification.
 
 `--scope diff|source` is the legacy alias of code review's `--input`. Equal alias
 values may normalize; conflicting values stop with usage. Unknown flags/values

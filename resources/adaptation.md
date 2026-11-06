@@ -1,5 +1,10 @@
 # Adapt a method to another project
 
+Use generally applicable software/ML contracts and sector-neutral examples.
+Do not carry an example's business subjects, specialized conclusions or operating
+defaults into another target. Preserve the underlying identity, evidence, safety
+and acceptance mechanisms through that target's actual authority.
+
 Read current instructions and identify the editing/build surfaces before choosing
 commands. Record source authority and conflict rules, compatibility obligations,
 protected behavior/evidence, allowed actions/data, prerequisites, canonical checks,
